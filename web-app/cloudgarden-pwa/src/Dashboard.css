@@ -1,0 +1,80 @@
+.column-container {
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2%;
+}
+
+.row-container {
+  display: flex;
+  align-content: space-between;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  display: flex;
+  float: left;
+  background-color: transparent;
+  border: none;
+  color: black;
+  text-align: center;
+  padding: 3 5 3 5;
+  font-size: small;
+  outline: 0;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.3em 1.2em;
+  border-radius: 2em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  color: black;
+  background-color: transparent;
+  text-align: center;
+  transition: all 0.2s;
+  font-size: medium;
+}
+
+.active-button {
+  background-image: linear-gradient(to right, #56ab2f, #a8e063);
+  color: white;
+}
+
+.active-button svg {
+  stroke: white;
+}
+
+.active-button span {
+  color: white;
+}
+
+@import url(https://fonts.googleapis.com/css?family=Montserrat:400);
+
+.chart-text {
+  font: 16px/1.4em "Montserrat", Arial, sans-serif;
+  fill: #000;
+  -moz-transform: translateY(0.25em);
+  -ms-transform: translateY(0.25em);
+  -webkit-transform: translateY(0.25em);
+  transform: translateY(0.25em);
+}
+
+.chart-number {
+  font-size: 0.6em;
+  line-height: 1;
+  text-anchor: middle;
+  -moz-transform: translateY(-0.5em);
+  -ms-transform: translateY(-0.5em);
+  -webkit-transform: translateY(-0.5em);
+  transform: translateY(-0.5em);
+}
+
+.percent-chart-layer {
+  margin: 5%;
+}

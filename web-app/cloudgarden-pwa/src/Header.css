@@ -1,0 +1,23 @@
+.navigation {
+  display: flex;
+  flex-flow: row wrap;
+  /* This aligns items to the end line on main-axis */
+  justify-content: flex-start;
+  background-image: linear-gradient(to right, #56ab2f, #a8e063);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  margin: 2%;
+}
+
+.item-center {
+  display: flex;
+  align-items: center;
+  flex-grow: 1; /* Set the middle element to grow and stretch */
+  margin-left: 2%;
+}
