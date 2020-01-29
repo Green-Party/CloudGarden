@@ -4,7 +4,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  NavLink
+  NavLink,
+  Redirect
 } from "react-router-dom";
 import {
   Sheet,
@@ -37,7 +38,7 @@ const App: React.FC = () => {
               <Home />
             </Route>
             <Route path="/">
-              <Home />
+              <Redirect to="/dashboard" />
             </Route>
           </Switch>
         </Suspense>

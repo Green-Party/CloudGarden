@@ -7,6 +7,15 @@
   margin-top: 2%;
 }
 
+.column-container-space-around {
+  display: flex;
+  flex-direction: column;
+  align-content: space-around;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2%;
+}
+
 .row-container {
   display: flex;
   align-content: space-between;
@@ -42,7 +51,7 @@
 }
 
 .active-button {
-  background-image: linear-gradient(to right, #56ab2f, #a8e063);
+  background-image: linear-gradient(to right, #45b649, #a8e063);
   color: white;
 }
 
@@ -75,6 +84,48 @@
   transform: translateY(-0.5em);
 }
 
-.percent-chart-layer {
+.percent-chart-layer,
+.history-chart {
   margin: 5%;
+}
+.history-chart {
+  padding: 2%;
+}
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+
+.axis {
+  font-size: x-small;
+  font-family: "Roboto";
+}
+
+.label {
+  font-size: small;
+  font-family: "Roboto";
+}
+
+.history-chart-button svg {
+  color: #45b649;
+  padding: 5%;
+}
+
+.plant-button {
+  padding: 2%;
+  flex: 1 1 auto;
+}
+
+.plant-button > * {
+  padding: 2%;
+}
+
+.history-chart-button,
+.percent-chart-layer {
+  flex: 1 1 0;
+}
+
+.full-width {
+  width: "100%";
 }

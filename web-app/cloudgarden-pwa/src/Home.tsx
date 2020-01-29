@@ -12,6 +12,8 @@ import {
   useParams
 } from "react-router-dom";
 import PercentChart from "./components/PercentChart";
+import HistoryChart from "./components/HistoryChart";
+import MoistureDashboard from "./components/MoistureDashboard";
 const About = lazy(() => import("./About"));
 
 function Topic() {
@@ -24,7 +26,6 @@ function Topic() {
 }
 
 const Home: React.FC = () => {
-  debugger;
   const match = useRouteMatch();
   return (
     <div className="column-container">
@@ -32,16 +33,13 @@ const Home: React.FC = () => {
         <div className="row-container">
           <Tab target={`${match.url}/moisture`} label="moisture" />
           <Tab target={`${match.url}/temp`} label="temperature" />
-          <Tab target={`${match.url}/light`} label="UV/light" />
+          <Tab target={`${match.url}/light`} label="uv/light" />
           <Tab target={`${match.url}/water`} label="water" />
         </div>
       </Layer>
       <Switch>
         <Route path={`${match.path}/:sensorId`}>
-          <div className="row-container">
-            <PercentChart percent={40} />
-            <PercentChart percent={80} />
-          </div>
+          <MoistureDashboard />
         </Route>
         <Route path={match.path}>
           <div className="row-container">

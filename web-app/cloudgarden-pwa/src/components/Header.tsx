@@ -1,5 +1,5 @@
 import React from "react";
-import { IconButton, IconMenu, Text } from "sancho";
+import { IconButton, IconMenu } from "sancho";
 import "../Header.css";
 import Logo from "./Logo";
 class Header extends React.Component<{ onMenuClick: Function }> {
@@ -21,9 +21,7 @@ class Header extends React.Component<{ onMenuClick: Function }> {
           <Logo />
         </div>
         <div className="item">
-          <Text variant="display2" css={{ color: "white" }}>
-            CloudGarden
-          </Text>
+          <h1 className="app-name">CloudGarden</h1>
         </div>
       </div>
     );

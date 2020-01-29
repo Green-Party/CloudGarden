@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'boldbold';
+    src: url('Cunia-webfont.eot');
+    src: url('Cunia-webfont.eot?#iefix') format('embedded-opentype'),
+         url('Cunia-webfont.woff2') format('woff2'),
+         url('Cunia-webfont.woff') format('woff'),
+         url('Cunia-webfont.ttf') format('truetype'),
+         url('Cunia-webfont.svg#boldbold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
