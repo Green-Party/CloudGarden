@@ -13,8 +13,13 @@ class MoistureDashboard extends React.Component {
   render() {
     return (
       <div className="moisture-dashboard column-container">
-        <div className="row-container">
-          <PercentChart percent={40} />
+        <div className="row-container parent">
+          <Layer
+            elevation="lg"
+            className="history-chart-button column-container-space-around"
+          >
+            <PercentChart percent={40} />
+          </Layer>
           <Layer
             elevation="lg"
             className="history-chart-button column-container-space-around"

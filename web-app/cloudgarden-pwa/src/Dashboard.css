@@ -13,7 +13,6 @@
   align-content: space-around;
   justify-content: center;
   align-items: center;
-  margin-top: 2%;
 }
 
 .row-container {
@@ -21,6 +20,12 @@
   align-content: space-between;
   align-items: center;
   justify-content: center;
+}
+
+.parent {
+  width: 80vmin;
+  height: 30vmin;
+  margin: 2%;
 }
 
 .button {
@@ -84,13 +89,6 @@
   transform: translateY(-0.5em);
 }
 
-.percent-chart-layer,
-.history-chart {
-  margin: 5%;
-}
-.history-chart {
-  padding: 2%;
-}
 .line {
   fill: none;
   stroke: steelblue;
@@ -123,9 +121,12 @@
 
 .history-chart-button,
 .percent-chart-layer {
-  flex: 1 1 0;
+  flex: 1 1 auto;
+  width: 50%;
+  height: 100%;
+  margin: 5%;
 }
 
 .full-width {
-  width: "100%";
+  width: 100%;
 }
