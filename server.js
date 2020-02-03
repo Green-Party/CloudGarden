@@ -1,3 +1,10 @@
+/**
+ * Creation Date: January 27, 2020
+ * Author: Luke Slevinsky
+ * Backend server that serves the react front end
+ * Based off of: https://create-react-app.dev/docs/deployment/
+ */
+
 //Requires
 const express = require("express");
 const app = express();
