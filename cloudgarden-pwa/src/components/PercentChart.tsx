@@ -1,12 +1,21 @@
+/**
+ * Creation Date: January 30, 2020
+ * Author: Gillian Pierce
+ * A template component that displays the passed in percent value on a donut graph
+ */
+
 import React from "react";
 import "../Dashboard.css";
 type PercentChartProps = { percent: number };
+//change the color of the graph based on sensor level
 enum StatusColour {
   EXCELLENT = "#a2d28f",
   OK = "#f5c78e",
   POOR = "#fea58e"
 }
-export default ({ percent }: PercentChartProps) => {
+const PercentChart: React.FC<PercentChartProps> = ({
+  percent
+}: PercentChartProps) => {
   const percentString = `${percent} ${100 - percent}`;
   const statusColour =
     percent <= 33
@@ -57,3 +66,5 @@ export default ({ percent }: PercentChartProps) => {
     </svg>
   );
 };
+
+export default PercentChart;

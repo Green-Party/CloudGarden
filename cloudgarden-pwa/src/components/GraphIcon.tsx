@@ -1,3 +1,8 @@
+/**
+ * Creation Date: January 30, 2020
+ * Author: Gillian Pierce
+ * A placeholder SVG graph icon for the history graph button
+ */
 import React from "react";
 interface ChartProps {
   width: number | string;

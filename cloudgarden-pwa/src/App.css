@@ -1,0 +1,38 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.row-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+}
+
+.col-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-background {
+  color: black;
+  background-color: gainsboro;
+  flex-basis: 20vw;
+}
+
+.nav-closed {
+  display: hidden;
+}
+
+.main-content {
+  background-color: gold;
+  flex-grow: 1;
+}
+
+.main-header {
+  background-color: hotpink;
+}

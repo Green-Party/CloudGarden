@@ -1,0 +1,32 @@
+/**
+ * Creation Date: January 26, 2020
+ * Author: Gillian Pierce
+ * Defines the styles used for the top app header
+ */
+.navigation {
+  display: flex;
+  flex-flow: row wrap;
+  /* This aligns items to the end line on main-axis */
+  justify-content: flex-start;
+  background-color: #45b649;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  margin: 2%;
+}
+
+.item-center {
+  display: flex;
+  align-items: center;
+  flex-grow: 1; /* Set the middle element to grow and stretch */
+  margin-left: 2%;
+}
+
+.app-name {
+  color: white;
+}

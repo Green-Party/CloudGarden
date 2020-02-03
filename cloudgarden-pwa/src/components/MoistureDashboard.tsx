@@ -1,3 +1,9 @@
+/**
+ * Creation Date: January 30, 2020
+ * Author: Gillian Pierce
+ * A dashboard component for displaying moisture sensor data
+ */
+
 import React from "react";
 import { Layer, IconChevronRight } from "sancho";
 import "../Dashboard.css";

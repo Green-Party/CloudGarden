@@ -1,5 +1,10 @@
 /** @jsx jsx */
-import React, { lazy, Suspense } from "react";
+/**
+ * Creation Date: January 26, 2020
+ * Author: Gillian Pierce
+ * Renders the direct app routes and side navigation
+ */
+import React, { lazy, Suspense, useState } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -20,20 +25,16 @@ import { jsx } from "@emotion/core";
 import "./Header.css";
 import "./Dashboard.css";
 import Header from "./components/Header";
-const About = lazy(() => import("./About"));
 const Home = lazy(() => import("./Home"));
 
 const App: React.FC = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   return (
     <React.Fragment>
       <Header onMenuClick={setOpen} />
       <Router>
         <Suspense fallback={<div>Loading...</div>}>
           <Switch>
-            <Route path="/about">
-              <About title="normal about" />
-            </Route>
             <Route path="/dashboard">
               <Home />
             </Route>

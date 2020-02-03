@@ -1,3 +1,10 @@
+/**
+ * Creation Date: January 30, 2020
+ * Author: Gillian Pierce
+ * A template component that displays passed in time series data as a line graph
+ * Adapted from https://observablehq.com/@d3/line-chart by Mike Bostock
+ */
+
 import { select } from "d3-selection";
 import { scaleLinear, scaleTime } from "d3-scale";
 import { line } from "d3-shape";
@@ -17,7 +24,6 @@ interface Props {
   width: number;
   height: number;
 }
-const margin = { top: 50, right: 50, bottom: 50, left: 50 };
 
 export default class HistoryChart extends React.Component<Props> {
   private svgRef?: SVGSVGElement | null;
@@ -33,16 +39,16 @@ export default class HistoryChart extends React.Component<Props> {
   }
 
   private drawChart(data: DataPoint[]) {
-    var margin = { top: 20, right: 20, bottom: 50, left: 50 },
-      width = this.props.width - margin.left - margin.right,
-      height = this.props.height - margin.top - margin.bottom;
+    const margin = { top: 20, right: 20, bottom: 50, left: 50 };
+    const width = this.props.width - margin.left - margin.right;
+    const height = this.props.height - margin.top - margin.bottom;
 
-    // set the ranges
+    // set the ranges for both axises
     const x = scaleTime().range([0, width]);
     const y = scaleLinear().range([height, 0]);
 
-    // define the line
-    var valueline = line<DataPoint>()
+    // define how to connect data points together with lines
+    const valueline = line<DataPoint>()
       .x(function(d) {
         return x(d.date);
       })
@@ -54,17 +60,16 @@ export default class HistoryChart extends React.Component<Props> {
     // appends a 'group' element to 'svg'
     // moves the 'group' element to the top left margin
     const svg = select(this.svgRef!)
-      //   .attr("width", width + margin.left + margin.right)
-      //   .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    //get dates and values from data
     const dates = data.map(d => d.date);
     const values = data.map(d => d.value);
-    // Scale the range of the data
+    // Scale the range of the graph to fit the data
     x.domain([min(dates) as Date, max(dates) as Date]);
     y.domain([0, max(values) as number]);
 
-    // Add the valueline path.
+    // Add the valueline path between data points
     svg
       .append("path")
       .data([data])
@@ -78,6 +83,7 @@ export default class HistoryChart extends React.Component<Props> {
       .attr("transform", "translate(0," + height + ")")
       .call(axisBottom(x));
 
+    // add a label to the X axis
     svg
       .append("text")
       .attr("transform", "translate(" + width / 2 + " ," + (height + 40) + ")")
@@ -91,7 +97,7 @@ export default class HistoryChart extends React.Component<Props> {
       .attr("class", "axis")
       .call(axisLeft(y));
 
-    // text label for the y axis
+    // Add a label for the Y Axis
     svg
       .append("text")
       .attr("transform", "rotate(-90)")

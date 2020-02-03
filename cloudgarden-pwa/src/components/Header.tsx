@@ -1,8 +1,17 @@
+/**
+ * Creation Date: January 30, 2020
+ * Author: Gillian Pierce
+ * A component for the top page header including menu icon, logo and title
+ */
+
 import React from "react";
 import { IconButton, IconMenu } from "sancho";
 import "../Header.css";
 import Logo from "./Logo";
-class Header extends React.Component<{ onMenuClick: Function }> {
+interface HeaderProps {
+  onMenuClick: Function;
+}
+class Header extends React.Component<HeaderProps> {
   render() {
     return (
       <div className="navigation">

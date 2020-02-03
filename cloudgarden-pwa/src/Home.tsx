@@ -1,32 +1,23 @@
 /** @jsx jsx */
-import React, { Suspense, lazy } from "react";
+/**
+ * Creation Date: January 28, 2020
+ * Author: Gillian Pierce
+ * The main dashboard component, provides access to specific sensor data dashboards
+ */
+
+import React from "react";
 import { Layer } from "sancho";
 import { jsx } from "@emotion/core";
 import "./Dashboard.css";
 import Tab from "./components/Tab";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useRouteMatch,
-  useParams
-} from "react-router-dom";
-import PercentChart from "./components/PercentChart";
-import HistoryChart from "./components/HistoryChart";
+import { Switch, Route, useRouteMatch } from "react-router-dom";
 import MoistureDashboard from "./components/MoistureDashboard";
-const About = lazy(() => import("./About"));
-
-function Topic() {
-  let { sensorId } = useParams();
-  return (
-    <div className="row-container">
-      <h3>Requested sensor: {sensorId}</h3>
-    </div>
-  );
-}
 
 const Home: React.FC = () => {
   const match = useRouteMatch();
+  //Top layer is used to select which sensor data to display
+  //Routes point to the various dashboard components
+  //(only moisture is implemented currently)
   return (
     <div className="column-container">
       <Layer elevation="lg">

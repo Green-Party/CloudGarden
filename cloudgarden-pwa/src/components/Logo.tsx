@@ -1,3 +1,9 @@
+/**
+ * Creation Date: January 28, 2020
+ * Author: Gillian Pierce
+ * An SVG component for displaying the App Logo
+ */
+
 import React from "react";
 
 export default () => (
