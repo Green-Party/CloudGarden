@@ -11,7 +11,7 @@ import { jsx } from "@emotion/core";
 import "./Dashboard.css";
 import Tab from "./components/Tab";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
-import MoistureDashboard from "./components/MoistureDashboard";
+import MoistureDashboard from "./components/moisture/MoistureDashboard";
 
 const Home: React.FC = () => {
   const match = useRouteMatch();
