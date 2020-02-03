@@ -19,13 +19,12 @@
   display: flex;
   align-content: space-between;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 .parent {
-  width: 80vmin;
+  width: 70vmin;
   height: 30vmin;
-  margin: 2%;
 }
 
 .button {
@@ -111,12 +110,16 @@
 }
 
 .plant-button {
-  padding: 2%;
+  margin-top: 2%;
   flex: 1 1 auto;
 }
 
 .plant-button > * {
   padding: 2%;
+}
+
+.plant-button > h2 {
+  flex-grow: 1;
 }
 
 .history-chart-button,
@@ -127,6 +130,28 @@
   margin: 5%;
 }
 
+.history-chart-button > h4,
+.percent-chart-layer > h4 {
+  margin-top: 0;
+}
+
+.percent-chart-layer {
+  margin-left: 0;
+}
+
+.history-chart-button {
+  margin-right: 0;
+}
+
 .full-width {
   width: 100%;
+}
+
+.fit-content {
+  width: fit-content;
+}
+
+.moisture-dashboard {
+  margin-bottom: 2%;
+  align-items: stretch;
 }

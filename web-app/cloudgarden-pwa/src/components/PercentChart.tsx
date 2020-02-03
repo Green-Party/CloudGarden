@@ -1,6 +1,5 @@
 import React from "react";
 import "../Dashboard.css";
-import { Layer } from "sancho";
 type PercentChartProps = { percent: number };
 enum StatusColour {
   EXCELLENT = "#a2d28f",
