@@ -24,7 +24,7 @@
 
 .parent {
   width: 70vmin;
-  height: 30vmin;
+  height: 50vmin;
 }
 
 .button {
@@ -154,4 +154,9 @@
 .moisture-dashboard {
   margin-bottom: 2%;
   align-items: stretch;
+}
+
+.inline {
+  white-space: nowrap;
+  vertical-align: middle;
 }

@@ -23,8 +23,8 @@ class MoistureDashboard extends React.Component {
             elevation="lg"
             className="history-chart-button column-container-space-around"
           >
-            <GraphIcon width="62%" height="62%" color="#45b649" />
-            <h4>see history</h4>
+            <GraphIcon width="80%" height="90%" color="#45b649" />
+            <h4 className="inline">see history</h4>
           </Layer>
         </div>
         <Layer elevation="lg" className="row-container plant-button full-width">
