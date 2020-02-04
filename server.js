@@ -1,3 +1,10 @@
+/**
+ * Creation Date: January 27, 2020
+ * Author: Luke Slevinsky
+ * Backend server that serves the react front end
+ * Based off of: https://create-react-app.dev/docs/deployment/
+ */
+
 //Requires
 const express = require("express");
 const app = express();
@@ -7,19 +14,16 @@ const chalk = require("chalk");
 const logger = require("morgan");
 const open = require("open");
 
-//Static Routes
-app.use(
-  express.static(path.join(__dirname, "web-app", "cloudgarden-pwa", "build"))
-);
+// Static Routes
+// Serve production build of React app
+app.use(express.static(path.join(__dirname, "cloudgarden-pwa", "build")));
 app.use(logger("dev")); // logging
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 //Main App Route
 app.get("/*", (_req, res, _next) =>
-  res.sendFile(
-    path.join(__dirname, "web-app", "cloudgarden-pwa", "build", "index.html")
-  )
+  res.sendFile(path.join(__dirname, "cloudgarden-pwa", "build", "index.html"))
 );
 const port = 9000;
 

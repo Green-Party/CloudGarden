@@ -1,47 +1,36 @@
 /** @jsx jsx */
-import React, { Suspense, lazy } from "react";
+/**
+ * Creation Date: January 28, 2020
+ * Author: Gillian Pierce
+ * The main dashboard component, provides access to specific sensor data dashboards
+ */
+
+import React from "react";
 import { Layer } from "sancho";
 import { jsx } from "@emotion/core";
 import "./Dashboard.css";
 import Tab from "./components/Tab";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useRouteMatch,
-  useParams
-} from "react-router-dom";
-import PercentChart from "./components/PercentChart";
-const About = lazy(() => import("./About"));
-
-function Topic() {
-  let { sensorId } = useParams();
-  return (
-    <div className="row-container">
-      <h3>Requested sensor: {sensorId}</h3>
-    </div>
-  );
-}
+import { Switch, Route, useRouteMatch } from "react-router-dom";
+import MoistureDashboard from "./components/MoistureDashboard";
 
 const Home: React.FC = () => {
-  debugger;
   const match = useRouteMatch();
+  //Top layer is used to select which sensor data to display
+  //Routes point to the various dashboard components
+  //(only moisture is implemented currently)
   return (
     <div className="column-container">
       <Layer elevation="lg">
         <div className="row-container">
           <Tab target={`${match.url}/moisture`} label="moisture" />
           <Tab target={`${match.url}/temp`} label="temperature" />
-          <Tab target={`${match.url}/light`} label="UV/light" />
+          <Tab target={`${match.url}/light`} label="uv/light" />
           <Tab target={`${match.url}/water`} label="water" />
         </div>
       </Layer>
       <Switch>
         <Route path={`${match.path}/:sensorId`}>
-          <div className="row-container">
-            <PercentChart percent={40} />
-            <PercentChart percent={80} />
-          </div>
+          <MoistureDashboard />
         </Route>
         <Route path={match.path}>
           <div className="row-container">

@@ -1,3 +1,8 @@
+/**
+ * Creation Date: January 26, 2020
+ * Author: Gillian Pierce
+ * Defines the styles used in the dashboard components
+ */
 .column-container {
   display: flex;
   flex-direction: column;
@@ -7,11 +12,24 @@
   margin-top: 2%;
 }
 
+.column-container-space-around {
+  display: flex;
+  flex-direction: column;
+  align-content: space-around;
+  justify-content: center;
+  align-items: center;
+}
+
 .row-container {
   display: flex;
   align-content: space-between;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
+}
+
+.parent {
+  width: 70vmin;
+  height: 50vmin;
 }
 
 .button {
@@ -42,7 +60,7 @@
 }
 
 .active-button {
-  background-image: linear-gradient(to right, #56ab2f, #a8e063);
+  background-image: linear-gradient(to right, #45b649, #a8e063);
   color: white;
 }
 
@@ -75,6 +93,75 @@
   transform: translateY(-0.5em);
 }
 
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+
+.axis {
+  font-size: x-small;
+  font-family: "Roboto";
+}
+
+.label {
+  font-size: small;
+  font-family: "Roboto";
+}
+
+.history-chart-button svg {
+  color: #45b649;
+  padding: 5%;
+}
+
+.plant-button {
+  margin-top: 2%;
+  flex: 1 1 auto;
+}
+
+.plant-button > * {
+  padding: 2%;
+}
+
+.plant-button > h2 {
+  flex-grow: 1;
+}
+
+.history-chart-button,
 .percent-chart-layer {
+  flex: 1 1 auto;
+  width: 50%;
+  height: 100%;
   margin: 5%;
+}
+
+.history-chart-button > h4,
+.percent-chart-layer > h4 {
+  margin-top: 0;
+}
+
+.percent-chart-layer {
+  margin-left: 0;
+}
+
+.history-chart-button {
+  margin-right: 0;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.fit-content {
+  width: fit-content;
+}
+
+.moisture-dashboard {
+  margin-bottom: 2%;
+  align-items: stretch;
+}
+
+.inline {
+  white-space: nowrap;
+  vertical-align: middle;
 }

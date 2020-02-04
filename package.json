@@ -8,7 +8,8 @@
   "license": "ISC",
   "scripts": {
     "start": "npm-run-all build:* && nodemon server.js",
-    "build:client": "cd web-app/cloudgarden-pwa && yarn && yarn build"
+    "build:server": "npm install",
+    "build:client": "cd cloudgarden-pwa && yarn && yarn build"
   },
   "dependencies": {
     "chalk": "^3.0.0",
