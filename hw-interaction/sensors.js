@@ -6,6 +6,8 @@
 
 const five = require("johnny-five");
 const Si1145 = require("./si1145");
+const thermo = require("./thermo");
+const relays = require("./relays");
 const utils = require("./utils");
 
 module.exports = {
@@ -26,6 +28,10 @@ let controls = {
   pumps: null,
   light: null,
   pumpsEnabled: false
+};
+
+const temp = {
+  3: 0x11912c86a76
 };
 
 function initialize() {
@@ -52,28 +58,7 @@ function initialize() {
       }
     }, 500);
 
-    // temperature sensor * 3
-    const addresses = [1, 2, 3];
-    let tempSensors = addresses.map((addr, idx, arr) => {
-      return new five.Thermometer({
-        controller: "DS18B20",
-        pin: 2,
-        address: addr
-        // freq: TBD
-      });
-    });
-
-    tempSensors.map((temp, idx, arr) => {
-      temp.on("data", () => {
-        const { address, celsius, fahrenheit, kelvin } = temp;
-        console.log(`Thermometer data at address: 0x${address.toString(16)}`);
-        readings.temp[idx] = celsius;
-      });
-      // temp2.on("change", () => {
-      //   const { address, celsius, fahrenheit, kelvin } = temp2;
-      //   console.log(`Thermometer change at address: 0x${address.toString(16)}`);
-      // });
-    });
+    let thermoSensors = thermo.initialize();
 
     // soil humidity sensor
     const soilMoisturePins = ["A0", "A1", "A2"];
@@ -127,11 +112,11 @@ function initialize() {
 
     // pumps - controlled through relays at pins 3,4,5
     // relays configured to be NO
-    controls.pumps = new five.Relays([3, 4, 5]);
+    controls.pumps = relays.initialize(relays.getPumpPins());
 
     // grow light - controlled through relay at pin 6
     // relay configured to be NO
-    controls.light = new five.Relay(6);
+    controls.light = relays.initialize(relays.getLightPins());
   });
 }
 

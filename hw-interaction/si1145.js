@@ -13,11 +13,11 @@ module.exports = class Si1145 {
 
     this.device = {};
     this.device.name = opts.hasOwnProperty("name") ? opts.name : "Si1145";
+    this.device.id = 69;
     this.device.type = opts.hasOwnProperty("type") ? opts.type : "sensor";
     this.device.active = false;
     this.device.bus = opts.hasOwnProperty("bus") ? opts.bus : 1;
     this.device.addr = opts.hasOwnProperty("addr") ? opts.addr : 0x60;
-    this.device.version = require("./package.json").version;
     this.device.parameters = [
       { name: "visible", type: "integer", value: NaN },
       { name: "ir", type: "integer", value: NaN },
@@ -27,12 +27,17 @@ module.exports = class Si1145 {
     // this.board = i2c.openSync(this.device.bus);
     this.board = opts.board;
     this.board.i2cConfig();
-
-    this.initialize();
   }
 
-  initialize() {
+  async initialize(callback) {
     this.loadConstants();
+
+    let id = await this.i2cRead(this.register.PARTID, 8);
+    if (id != this.device.id) {
+      this.device.active = false;
+      callback();
+      return;
+    }
 
     this.reset();
 
@@ -87,6 +92,7 @@ module.exports = class Si1145 {
     );
 
     this.device.active = true;
+    callback();
   }
 
   deviceName() {
@@ -95,10 +101,6 @@ module.exports = class Si1145 {
 
   deviceType() {
     return this.device.type;
-  }
-
-  deviceVersion() {
-    return this.device.version;
   }
 
   deviceNumValues() {
@@ -130,33 +132,27 @@ module.exports = class Si1145 {
       callback(`Si1145 Error: index ${idx} out of range`, null);
     } else {
       const readReg = this.getReadRegisterAtIndex(idx);
-      this.board.readI2cBlock(
-        this.device.addr,
-        readReg,
-        2,
-        Buffer.alloc(2),
-        (err, bytesRead, buffer) => {
-          if (err) {
-            callback(err);
-          } else {
-            this.device.parameters[idx].value = Si1145.uint16(
-              buffer[1],
-              buffer[0]
+      this.board.i2cReadOnce(this.device.addr, readReg, 2, arrayOfBytes => {
+        if (arrayOfBytes == null) {
+          callback("Error: No bytes read from i2c device");
+        } else {
+          this.device.parameters[idx].value = Si1145.uint16(
+            arrayOfBytes[1],
+            arrayOfBytes[0]
+          );
+          // special case for UV -- needs to be divided by 100
+          if (idx == 2) {
+            this.device.parameters[idx].value = Math.round(
+              this.device.parameters[idx].value / 100
             );
-            // special case for UV -- needs to be divided by 100
-            if (idx == 2) {
-              this.device.parameters[idx].value = Math.round(
-                this.device.parameters[idx].value / 100
-              );
-            }
-            callback(null, this.device.parameters[idx].value);
           }
+          callback(null, this.device.parameters[idx].value);
         }
-      );
+      });
     }
   }
 
-  valueAtIndexSync(idx) {
+  async valueAtIndexSync(idx) {
     if (!this.isIdxInRange(idx)) {
       this.logError(
         `Si1145 Error: readValueAtIndexSync(${idx}) index out of range`
@@ -165,20 +161,24 @@ module.exports = class Si1145 {
     }
 
     const readReg = this.getReadRegisterAtIndex(idx);
-
-    var buffer = Buffer.alloc(2);
-    this.board.readI2cBlockSync(this.device.addr, readReg, 2, buffer);
-
-    this.device.parameters[idx].value = Si1145.uint16(buffer[1], buffer[0]);
-
-    // special case for UV -- needs to be divided by 100
-    if (idx == 2) {
-      this.device.parameters[idx].value = Math.round(
-        this.device.parameters[idx].value / 100
+    try {
+      let arrayOfBytes = await this.i2cRead(readReg, 2);
+      this.device.parameters[idx].value = Si1145.uint16(
+        arrayOfBytes[1],
+        arrayOfBytes[0]
       );
-    }
 
-    return this.device.parameters[idx].value;
+      // special case for UV -- needs to be divided by 100
+      if (idx == 2) {
+        this.device.parameters[idx].value = Math.round(
+          this.device.parameters[idx].value / 100
+        );
+      }
+
+      return this.device.parameters[idx].value;
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   getReadRegisterAtIndex(idx) {
@@ -202,6 +202,7 @@ module.exports = class Si1145 {
       if (err) {
         callback(err);
       } else {
+        console.log(vis);
         this.valueAtIndex(1, (err, ir) => {
           if (err) {
             callback(err);
@@ -242,32 +243,53 @@ module.exports = class Si1145 {
     return true;
   }
 
+  // version based on Adafruit Arduino library
+  // writeParam(p, v) {
+  //   this.board.i2cWriteReg(this.device.addr, this.register.PARAMWR, v);
+  //   this.board.i2cWriteReg(
+  //     this.device.addr,
+  //     this.register.COMMAND,
+  //     p | this.command.PARAM_SET
+  //   );
+  //   this.board.i2cReadOnce(
+  //     this.device.addr,
+  //     this.register.PARAMRD,
+  //     8,
+  //     arrayOfBytes => {}
+  //   );
+  // }
+
+  i2cRead(register, bytesToRead) {
+    return new Promise((resolve, reject) => {
+      this.board.i2cReadOnce(
+        this.device.addr,
+        register,
+        bytesToRead,
+        arrayOfBytes => {
+          resolve(arrayOfBytes);
+        }
+      );
+    });
+  }
+
   async writeParam(p, v) {
     this.board.i2cWriteReg(this.device.addr, this.register.COMMAND, 0x00);
-    this.board.i2cReadOnce(
-      this.device.addr,
-      this.register.RESPONSE,
-      8,
-      async bytes => {
-        while (bytes[0] == 0x00) {
-          this.board.i2cWriteReg(this.device.addr, this.register.PARAMWR, v);
-          this.board.i2cWriteReg(
-            this.device.addr,
-            this.register.COMMAND,
-            p | this.command.PARAM_SET
-          );
-          await utils.sleep(2);
-          this.board.i2cReadOnce(
-            this.device.addr,
-            this.register.RESPONSE,
-            8,
-            response => {
-              bytes = response;
-            }
-          );
-        }
+    try {
+      let bytes = await this.i2cRead(this.register.RESPONSE, 8);
+      while (bytes[0] == 0x00) {
+        this.board.i2cWriteReg(this.device.addr, this.register.PARAMWR, v);
+        this.board.i2cWriteReg(
+          this.device.addr,
+          this.register.COMMAND,
+          p | this.command.PARAM_SET
+        );
+        await utils.sleep(2);
+        bytes = await this.i2cRead(this.register.RESPONSE, 8);
       }
-    );
+    } catch (e) {
+      // to catch any Promise rejections
+      console.log(e);
+    }
   }
 
   async reset() {
@@ -306,16 +328,16 @@ module.exports = class Si1145 {
 
     // The coefficeint values provided by Adafruit are 0x29, 0x89, 0x02, and 0x00
 
-    this.board.writeByteSync(this.device.addr, this.register.UCOEFF0, 0x29);
-    this.board.writeByteSync(this.device.addr, this.register.UCOEFF1, 0x89);
-    this.board.writeByteSync(this.device.addr, this.register.UCOEFF2, 0x02);
-    this.board.writeByteSync(this.device.addr, this.register.UCOEFF3, 0x00);
+    this.board.i2cWriteReg(this.device.addr, this.register.UCOEFF0, 0x29);
+    this.board.i2cWriteReg(this.device.addr, this.register.UCOEFF1, 0x89);
+    this.board.i2cWriteReg(this.device.addr, this.register.UCOEFF2, 0x02);
+    this.board.i2cWriteReg(this.device.addr, this.register.UCOEFF3, 0x00);
 
     // // Split the difference and call it good!
-    // this.board.writeByteSync(this.device.addr, this.register.UCOEFF0, 0x52);
-    // this.board.writeByteSync(this.device.addr, this.register.UCOEFF1, 0x7a);
-    // this.board.writeByteSync(this.device.addr, this.register.UCOEFF2, 0x02);
-    // this.board.writeByteSync(this.device.addr, this.register.UCOEFF3, 0x00);
+    // this.board.i2cWriteReg(this.device.addr, this.register.UCOEFF0, 0x52);
+    // this.board.i2cWriteReg(this.device.addr, this.register.UCOEFF1, 0x7a);
+    // this.board.i2cWriteReg(this.device.addr, this.register.UCOEFF2, 0x02);
+    // this.board.i2cWriteReg(this.device.addr, this.register.UCOEFF3, 0x00);
   }
 
   loadConstants() {
