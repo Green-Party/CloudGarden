@@ -1,5 +1,5 @@
 /**
- * Creation Date: January 30, 2020
+ * Creation Date: February 7, 2020
  * Author: Gillian Pierce
  * A dashboard component for displaying moisture sensor data
  */
@@ -8,12 +8,9 @@ import React, { useState, Fragment } from "react";
 import { Layer, IconChevronRight } from "sancho";
 import "../../Dashboard.css";
 import PercentChart from "../PercentChart";
-import { ReactComponent as Cactus } from "../../illustrations/cactus.svg";
-import { ReactComponent as Aloe } from "../../illustrations/aloe_vera.svg";
-import { ReactComponent as Snake } from "../../illustrations/snake_plant.svg";
 import HistoryChart from "../HistoryChart";
 import { Link, useRouteMatch, Route } from "react-router-dom";
-import PlantSpecific from "./PlantSpecific";
+import UnitToggle from "./UnitToggle";
 import {
   Card,
   CardContent,
@@ -24,6 +21,8 @@ import {
   Typography
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 
 const useStyles = makeStyles({
   button: {
@@ -64,61 +63,59 @@ const useStyles = makeStyles({
   },
   chart: {
     margin: 8
+  },
+  temp: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    textAlign: "center"
   }
 });
 
-const MoistureDashboard: React.FC = () => {
+const TempDashboard: React.FC = () => {
   const [open, setOpen] = useState(false);
   const match = useRouteMatch();
 
-  const PlantButtons: React.FC = () => {
+  const TempChart: React.FC = () => {
     const styles = useStyles();
-    return (
-      <Fragment>
-        <Card className={styles.card}>
-          <CardMedia className={styles.media} component={Aloe} />
-          <CardContent className={styles.cardContent}>
-            <Typography variant={"overline"}>Soil Moisture Data</Typography>
-            <Typography variant={"h6"} gutterBottom>
-              Plant 1
-            </Typography>
-            <Button className={styles.button}>View Details</Button>
-          </CardContent>
-        </Card>
-        <Card className={styles.card}>
-          <CardMedia className={styles.media} component={Cactus} />
-          <CardContent className={styles.cardContent}>
-            <Typography variant={"overline"}>Soil Moisture Data</Typography>
-            <Typography variant={"h6"} gutterBottom>
-              Plant 2
-            </Typography>
-            <Button className={styles.button}>View Details</Button>
-          </CardContent>
-        </Card>
-        <Card className={styles.card}>
-          <CardMedia className={styles.media} component={Snake} />
-          <CardContent className={styles.cardContent}>
-            <Typography variant={"overline"}>Soil Moisture Data</Typography>
-            <Typography variant={"h6"} gutterBottom>
-              Plant 3
-            </Typography>
-            <Button className={styles.button}>View Details</Button>
-          </CardContent>
-        </Card>
-      </Fragment>
-    );
-  };
+    const [units, setUnits] = useState<string>("celsius");
+    const [temp, setTemp] = useState<number>(20);
 
-  const MoisturePercentage: React.FC = () => {
-    const styles = useStyles();
+    const handleUnits = (
+      event: React.MouseEvent<HTMLElement>,
+      newUnits: string
+    ) => {
+      setUnits(newUnits);
+      let newTemp = temp;
+      if (newUnits == "celsius") {
+        newTemp = ((temp - 32) * 5) / 9;
+      } else {
+        newTemp = (temp * 9) / 5 + 32;
+      }
+      setTemp(newTemp);
+    };
+
     return (
       <Card className={styles.chart}>
-        <CardContent>
+        <CardContent className={styles.temp}>
           <Typography variant={"h6"} gutterBottom>
-            Average Moisture
+            Temperature
           </Typography>
           <Divider />
-          <PercentChart percent={60} />
+          <PercentChart percent={temp} />
+          <ToggleButtonGroup
+            value={units}
+            exclusive
+            onChange={handleUnits}
+            aria-label="temp units"
+          >
+            <ToggleButton value="celsius" aria-label="celsius">
+              ℃
+            </ToggleButton>
+            <ToggleButton value="ferinheight" aria-label="ferinheight">
+              ℉
+            </ToggleButton>
+          </ToggleButtonGroup>
         </CardContent>
       </Card>
     );
@@ -153,25 +150,15 @@ const MoistureDashboard: React.FC = () => {
   };
 
   return (
-    <div className="moisture-dashboard column-container">
-      <Grid
-        container
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-      >
-        <Grid item xs={12} md={4}>
-          <MoisturePercentage />
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <HistoryGraph />
-        </Grid>
+    <Grid container spacing={3} justify="center" direction="column">
+      <Grid item xs={12} md={12}>
+        <TempChart />
       </Grid>
       <Grid item xs={12} md={12}>
-        <PlantButtons />
+        <HistoryGraph />
       </Grid>
-    </div>
+    </Grid>
   );
 };
 
-export default MoistureDashboard;
+export default TempDashboard;

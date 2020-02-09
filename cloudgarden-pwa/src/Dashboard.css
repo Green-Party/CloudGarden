@@ -165,3 +165,36 @@
   white-space: nowrap;
   vertical-align: middle;
 }
+
+.unstyled {
+  text-decoration: none;
+}
+
+.unstyled:focus,
+.unstyled:hover,
+.unstyled:visited,
+.unstyled:link,
+.unstyled:active {
+  text-decoration: none;
+  color: black;
+}
+
+.percent-card {
+  margin: 5%;
+}
+
+.plant-media {
+  flex-shrink: 0;
+  width: 25%;
+  padding-top: 30%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
+
+.tabs {
+  margin-bottom: 2%;
+}

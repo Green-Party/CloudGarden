@@ -12,6 +12,9 @@ import "./Dashboard.css";
 import Tab from "./components/Tab";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import MoistureDashboard from "./components/moisture/MoistureDashboard";
+import PlantSpecific from "./components/moisture/PlantSpecific";
+import LightDashboard from "./components/light/LightDashboard";
+import TempDashboard from "./components/temp/TempDashboard";
 
 const Home: React.FC = () => {
   const match = useRouteMatch();
@@ -20,7 +23,7 @@ const Home: React.FC = () => {
   //(only moisture is implemented currently)
   return (
     <div className="column-container">
-      <Layer elevation="lg">
+      <Layer elevation="lg" className="tabs">
         <div className="row-container">
           <Tab target={`${match.url}/moisture`} label="moisture" />
           <Tab target={`${match.url}/temp`} label="temperature" />
@@ -29,9 +32,20 @@ const Home: React.FC = () => {
         </div>
       </Layer>
       <Switch>
-        <Route path={`${match.path}/:sensorId`}>
+        <Route exact path={`${match.path}/moisture`}>
           <MoistureDashboard />
         </Route>
+        <Route exact path={`${match.path}/light`}>
+          <LightDashboard />
+        </Route>
+        <Route exact path={`${match.path}/temp`}>
+          <TempDashboard />
+        </Route>
+        <Route
+          exact
+          path={`${match.path}/:sensorId/:plantId`}
+          component={PlantSpecific}
+        />
         <Route path={match.path}>
           <div className="row-container">
             <h3>Please select a sensor.</h3>

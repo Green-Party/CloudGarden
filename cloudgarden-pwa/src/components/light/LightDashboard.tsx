@@ -1,5 +1,5 @@
 /**
- * Creation Date: January 30, 2020
+ * Creation Date: February 7, 2020
  * Author: Gillian Pierce
  * A dashboard component for displaying moisture sensor data
  */
@@ -13,7 +13,7 @@ import { ReactComponent as Aloe } from "../../illustrations/aloe_vera.svg";
 import { ReactComponent as Snake } from "../../illustrations/snake_plant.svg";
 import HistoryChart from "../HistoryChart";
 import { Link, useRouteMatch, Route } from "react-router-dom";
-import PlantSpecific from "./PlantSpecific";
+
 import {
   Card,
   CardContent,
@@ -67,58 +67,50 @@ const useStyles = makeStyles({
   }
 });
 
-const MoistureDashboard: React.FC = () => {
+const LightDashboard: React.FC = () => {
   const [open, setOpen] = useState(false);
   const match = useRouteMatch();
 
-  const PlantButtons: React.FC = () => {
-    const styles = useStyles();
-    return (
-      <Fragment>
-        <Card className={styles.card}>
-          <CardMedia className={styles.media} component={Aloe} />
-          <CardContent className={styles.cardContent}>
-            <Typography variant={"overline"}>Soil Moisture Data</Typography>
-            <Typography variant={"h6"} gutterBottom>
-              Plant 1
-            </Typography>
-            <Button className={styles.button}>View Details</Button>
-          </CardContent>
-        </Card>
-        <Card className={styles.card}>
-          <CardMedia className={styles.media} component={Cactus} />
-          <CardContent className={styles.cardContent}>
-            <Typography variant={"overline"}>Soil Moisture Data</Typography>
-            <Typography variant={"h6"} gutterBottom>
-              Plant 2
-            </Typography>
-            <Button className={styles.button}>View Details</Button>
-          </CardContent>
-        </Card>
-        <Card className={styles.card}>
-          <CardMedia className={styles.media} component={Snake} />
-          <CardContent className={styles.cardContent}>
-            <Typography variant={"overline"}>Soil Moisture Data</Typography>
-            <Typography variant={"h6"} gutterBottom>
-              Plant 3
-            </Typography>
-            <Button className={styles.button}>View Details</Button>
-          </CardContent>
-        </Card>
-      </Fragment>
-    );
-  };
-
-  const MoisturePercentage: React.FC = () => {
+  const UVPercentage: React.FC = () => {
     const styles = useStyles();
     return (
       <Card className={styles.chart}>
         <CardContent>
           <Typography variant={"h6"} gutterBottom>
-            Average Moisture
+            UV Index
+          </Typography>
+          <Divider />
+          <PercentChart percent={20} />
+        </CardContent>
+      </Card>
+    );
+  };
+
+  const VisiblePercentage: React.FC = () => {
+    const styles = useStyles();
+    return (
+      <Card className={styles.chart}>
+        <CardContent>
+          <Typography variant={"h6"} gutterBottom>
+            Visible Intensity
           </Typography>
           <Divider />
           <PercentChart percent={60} />
+        </CardContent>
+      </Card>
+    );
+  };
+
+  const InfraredPercentage: React.FC = () => {
+    const styles = useStyles();
+    return (
+      <Card className={styles.chart}>
+        <CardContent>
+          <Typography variant={"h6"} gutterBottom>
+            Infrared Index
+          </Typography>
+          <Divider />
+          <PercentChart percent={80} />
         </CardContent>
       </Card>
     );
@@ -161,17 +153,20 @@ const MoistureDashboard: React.FC = () => {
         alignItems="center"
       >
         <Grid item xs={12} md={4}>
-          <MoisturePercentage />
+          <UVPercentage />
         </Grid>
-        <Grid item xs={12} md={8}>
-          <HistoryGraph />
+        <Grid item xs={12} md={4}>
+          <VisiblePercentage />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <InfraredPercentage />
         </Grid>
       </Grid>
       <Grid item xs={12} md={12}>
-        <PlantButtons />
+        <HistoryGraph />
       </Grid>
     </div>
   );
 };
 
-export default MoistureDashboard;
+export default LightDashboard;
