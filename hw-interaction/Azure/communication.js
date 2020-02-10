@@ -17,11 +17,17 @@ const Message = require("azure-iot-device").Message;
 const MqttProtocol = require("azure-iot-device-mqtt").Mqtt;
 const AmqpProtocol = require("azure-iot-device-amqp").Amqp;
 
+const bi = require("az-iot-bi");
+
 const MessageProcessor = require("./messageProcessor.js");
 
-var isMessageSendOn = true;
-var messageId = 0;
-var client, config, messageProcessor;
+let isMessageSendOn = true;
+let messageId = 0;
+let client, config, messageProcessor;
+
+module.exports = {
+  setupClient
+};
 
 function sendMessage() {
   if (!isMessageSendOn) {
@@ -30,14 +36,10 @@ function sendMessage() {
 
   messageId++;
 
-  messageProcessor.getMessage(messageId, (content, temperatureAlert) => {
-    var message = new Message(content.toString("utf-8"));
+  messageProcessor.getMessage(messageId, content => {
+    let message = new Message(content.toString("utf-8"));
     message.contentEncoding = "utf-8";
     message.contentType = "application/json";
-    message.properties.add(
-      "temperatureAlert",
-      temperatureAlert ? "true" : "false"
-    );
 
     console.log("[Device] Sending message: " + content);
 
@@ -98,7 +100,7 @@ function onStop(request, response) {
 function receiveMessageCallback(msg) {
   blinkLED();
 
-  var message = msg.getData().toString("utf-8");
+  let message = msg.getData().toString("utf-8");
 
   client.complete(msg, () => {
     console.log("Received message:\n\t" + message);
@@ -114,8 +116,8 @@ function blinkLED() {
 }
 
 function initClient(connectionStringParam, credentialPath) {
-  var connectionString = ConnectionString.parse(connectionStringParam);
-  var deviceId = connectionString.DeviceId;
+  const connectionString = ConnectionString.parse(connectionStringParam);
+  const deviceId = connectionString.DeviceId;
 
   // select transport
   if (config.transport === "amqp") {
@@ -132,7 +134,7 @@ function initClient(connectionStringParam, credentialPath) {
     // Read X.509 certificate and private key.
     // These files should be in the current folder and use the following naming convention:
     // [device name]-cert.pem and [device name]-key.pem, example: myraspberrypi-cert.pem
-    var connectionOptions = {
+    const connectionOptions = {
       cert: fs
         .readFileSync(path.join(credentialPath, deviceId + "-cert.pem"))
         .toString(),
@@ -147,7 +149,7 @@ function initClient(connectionStringParam, credentialPath) {
   }
 
   if (connectionString.GatewayHostName && config.iotEdgeRootCertFilePath) {
-    var deviceClientOptions = {
+    const deviceClientOptions = {
       sa: fs.readFileSync(config.iotEdgeRootCertFilePath, "utf-8")
     };
 
@@ -165,7 +167,7 @@ function initClient(connectionStringParam, credentialPath) {
   return client;
 }
 
-(function(connectionString) {
+function setupClient(connectionString, sensorData) {
   // read in configuration in config.json
   try {
     config = require("./config.json");
@@ -174,10 +176,46 @@ function initClient(connectionStringParam, credentialPath) {
     return;
   }
 
+  config = Object.assign(sensorData, config);
+
   // set up wiring
   wpi.setup("wpi");
   wpi.pinMode(config.LEDPin, wpi.OUTPUT);
   messageProcessor = new MessageProcessor(config);
+
+  try {
+    var firstTimeSetting = false;
+    if (
+      !fs.existsSync(
+        path.join(process.env.HOME, ".iot-hub-getting-started/biSettings.json")
+      )
+    ) {
+      firstTimeSetting = true;
+    }
+
+    bi.start();
+
+    var deviceInfo = { device: "RaspberryPi", language: "NodeJS" };
+
+    if (bi.isBIEnabled()) {
+      bi.trackEventWithoutInternalProperties("yes", deviceInfo);
+      bi.trackEvent("success", deviceInfo);
+    } else {
+      bi.disableRecordingClientIP();
+      bi.trackEventWithoutInternalProperties("no", deviceInfo);
+    }
+
+    if (firstTimeSetting) {
+      console.log(
+        "Telemetry setting will be remembered. If you would like to reset, please delete following file and run the sample again"
+      );
+      console.log("~/.iot-hub-getting-started/biSettings.json\n");
+    }
+
+    bi.flush();
+  } catch (e) {
+    //ignore
+  }
 
   // create a client
   // read out the connectionString from process environment
@@ -208,4 +246,4 @@ function initClient(connectionStringParam, credentialPath) {
     }, config.interval);
     sendMessage();
   });
-})(process.argv[2]);
+}
