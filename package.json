@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "version": "0.1.0",
+  "private": true,
+  "keywords": [],
+  "author": "",
+  "description": "",
+  "license": "ISC",
+  "scripts": {
+    "start": "npm-run-all build:* && nodemon server.js",
+    "build:server": "npm install",
+    "build:client": "cd cloudgarden-pwa && yarn && yarn build"
+  },
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "nodemon": "^2.0.2",
+    "npm-run-all": "^4.1.5",
+    "open": "^7.0.0"
+  }
+}
