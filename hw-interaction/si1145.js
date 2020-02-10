@@ -32,8 +32,8 @@ module.exports = class Si1145 {
   async initialize(callback) {
     this.loadConstants();
 
-    let id = await this.i2cRead(this.register.PARTID, 8);
-    if (id != this.device.id) {
+    let [id] = await this.i2cRead(this.register.PARTID, 1);
+    if (id !== this.device.id) {
       this.device.active = false;
       callback();
       return;
@@ -142,9 +142,8 @@ module.exports = class Si1145 {
           );
           // special case for UV -- needs to be divided by 100
           if (idx == 2) {
-            this.device.parameters[idx].value = Math.round(
-              this.device.parameters[idx].value / 100
-            );
+            this.device.parameters[idx].value =
+              Math.round(this.device.parameters[idx].value) / 100;
           }
           callback(null, this.device.parameters[idx].value);
         }
@@ -170,9 +169,8 @@ module.exports = class Si1145 {
 
       // special case for UV -- needs to be divided by 100
       if (idx == 2) {
-        this.device.parameters[idx].value = Math.round(
-          this.device.parameters[idx].value / 100
-        );
+        this.device.parameters[idx].value =
+          Math.round(this.device.parameters[idx].value) / 100;
       }
 
       return this.device.parameters[idx].value;
@@ -275,8 +273,8 @@ module.exports = class Si1145 {
   async writeParam(p, v) {
     this.board.i2cWriteReg(this.device.addr, this.register.COMMAND, 0x00);
     try {
-      let bytes = await this.i2cRead(this.register.RESPONSE, 8);
-      while (bytes[0] == 0x00) {
+      let [byte] = await this.i2cRead(this.register.RESPONSE, 1);
+      while (byte == 0x00) {
         this.board.i2cWriteReg(this.device.addr, this.register.PARAMWR, v);
         this.board.i2cWriteReg(
           this.device.addr,
@@ -284,7 +282,7 @@ module.exports = class Si1145 {
           p | this.command.PARAM_SET
         );
         await utils.sleep(2);
-        bytes = await this.i2cRead(this.register.RESPONSE, 8);
+        [byte] = await this.i2cRead(this.register.RESPONSE, 1);
       }
     } catch (e) {
       // to catch any Promise rejections

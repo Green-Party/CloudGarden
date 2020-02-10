@@ -17,8 +17,9 @@ board.on("ready", () => {
               console.log(`Visible: ${si1145.device.parameters[0].value}`);
               console.log(`IR: ${si1145.device.parameters[1].value}`);
               console.log(`UVIndex: ${si1145.device.parameters[2].value}`);
+            } else {
+              console.error(`Error: ${err}`);
             }
-            console.error(`Error: ${err}`);
           });
         } else {
           console.error("Error: Device not active.");
