@@ -47,21 +47,9 @@ function initialize() {
       }
     });
 
-    setInterval(() => {
-      if (si1145.deviceActive()) {
-        si1145.getDataFromDevice(err => {
-          if (!err) {
-            readings.visible = si1145.device.parameters[0].value;
-            readings.ir = si1145.device.parameters[1].value;
-            readings.uvIdx = si1145.device.parameters[2].value;
-          }
-        });
-      }
-    }, 500);
+    const thermoSensors = new ThermoSensors();
 
-    let thermoSensors = new ThermoSensors();
-
-    let soilHumiditySensors = new SoilHumiditySensors();
+    const soilHumiditySensors = new SoilHumiditySensors();
 
     // eTape water level sensor
     waterLevelRuler = new five.Sensor({
@@ -75,41 +63,62 @@ function initialize() {
       console.log(`Water level reading: ${reading}`);
     });
 
-    // switch based water level sensor
-    // NO switch
-    // output HIGH when closed, indicates sufficient liquid
-    // output LOW when open, indicates low liquid
-    waterLevelSwitch = new five.Switch(7);
-    waterLevelSwitch.on("open", () => {
-      controls.pumpsEnabled = false;
-    });
-
-    waterLevelSwitch.on("close", () => {
-      controls.pumpsEnabled = true;
-    });
-
     // pumps - controlled through relays at pins 3,4,5
-    // relays configured to be NO
-    controls.pumps = new Pumps();
+    controls.pumps = new Pumps({
+      enabled: false
+    });
+
+    const waterLevelSwitch = new waterLevelSwitch({
+      slave: controls.pumps
+    });
 
     // grow light - controlled through relay at pin 6
-    // relay configured to be NO
     controls.light = new Light({
-      pin: 6, 
-      type: "NC", 
+      pin: 6,
+      type: "NC",
       number: 1
     });
-    
+
+    configureLightTimeInterval();
+
+    setInterval(() => {
+      readings.temp = thermoSensors.getReadings();
+      readings.soilHumidity = soilHumiditySensors.getReadings();
+      if (si1145.deviceActive()) {
+        si1145.getDataFromDevice(err => {
+          if (!err) {
+            readings.visible = si1145.device.parameters[0].value;
+            readings.ir = si1145.device.parameters[1].value;
+            readings.uvIdx = si1145.device.parameters[2].value;
+          }
+        });
+      }
+    }, 1000);
   });
+}
+
+// configure to run for 15 mins at the beginning of every hour
+function configureLightTimeInterval() {
+  let minutes = Date.now().getMinutes();
+  if (minutes > 15) {
+    // do something
+    controls.light.turnOff();
+    setTimeout(configureLightTimeInterval, Math.max(0, (45 - minutes) * 60000));
+  } else {
+    // do something
+    controls.light.turnOn();
+    setTimeout(configureLightTimeInterval, Math.max(0, (15 - minutes) * 60000));
+  }
 }
 
 async function runPump(idx) {
   if (controls.pumpsEnabled) {
-    controls.pumps[idx].on();
+    controls.pumps[idx].turnOn();
     await utils.sleep(4000);
-    controls.pumps[idx].off();
+    controls.pumps[idx].turnOff();
   }
 }
+
 function toggleLight() {
-  controls.light.toggle();
+  controls.light.control.toggle();
 }

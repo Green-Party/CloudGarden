@@ -1,3 +1,3 @@
-import { Relay } from "./relay"
+const Relay = require("./relay");
 
-class Pump extends Relay {}
+module.exports = class Pump extends Relay {};

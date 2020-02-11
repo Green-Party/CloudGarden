@@ -85,7 +85,6 @@
 //#include <SPI.h>
 //#include <Ethernet.h>
 
-
 /*
  * OPTION B: Configure for a board or shield using an ENC28J60-based Ethernet controller,
  * uncomment out the UIPEthernet include below.
@@ -94,7 +93,6 @@
  * from: https://github.com/ntruchsess/arduino_uip
  */
 //#include <UIPEthernet.h>
-
 
 /*
  * OPTION C: Configure for Arduino Yun
@@ -164,7 +162,7 @@ AnalogOutputFirmata analogOutput;
 #include <ServoFirmata.h>
 ServoFirmata servo;
 // ServoFirmata depends on AnalogOutputFirmata
-#if defined ServoFirmata_h && ! defined AnalogOutputFirmata_h
+#if defined ServoFirmata_h && !defined AnalogOutputFirmata_h
 #error AnalogOutputFirmata must be included to use ServoFirmata
 #endif
 
@@ -250,16 +248,25 @@ void systemResetCallback()
 
   // pins with analog capability default to analog input
   // otherwise, pins default to digital output
-  for (byte i = 0; i < TOTAL_PINS; i++) {
-    if (IS_PIN_ANALOG(i)) {
+  for (byte i = 0; i < TOTAL_PINS; i++)
+  {
+    if (IS_PIN_ANALOG(i))
+    {
 #ifdef AnalogInputFirmata_h
       // turns off pull-up, configures everything
       Firmata.setPinMode(i, PIN_MODE_ANALOG);
 #endif
-    } else if (IS_PIN_DIGITAL(i)) {
+    }
+    else if (IS_PIN_DIGITAL(i))
+    {
 #ifdef DigitalOutputFirmata_h
       // sets the output to 0, configures portConfigInputs
+
       Firmata.setPinMode(i, OUTPUT);
+      // if (i == 3 || i == 4 || i == 5 || i == 6)
+      // {
+      //   digitalWrite(PIN_TO_DIGITAL(i), HIGH);
+      // }
 #endif
     }
   }
@@ -346,24 +353,25 @@ void setup()
   // No need to ignore pin 10 on MEGA with ENC28J60, as here pin 53 should be connected to SS:
 #ifdef NETWORK_FIRMATA
 
-  #ifndef _YUN_CLIENT_H_
+#ifndef _YUN_CLIENT_H_
   // ignore SPI and pin 4 that is SS for SD-Card on Ethernet-shield
-  for (byte i = 0; i < TOTAL_PINS; i++) {
-    if (IS_PIN_SPI(i)
-        || 4 == i  // SD Card on Ethernet shield uses pin 4 for SS
-        || 10 == i // Ethernet-shield uses pin 10 for SS
-       ) {
+  for (byte i = 0; i < TOTAL_PINS; i++)
+  {
+    if (IS_PIN_SPI(i) || 4 == i // SD Card on Ethernet shield uses pin 4 for SS
+        || 10 == i              // Ethernet-shield uses pin 10 for SS
+    )
+    {
       Firmata.setPinMode(i, PIN_MODE_IGNORE);
     }
   }
   //  pinMode(PIN_TO_DIGITAL(53), OUTPUT); configure hardware-SS as output on MEGA
-  pinMode(PIN_TO_DIGITAL(4), OUTPUT); // switch off SD-card bypassing Firmata
+  pinMode(PIN_TO_DIGITAL(4), OUTPUT);    // switch off SD-card bypassing Firmata
   digitalWrite(PIN_TO_DIGITAL(4), HIGH); // SS is active low;
-  #endif
+#endif
 
-  #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-    pinMode(PIN_TO_DIGITAL(53), OUTPUT); // configure hardware SS as output on MEGA
-  #endif
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+  pinMode(PIN_TO_DIGITAL(53), OUTPUT); // configure hardware SS as output on MEGA
+#endif
 
   // start up Network Firmata:
   Firmata.begin(stream);
@@ -374,7 +382,7 @@ void setup()
   // start up the default Firmata using Serial interface:
   Firmata.begin(57600);
 #endif
-  Firmata.parse(SYSTEM_RESET);  // reset to default config
+  Firmata.parse(SYSTEM_RESET); // reset to default config
 }
 
 /*==============================================================================
@@ -390,15 +398,19 @@ void loop()
 
   /* STREAMREAD - processing incoming message as soon as possible, while still
    * checking digital inputs.  */
-  while (Firmata.available()) {
+  while (Firmata.available())
+  {
     Firmata.processInput();
 #ifdef FirmataScheduler_h
-    if (!Firmata.isParsingMessage()) {
+    if (!Firmata.isParsingMessage())
+    {
       goto runtasks;
     }
   }
-  if (!Firmata.isParsingMessage()) {
-runtasks: scheduler.runTasks();
+  if (!Firmata.isParsingMessage())
+  {
+  runtasks:
+    scheduler.runTasks();
 #endif
   }
 
@@ -407,7 +419,8 @@ runtasks: scheduler.runTasks();
    * trigger the buffer to dump. */
 
 #ifdef FirmataReporting_h
-  if (reporting.elapsed()) {
+  if (reporting.elapsed())
+  {
 #ifdef AnalogInputFirmata_h
     /* ANALOGREAD - do all analogReads() at the configured sampling interval */
     analogInput.report();
@@ -432,9 +445,10 @@ runtasks: scheduler.runTasks();
   serial.update();
 #endif
 
-#if defined NETWORK_FIRMATA && !defined local_ip &&!defined _YUN_CLIENT_H_
+#if defined NETWORK_FIRMATA && !defined local_ip && !defined _YUN_CLIENT_H_
   // only necessary when using DHCP, ensures local IP is updated appropriately if it changes
-  if (Ethernet.maintain()) {
+  if (Ethernet.maintain())
+  {
     stream.maintain(Ethernet.localIP());
   }
 #endif

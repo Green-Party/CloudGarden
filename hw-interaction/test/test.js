@@ -10,20 +10,22 @@ let board = new five.Board();
 board.on("ready", () => {
   // NC.on() will send a high control signal
   // NO.on() will send a low control signal
+
+  // board.digitalWrite(3, 1);
   let pump = new five.Relay({
     pin: 3,
-    type: "NC"
+    type: "NO"
   });
-  pump.off();
+  // pump.off();
 
   let led = new five.Relay({
     pin: 4,
-    type: "NC"
+    type: "NO"
   });
-  led.off();
+  // led.on();
 
   let button = new five.Button({
-    pin: 7
+    pin: 8
   });
 
   //   let led13 = new five.Led(13);

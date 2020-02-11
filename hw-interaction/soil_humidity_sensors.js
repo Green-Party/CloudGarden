@@ -9,7 +9,16 @@ module.exports = class SoilHumiditySensors {
     }
 
     this.sensors = pins.map((pin, idx, arr) => {
-      return new SoilHumiditySensor(pin, idx + 1);
+      return new SoilHumiditySensor({
+        pin: pin,
+        number: idx + 1
+      });
+    });
+  }
+
+  getReadings() {
+    return this.sensors.map(sensor => {
+      return sensor.getReading();
     });
   }
 };

@@ -13,7 +13,16 @@ module.exports = class ThermoSensors {
     }
 
     this.sensors = addresses.map((address, idx, arr) => {
-      return new ThermoSensor(address, idx + 1);
+      return new ThermoSensor({
+        address: address,
+        number: idx + 1
+      });
+    });
+  }
+
+  getReadings() {
+    return this.sensors.map(sensor => {
+      return sensor.getReading();
     });
   }
 };

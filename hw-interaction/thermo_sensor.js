@@ -1,27 +1,30 @@
 const five = require("johnny-five");
 
 module.exports = class ThermoSensor {
-  constructor(address, number, options) {
-    const DEFAULT_CONTROLLER = "DS18B20";
-    const DEFAULT_PIN = 22;
-    const DEFAULT_FREQ = 1000;
+  constructor(address, options) {
+    const DEFAULT_NUMBER = 1;
 
-    this.number = number;
+    const DEFAULT_PIN = 22;
+    const DEFAULT_CONTROLLER = "DS18B20";
+    const DEFAULT_FREQ = 1000;
 
     let opts = options || {};
 
+    let pin = opts.hasOwnProperty("pin") ? opts.pin : DEFAULT_PIN;
     let controller = opts.hasOwnProperty("controller")
       ? opts.controller
       : DEFAULT_CONTROLLER;
-    let pin = opts.hasOwnProperty("pin") ? opts.pin : DEFAULT_PIN;
     let freq = opts.hasOwnProperty("freq") ? opts.freq : DEFAULT_FREQ;
 
     this.sensor = new five.Thermometer({
       address: address,
-      controller: controller,
       pin: pin,
+      controller: controller,
       freq: freq
     });
+
+    this.reading = NaN;
+    this.number = opts.hasOwnProperty("number") ? opts.number : DEFAULT_NUMBER;
 
     // available events are
     //"data"  : emitted on freq interval
@@ -33,8 +36,17 @@ module.exports = class ThermoSensor {
   defaultEventCallback() {
     let address = this.sensor.address;
     let celsius = this.sensor.celsius;
+    this.reading = celsius;
     console.log(`Thermometer number: ${this.number.toString(16)}`);
     console.log(`Thermometer data at address: 0x${address.toString(16)}`);
-    console.log("celsius: %d", celsius);
+    console.log("Celsius: %d", celsius);
+  }
+
+  getReading() {
+    return this.reading;
+  }
+
+  getNumber() {
+    return this.number;
   }
 };

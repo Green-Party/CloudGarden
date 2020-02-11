@@ -12,3 +12,17 @@ module.exports = {
 function sleep(millis) {
   return new Promise(resolve => setTimeout(resolve, millis));
 }
+
+function setExactInterval(interval, callback) {
+  var expected = Date.now() + interval;
+  setTimeout(step, interval);
+  function step() {
+    var dt = Date.now() - expected;
+    if (dt > interval) {
+      // something really bad happened
+    }
+    callback();
+    expected += interval;
+    setTimeout(step, Math.max(0, interval - dt));
+  }
+}
