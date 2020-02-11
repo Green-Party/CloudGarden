@@ -10,6 +10,7 @@ const ThermoSensors = require("./thermo_sensors");
 const SoilHumiditySensors = require("./soil_humidity_sensors");
 const Pumps = require("./pumps");
 const Light = require("./light");
+const WaterLevelSwitch = require("./water_level_switch");
 
 module.exports = {
   initialize,
@@ -68,7 +69,7 @@ function initialize() {
       enabled: false
     });
 
-    const waterLevelSwitch = new waterLevelSwitch({
+    const waterLevelSwitch = new WaterLevelSwitch({
       slave: controls.pumps
     });
 
