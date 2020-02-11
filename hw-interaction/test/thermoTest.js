@@ -1,8 +1,8 @@
 const five = require("johnny-five");
-const thermo = require("../thermo");
+const ThermoSensors = require("../thermo_sensors");
 
 let board = new five.Board();
 
 board.on("ready", () => {
-  let thermoSensors = thermo.initialize();
+  let thermoSensors = new ThermoSensors();
 });
