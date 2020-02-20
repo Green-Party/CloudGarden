@@ -1,17 +1,18 @@
 const Light = require("./light");
 
 module.exports = class Lights {
-  constructor(pins, type) {
+  /**
+   *
+   * @param {*} options pins, type
+   */
+  constructor(options) {
     const DEFAULT_PINS = [6];
     const DEFAULT_TYPE = "NO";
 
-    if (!pins) {
-      pins = DEFAULT_PINS;
-    }
+    let opts = options || {};
 
-    if (!type) {
-      type = DEFAULT_TYPE;
-    }
+    let pins = opts.hasOwnProperty("pins") ? opts.pins : DEFAULT_PINS;
+    let type = opts.hasOwnProperty("type") ? opts.type : DEFAULT_TYPE;
 
     this.controls = pins.map((pin, idx, arr) => {
       return new Light({
@@ -23,10 +24,14 @@ module.exports = class Lights {
   }
 
   turnOn(idx) {
-    this.controls[idx].turnOn();
+    if (idx < this.controls.length) {
+      this.controls[idx].turnOn();
+    }
   }
 
   turnOff(idx) {
-    this.controls[idx].turnOff();
+    if (idx < this.controls.length) {
+      this.controls[idx].turnOff();
+    }
   }
 };

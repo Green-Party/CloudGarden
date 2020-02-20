@@ -1,4 +1,4 @@
-const Si1145 = require("./si1145");
+const Si1145 = require("../si1145");
 const five = require("johnny-five");
 
 let board = new five.Board();

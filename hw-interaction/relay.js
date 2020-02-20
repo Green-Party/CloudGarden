@@ -3,7 +3,7 @@ const five = require("johnny-five");
 module.exports = class Relay {
   /**
    *
-   * @param {*} options pin, type, number, enabled
+   * @param {*} options pin, type, number
    */
   constructor(options) {
     const DEFAULT_NUMBER = 1;
@@ -14,9 +14,8 @@ module.exports = class Relay {
 
     let pin = opts.hasOwnProperty("pin") ? opts.pin : DEFAULT_PIN;
     let type = opts.hasOwnProperty("type") ? opts.type : DEFAULT_TYPE;
-
     this.number = opts.hasOwnProperty("number") ? opts.number : DEFAULT_NUMBER;
-    this.enabled = opts.hasOwnProperty("enabled") ? opts.enabled : true;
+
     this.control = new five.Relay({
       pin: pin,
       type: type
@@ -52,13 +51,5 @@ module.exports = class Relay {
       default:
         console.log(`Unsupported relay type: ${relay.type}`);
     }
-  }
-
-  enable() {
-    this.enabled = true;
-  }
-
-  disable() {
-    this.enabled = false;
   }
 };

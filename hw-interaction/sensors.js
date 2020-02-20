@@ -10,6 +10,7 @@ const ThermoSensors = require("./thermo_sensors");
 const SoilHumiditySensors = require("./soil_humidity_sensors");
 const Pumps = require("./pumps");
 const Light = require("./light");
+const WaterLevelRuler = require("./water_level_ruler");
 const WaterLevelSwitch = require("./water_level_switch");
 
 module.exports = {
@@ -22,8 +23,9 @@ let readings = {
   visible: 0,
   ir: 0,
   uvIdx: 0,
+  temp: [0, 0, 0],
   soilHumidity: [0, 0, 0],
-  temp: [0, 0, 0]
+  waterLevel: 0
 };
 
 let controls = {
@@ -41,10 +43,33 @@ function initialize() {
 
   board.on("ready", async function() {
     // light sensor
-    // code adapted from Arduino Adafruit_SI1145_Library library
     const si1145 = new Si1145({
-      opts: {
-        board: this
+      board: board
+    });
+
+    si1145.initialize(() => {
+      if (si1145.deviceActive()) {
+        setInterval(() => {
+          if (si1145.deviceActive()) {
+            console.log("Getting data...");
+            si1145.getDataFromDevice(err => {
+              if (!err) {
+                console.log(`Visible: ${si1145.device.parameters[0].value}`);
+                console.log(`IR: ${si1145.device.parameters[1].value}`);
+                console.log(`UVIndex: ${si1145.device.parameters[2].value}`);
+                readings.visible = si1145.device.parameters[0].value;
+                readings.ir = si1145.device.parameters[1].value;
+                readings.uvIdx = si1145.device.parameters[2].value;
+              } else {
+                console.error(`Error: ${err}`);
+              }
+            });
+          } else {
+            console.error("Error: Device not active.");
+          }
+        }, 1000);
+      } else {
+        console.error("Error: SI1145 device not found.");
       }
     });
 
@@ -53,16 +78,7 @@ function initialize() {
     const soilHumiditySensors = new SoilHumiditySensors();
 
     // eTape water level sensor
-    waterLevelRuler = new five.Sensor({
-      pin: "A3",
-      freq: 500
-      // threshold: TBD,
-    });
-
-    waterLevelRuler.on("data", () => {
-      let reading = this.raw;
-      console.log(`Water level reading: ${reading}`);
-    });
+    const waterLevelRuler = new WaterLevelRuler();
 
     // pumps - controlled through relays at pins 3,4,5
     controls.pumps = new Pumps({
@@ -85,15 +101,7 @@ function initialize() {
     setInterval(() => {
       readings.temp = thermoSensors.getReadings();
       readings.soilHumidity = soilHumiditySensors.getReadings();
-      if (si1145.deviceActive()) {
-        si1145.getDataFromDevice(err => {
-          if (!err) {
-            readings.visible = si1145.device.parameters[0].value;
-            readings.ir = si1145.device.parameters[1].value;
-            readings.uvIdx = si1145.device.parameters[2].value;
-          }
-        });
-      }
+      readings.waterLevel = waterLevelRuler.getReading();
     }, 1000);
   });
 }
@@ -110,16 +118,4 @@ function configureLightTimeInterval() {
     controls.light.turnOn();
     setTimeout(configureLightTimeInterval, Math.max(0, (15 - minutes) * 60000));
   }
-}
-
-async function runPump(idx) {
-  if (controls.pumpsEnabled) {
-    controls.pumps[idx].turnOn();
-    await utils.sleep(4000);
-    controls.pumps[idx].turnOff();
-  }
-}
-
-function toggleLight() {
-  controls.light.control.toggle();
 }

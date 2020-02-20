@@ -1,18 +1,12 @@
 const AnalogSensor = require("./analog_sensor");
 
-module.exports = class SoilHumiditySensor extends AnalogSensor {
+module.exports = class WaterLevelRuler extends AnalogSensor {
   /**
    *
-   * @param {*} options pin, freq, threshold, number
+   * @param {*} options pin, freq, threshold
    */
   constructor(options) {
-    const DEFAULT_NUMBER = 1;
-
     super(options);
-
-    let opts = options || {};
-
-    this.number = opts.hasOwnProperty("number") ? opts.number : DEFAULT_NUMBER;
 
     // emits two events:
     // "change": occurs when change in reading is >= threshold
@@ -23,8 +17,7 @@ module.exports = class SoilHumiditySensor extends AnalogSensor {
   dataCallback() {
     let reading = this._convertReading(this.sensor.raw);
     this.reading = reading;
-    console.log(`Soil sensor: ${this.number}`);
-    console.log(`Reading: ${reading}`);
+    console.log(`Water Level Reading: ${reading}`);
   }
 
   _convertReading(reading) {

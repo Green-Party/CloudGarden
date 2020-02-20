@@ -1,5 +1,4 @@
 const Pump = require("./pump");
-const WaterLevelSwitch = require("./water_level_switch");
 
 module.exports = class Pumps {
   /**
@@ -11,10 +10,11 @@ module.exports = class Pumps {
     const DEFAULT_TYPE = "NO";
 
     let opts = options || {};
+
     let pins = opts.hasOwnProperty("pins") ? opts.pins : DEFAULT_PINS;
     let type = opts.hasOwnProperty("type") ? opts.type : DEFAULT_TYPE;
-
     this.enabled = opts.hasOwnProperty("enabled") ? opts.enabled : true;
+
     this.controls = pins.map((pin, idx, arr) => {
       return new Pump({
         pin: pin,
@@ -23,16 +23,24 @@ module.exports = class Pumps {
         enabled: enabled
       });
     });
+
+    // this.turnOn = idx => {
+    //   if (this.enabled && idx < this.controls.length) {
+    //     this.controls[idx].turnOn();
+    //   }
+    // };
   }
 
   turnOn(idx) {
-    if (this.enabled) {
+    if (this.enabled && idx < this.controls.length) {
       this.controls[idx].turnOn();
     }
   }
 
   turnOff(idx) {
-    this.controls[idx].turnOff();
+    if (idx < this.controls.length) {
+      this.controls[idx].turnOff();
+    }
   }
 
   enable() {
@@ -47,5 +55,9 @@ module.exports = class Pumps {
     this.controls.map(pump => {
       pump.disable();
     });
+  }
+
+  isEnabled() {
+    return this.enabled;
   }
 };
