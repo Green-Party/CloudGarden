@@ -1,4 +1,3 @@
-/** @jsx jsx */
 /**
  * Creation Date: January 28, 2020
  * Author: Gillian Pierce
@@ -6,8 +5,6 @@
  */
 
 import React from "react";
-import { Layer } from "sancho";
-import { jsx } from "@emotion/core";
 import "./Dashboard.css";
 import Tab from "./components/Tab";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
@@ -15,6 +12,7 @@ import MoistureDashboard from "./components/moisture/MoistureDashboard";
 import PlantSpecific from "./components/moisture/PlantSpecific";
 import LightDashboard from "./components/light/LightDashboard";
 import TempDashboard from "./components/temp/TempDashboard";
+import { Paper } from "@material-ui/core";
 
 const Home: React.FC = () => {
   const match = useRouteMatch();
@@ -23,14 +21,14 @@ const Home: React.FC = () => {
   //(only moisture is implemented currently)
   return (
     <div className="column-container">
-      <Layer elevation="lg" className="tabs">
+      <Paper elevation={3} className="tabs">
         <div className="row-container">
           <Tab target={`${match.url}/moisture`} label="moisture" />
           <Tab target={`${match.url}/temp`} label="temperature" />
           <Tab target={`${match.url}/light`} label="uv/light" />
           <Tab target={`${match.url}/water`} label="water" />
         </div>
-      </Layer>
+      </Paper>
       <Switch>
         <Route exact path={`${match.path}/moisture`}>
           <MoistureDashboard />

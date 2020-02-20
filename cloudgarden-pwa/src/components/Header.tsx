@@ -5,7 +5,8 @@
  */
 
 import React from "react";
-import { IconButton, IconMenu } from "sancho";
+import MenuIcon from "@material-ui/icons/Menu";
+import { IconButton } from "@material-ui/core";
 import "../Header.css";
 import Logo from "./Logo";
 interface HeaderProps {
@@ -16,15 +17,9 @@ class Header extends React.Component<HeaderProps> {
     return (
       <div className="navigation">
         <div className="item">
-          <IconButton
-            variant="ghost"
-            intent="primary"
-            icon={<IconMenu />}
-            label="Menu"
-            onPress={() => this.props.onMenuClick(true)}
-            color="white"
-            size="lg"
-          />
+          <IconButton onClick={() => this.props.onMenuClick(true)}>
+            <MenuIcon htmlColor="white" />
+          </IconButton>
         </div>
         <div className="item logo">
           <Logo />

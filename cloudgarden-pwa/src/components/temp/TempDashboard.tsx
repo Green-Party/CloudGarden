@@ -5,7 +5,6 @@
  */
 
 import React, { useState, Fragment } from "react";
-import { Layer, IconChevronRight } from "sancho";
 import "../../Dashboard.css";
 import PercentChart from "../PercentChart";
 import HistoryChart from "../HistoryChart";
