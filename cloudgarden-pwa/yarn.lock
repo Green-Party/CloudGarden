@@ -3094,6 +3094,11 @@ async@^2.6.2:
   dependencies:
     lodash "^4.17.14"
 
+async@^3.1.0:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/async/-/async-3.1.1.tgz#dd3542db03de837979c9ebbca64ca01b06dc98df"
+  integrity sha512-X5Dj8hK1pJNC2Wzo2Rcp9FBVdJMGRR/S7V+lH46s8GVFhtbo5O4Le5GECCF/8PISVdkUA6mMPvgz7qTTD1rf1g==
+
 async@~0.2.6:
   version "0.2.10"
   resolved "https://registry.yarnpkg.com/async/-/async-0.2.10.tgz#b6bbe0b0674b9d719708ca38de8c237cb526c3d1"
@@ -3139,6 +3144,51 @@ axobject-query@^2.0.2:
   dependencies:
     "@babel/runtime" "^7.7.4"
     "@babel/runtime-corejs3" "^7.7.4"
+
+azure-iot-amqp-base@2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/azure-iot-amqp-base/-/azure-iot-amqp-base-2.3.2.tgz#004aefecb4d8c95623e00600bce716a45093bda7"
+  integrity sha512-4n17esOnRQn7jhqEo4qDqkV8yPiFSb7lPGIscEAdL5tiemGhtEs/Hn+WC9t6RBZVj0sG6VL0Vip71m6P/5ZJSg==
+  dependencies:
+    async "^2.6.2"
+    azure-iot-common "1.11.2"
+    debug "^4.1.1"
+    lodash.merge "^4.6.1"
+    machina "^4.0.2"
+    rhea "^1.0.15"
+    uuid "^3.3.2"
+    ws "^6.0.0"
+
+azure-iot-common@1.11.2:
+  version "1.11.2"
+  resolved "https://registry.yarnpkg.com/azure-iot-common/-/azure-iot-common-1.11.2.tgz#8a333db30c5addf66494e34ace96cdb6e1f07bad"
+  integrity sha512-PwCug/JvKHWXdbU3/mqN5oTicjhBHRBcbe+4H3rBYt0wilOEZC4N/KTNRX/PQGECIpLzQRSyvK6MNpqQL6bIuQ==
+  dependencies:
+    debug "^4.1.1"
+    getos "^3.1.1"
+
+azure-iot-http-base@1.10.2:
+  version "1.10.2"
+  resolved "https://registry.yarnpkg.com/azure-iot-http-base/-/azure-iot-http-base-1.10.2.tgz#5b5988e716a926ec5c15308873039a622febc2af"
+  integrity sha512-0wTa2HTmSFm3hghCv4pI0fadDWl0xs4HbexM+IUwN8wgGFiEPBKo73DAj1hCBytNyVbgA0upOfoh6iw7LoLcEA==
+  dependencies:
+    azure-iot-common "1.11.2"
+    debug "^4.1.1"
+    uuid "^3.3.2"
+
+azure-iothub@^1.11.2:
+  version "1.11.2"
+  resolved "https://registry.yarnpkg.com/azure-iothub/-/azure-iothub-1.11.2.tgz#acdb3bb95851fadfebb73a47843b9a360c242396"
+  integrity sha512-P9InJEBYaavkjagqlCQjsAoUaDS+eEr6UJnhQR+MzStb5olFj4c/KJjoMaP+4pIm6SUEgA9DyLRBtAmpJq9JAA==
+  dependencies:
+    async "^2.6.2"
+    azure-iot-amqp-base "2.3.2"
+    azure-iot-common "1.11.2"
+    azure-iot-http-base "1.10.2"
+    debug "^4.1.1"
+    lodash "^4.17.15"
+    machina "^4.0.2"
+    rhea "^1.0.15"
 
 babel-code-frame@^6.22.0, babel-code-frame@^6.26.0:
   version "6.26.0"
@@ -5744,6 +5794,13 @@ dateformat@^3.0.3:
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
   integrity sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==
 
+"debug@0.8.0 - 3.5.0", debug@^3.0.0, debug@^3.1.0, debug@^3.1.1, debug@^3.2.5:
+  version "3.2.6"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-3.2.6.tgz#e83d17de16d8a7efb7717edbe5fb10135eee629b"
+  integrity sha512-mel+jf7nrtEl5Pn1Qx46zARXKDpBbvzezse7p7LqINmdoIk8PYP5SySaxEmYv6TZ0JyEKA1hsCId6DIhgITtWQ==
+  dependencies:
+    ms "^2.1.1"
+
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.8, debug@^2.6.9:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -5757,13 +5814,6 @@ debug@3.1.0:
   integrity sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==
   dependencies:
     ms "2.0.0"
-
-debug@^3.0.0, debug@^3.1.0, debug@^3.1.1, debug@^3.2.5:
-  version "3.2.6"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-3.2.6.tgz#e83d17de16d8a7efb7717edbe5fb10135eee629b"
-  integrity sha512-mel+jf7nrtEl5Pn1Qx46zARXKDpBbvzezse7p7LqINmdoIk8PYP5SySaxEmYv6TZ0JyEKA1hsCId6DIhgITtWQ==
-  dependencies:
-    ms "^2.1.1"
 
 debug@^4.0.1, debug@^4.1.0, debug@^4.1.1:
   version "4.1.1"
@@ -7273,6 +7323,13 @@ get-value@^2.0.3, get-value@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/get-value/-/get-value-2.0.6.tgz#dc15ca1c672387ca76bd37ac0a395ba2042a2c28"
   integrity sha1-3BXKHGcjh8p2vTesCjlbogQqLCg=
+
+getos@^3.1.1:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/getos/-/getos-3.1.4.tgz#29cdf240ed10a70c049add7b6f8cb08c81876faf"
+  integrity sha512-UORPzguEB/7UG5hqiZai8f0vQ7hzynMQyJLxStoQ8dPGAcmgsfXOPA4iE/fGtweHYkK+z4zc9V0g+CIFRf5HYw==
+  dependencies:
+    async "^3.1.0"
 
 getpass@^0.1.1:
   version "0.1.7"
@@ -9573,6 +9630,11 @@ lodash.memoize@^4.1.2:
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
   integrity sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=
 
+lodash.merge@^4.6.1:
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
+  integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
+
 lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
@@ -9654,6 +9716,13 @@ lru-cache@^5.1.1:
   integrity sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==
   dependencies:
     yallist "^3.0.2"
+
+machina@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/machina/-/machina-4.0.2.tgz#7ba13ea317fafc5c64cde75337fad168e1ac3937"
+  integrity sha512-OOlFrW1rd783S6tF36v5Ie/TM64gfvSl9kYLWL2cPA31J71HHWW3XrgSe1BZSFAPkh8532CMJMLv/s9L2aopiA==
+  dependencies:
+    lodash "^4.17.5"
 
 make-dir@^1.0.0:
   version "1.3.0"
@@ -13246,6 +13315,13 @@ rgba-regex@^1.0.0:
   resolved "https://registry.yarnpkg.com/rgba-regex/-/rgba-regex-1.0.0.tgz#43374e2e2ca0968b0ef1523460b7d730ff22eeb3"
   integrity sha1-QzdOLiyglosO8VI0YLfXMP8i7rM=
 
+rhea@^1.0.15:
+  version "1.0.19"
+  resolved "https://registry.yarnpkg.com/rhea/-/rhea-1.0.19.tgz#ea3a4e1bb22f81c8e8b066a6d5978e73f121bb63"
+  integrity sha512-52fctFB6zZ+n2nMo1HvreC4HzV8FwSH7zZyTdMXxNaDMDWeVbZo42cjGeJh8+BZMC1+r7YUZrd3p4cNVAfJf1Q==
+  dependencies:
+    debug "0.8.0 - 3.5.0"
+
 right-align@^0.1.1:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/right-align/-/right-align-0.1.3.tgz#61339b722fe6a3515689210d24e14c96148613ef"
@@ -15516,7 +15592,7 @@ ws@^5.2.0:
   dependencies:
     async-limiter "~1.0.0"
 
-ws@^6.1.2, ws@^6.2.1:
+ws@^6.0.0, ws@^6.1.2, ws@^6.2.1:
   version "6.2.1"
   resolved "https://registry.yarnpkg.com/ws/-/ws-6.2.1.tgz#442fdf0a47ed64f59b6a5d8ff130f4748ed524fb"
   integrity sha512-GIyAXC2cB7LjvpgMt9EKS2ldqr0MTrORaleiOno6TweZ6r3TKtoFQWay/2PceJ3RuBasOHzXNn5Lrw1X0bEjqA==

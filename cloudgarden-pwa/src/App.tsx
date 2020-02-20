@@ -26,6 +26,9 @@ import "./Header.css";
 import "./Dashboard.css";
 import Header from "./components/Header";
 const Home = lazy(() => import("./Home"));
+const Controls = lazy(() =>
+  import("./components/control/TestControlDashboard")
+);
 
 const App: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -38,8 +41,11 @@ const App: React.FC = () => {
             <Route path="/dashboard">
               <Home />
             </Route>
-            <Route path="/">
+            <Route path="/" exact>
               <Redirect to="/dashboard" />
+            </Route>
+            <Route path="/controls" exact>
+              <Controls />
             </Route>
           </Switch>
         </Suspense>

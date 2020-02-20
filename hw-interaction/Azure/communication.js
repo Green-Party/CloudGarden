@@ -14,7 +14,7 @@ const wpi = require("node-wiring-pi");
 const Client = require("azure-iot-device").Client;
 const ConnectionString = require("azure-iot-device").ConnectionString;
 const Message = require("azure-iot-device").Message;
-const MqttProtocol = require("azure-iot-device-mqtt").Mqtt;
+const MqttProtocol = require("azure-iot-device-mqtt").Mqtt; //.MqttWs; //for websockets
 const AmqpProtocol = require("azure-iot-device-amqp").Amqp;
 
 const bi = require("az-iot-bi");
@@ -24,10 +24,6 @@ const MessageProcessor = require("./messageProcessor.js");
 let isMessageSendOn = true;
 let messageId = 0;
 let client, config, messageProcessor;
-
-module.exports = {
-  setupClient
-};
 
 function sendMessage() {
   if (!isMessageSendOn) {
@@ -223,6 +219,9 @@ function setupClient(connectionString, sensorData) {
     connectionString || process.env["AzureIoTHubDeviceConnectionString"];
   client = initClient(connectionString, config);
 
+  // Set up the handler for the SetBlinkLight direct method call.
+  client.onDeviceMethod("SetBlinkLight", onBlinkLight);
+
   client.open(err => {
     if (err) {
       console.error("[IoT Hub Client] Connect error:\n\t" + err.message);
@@ -244,6 +243,54 @@ function setupClient(connectionString, sensorData) {
         config.interval = twin.properties.desired.interval || config.interval;
       });
     }, config.interval);
-    sendMessage();
+    // sendMessage();
   });
 }
+
+// Function to handle the SetBlinkLight direct method call from IoT hub
+function onBlinkLight(request, response) {
+  // Function to send a direct method reponse to your IoT hub.
+  function directMethodResponse(err) {
+    if (err) {
+      console.error(
+        chalk.red(
+          "An error ocurred when sending a method response:\n" + err.toString()
+        )
+      );
+    } else {
+      console.log(
+        chalk.green(
+          "Response to method '" + request.methodName + "' sent successfully."
+        )
+      );
+    }
+  }
+
+  console.log(chalk.green("Direct method payload received:"));
+  console.log(chalk.green(request.payload));
+
+  // Check that a numeric value was passed as a parameter
+  if (isNaN(request.payload)) {
+    console.log(chalk.red("Invalid interval response received in payload"));
+    // Report failure back to your hub.
+    response.send(
+      400,
+      "Invalid direct method parameter: " + request.payload,
+      directMethodResponse
+    );
+  } else {
+    // Reset the interval timer
+    blinkLED();
+
+    // Report success back to your hub.
+    response.send(
+      200,
+      "Light blinked: " + request.payload,
+      directMethodResponse
+    );
+  }
+}
+
+module.exports = {
+  setupClient
+};
