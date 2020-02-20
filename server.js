@@ -15,7 +15,7 @@ const logger = require("morgan");
 const open = require("open");
 const Azure = require("./hw-interaction/Azure/communication");
 
-require("dotenv").config({ path: "./env.local" });
+require("dotenv").config();
 
 // Static Routes
 // Serve production build of React app
