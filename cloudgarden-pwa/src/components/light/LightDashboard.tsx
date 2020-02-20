@@ -5,12 +5,8 @@
  */
 
 import React, { useState, Fragment } from "react";
-import { Layer, IconChevronRight } from "sancho";
 import "../../Dashboard.css";
 import PercentChart from "../PercentChart";
-import { ReactComponent as Cactus } from "../../illustrations/cactus.svg";
-import { ReactComponent as Aloe } from "../../illustrations/aloe_vera.svg";
-import { ReactComponent as Snake } from "../../illustrations/snake_plant.svg";
 import HistoryChart from "../HistoryChart";
 import { Link, useRouteMatch, Route } from "react-router-dom";
 

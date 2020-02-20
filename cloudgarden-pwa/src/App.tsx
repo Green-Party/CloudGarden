@@ -1,4 +1,3 @@
-/** @jsx jsx */
 /**
  * Creation Date: January 26, 2020
  * Author: Gillian Pierce
@@ -13,19 +12,38 @@ import {
   Redirect
 } from "react-router-dom";
 import {
-  Sheet,
-  MenuList,
-  MenuItem,
-  IconBarChart2,
-  IconSliders,
-  IconBell,
-  Badge
-} from "sancho";
-import { jsx } from "@emotion/core";
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText
+} from "@material-ui/core";
+import BarChartIcon from "@material-ui/icons/BarChart";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import TuneIcon from "@material-ui/icons/Tune";
 import "./Header.css";
 import "./Dashboard.css";
 import Header from "./components/Header";
+import ControlView from "./components/controls/ControlView";
 const Home = lazy(() => import("./Home"));
+interface NavListItemProps {
+  text: string;
+  icon: JSX.Element;
+  to: string;
+}
+const NavListItem = ({ text, icon, to }: NavListItemProps) => {
+  return (
+    <ListItem
+      button
+      component={NavLink}
+      to={to}
+      activeClassName="active-button"
+    >
+      <ListItemIcon>{icon}</ListItemIcon>
+      <ListItemText primary={text} />
+    </ListItem>
+  );
+};
 
 const App: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -38,45 +56,29 @@ const App: React.FC = () => {
             <Route path="/dashboard">
               <Home />
             </Route>
-            <Route path="/">
+            <Route exact path="/">
               <Redirect to="/dashboard" />
+            </Route>
+            <Route path="/controls">
+              <ControlView />
             </Route>
           </Switch>
         </Suspense>
-
-        <Sheet
-          onRequestClose={() => setOpen(false)}
-          isOpen={open}
-          position="left"
-        >
-          <MenuList>
-            <MenuItem
-              contentBefore={<IconBarChart2 />}
-              component={NavLink}
+        <Drawer open={open} onClose={() => setOpen(false)}>
+          <List>
+            <NavListItem
               to="/dashboard/moisture"
-              activeClassName="active-button"
-            >
-              Dashboard
-            </MenuItem>
-            <MenuItem
-              contentBefore={<IconSliders />}
-              component={NavLink}
-              to="/controls"
-              activeClassName="active-button"
-            >
-              Controls
-            </MenuItem>
-            <MenuItem
-              contentBefore={<IconBell />}
-              contentAfter={<Badge>3</Badge>}
-              component={NavLink}
+              icon={<BarChartIcon />}
+              text="Dashboard"
+            />
+            <NavListItem to="/controls" icon={<TuneIcon />} text="Controls" />
+            <NavListItem
               to="/notifications"
-              activeClassName="active-button"
-            >
-              Notifications
-            </MenuItem>
-          </MenuList>
-        </Sheet>
+              icon={<NotificationsIcon />}
+              text="Notifications"
+            />
+          </List>
+        </Drawer>
       </Router>
     </Fragment>
   );

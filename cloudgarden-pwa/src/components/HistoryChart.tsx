@@ -11,7 +11,6 @@ import { line } from "d3-shape";
 import { min, max } from "d3-array";
 import { axisBottom, axisLeft } from "d3-axis";
 import "../Dashboard.css";
-import { Layer } from "sancho";
 import React from "react";
 
 interface DataPoint {
