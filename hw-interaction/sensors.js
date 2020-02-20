@@ -1,22 +1,25 @@
 /**
  * Creation Date: January 28, 2020
  * Author: Logan McDonald
- * Main sensor interaction methods
+ * Main sensor interaction methods for CloudGarden
  */
 
 const five = require("johnny-five");
+
+// Sensors
 const Si1145 = require("./si1145");
 const ThermoSensors = require("./thermo_sensors");
 const SoilHumiditySensors = require("./soil_humidity_sensors");
-const Pumps = require("./pumps");
-const Light = require("./light");
 const WaterLevelRuler = require("./water_level_ruler");
+
 const WaterLevelSwitch = require("./water_level_switch");
 
+// Controls
+const Pumps = require("./pumps");
+const Light = require("./light");
+
 module.exports = {
-  initialize,
-  runPump,
-  toggleLight
+  initialize
 };
 
 let readings = {
@@ -92,8 +95,7 @@ function initialize() {
     // grow light - controlled through relay at pin 6
     controls.light = new Light({
       pin: 6,
-      type: "NC",
-      number: 1
+      type: "NC"
     });
 
     configureLightTimeInterval();

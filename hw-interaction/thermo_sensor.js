@@ -1,3 +1,11 @@
+/**
+ * Creation Date: February 5, 2020
+ * Author: Logan McDonald
+ * Class to represent the temperature sensor
+ * Wrapper for the johnny-five Thermometer class
+ * See https://github.com/rwaldron/johnny-five/wiki/Thermometer for more documentation
+ */
+
 const five = require("johnny-five");
 
 module.exports = class ThermoSensor {

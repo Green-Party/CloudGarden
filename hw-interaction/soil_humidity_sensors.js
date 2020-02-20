@@ -1,3 +1,9 @@
+/**
+ * Creation Date: February 7, 2020
+ * Author: Logan McDonald
+ * Class to extend the functionality of the SoilHumiditySensor class to multiple objects
+ */
+
 const SoilHumiditySensor = require("./soil_humidity_sensor");
 
 module.exports = class SoilHumiditySensors {

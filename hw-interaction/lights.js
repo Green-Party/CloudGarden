@@ -1,3 +1,9 @@
+/**
+ * Creation Date: February 5, 2020
+ * Author: Logan McDonald
+ * Class to extend the functionality of the Light class to multiple objects
+ */
+
 const Light = require("./light");
 
 module.exports = class Lights {

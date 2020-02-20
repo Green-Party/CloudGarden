@@ -1,3 +1,10 @@
+/**
+ * Creation Date: February 20, 2020
+ * Author: Logan McDonald
+ * Class to represent the eTape water level sensor
+ * Extends the AnalogSensor class
+ */
+
 const AnalogSensor = require("./analog_sensor");
 
 module.exports = class WaterLevelRuler extends AnalogSensor {

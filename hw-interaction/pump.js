@@ -1,3 +1,10 @@
+/**
+ * Creation Date: February 5, 2020
+ * Author: Logan McDonald
+ * Class to represent a water pump
+ * Extends the Relay class
+ */
+
 const Relay = require("./relay");
 
 module.exports = class Pump extends Relay {

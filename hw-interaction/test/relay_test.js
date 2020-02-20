@@ -1,3 +1,9 @@
+/**
+ * Creation Date: February 5, 2020
+ * Author: Logan McDonald
+ * Tests each relay in turn, then disables pumps and tests again
+ */
+
 const five = require("johnny-five");
 const Pumps = require("../pumps");
 const Light = require("../light");
@@ -24,7 +30,6 @@ board.on("ready", async () => {
   await runRelay(light);
 
   pumps.disable();
-  light.disable();
 
   for (let pump of pumps.controls) {
     await runRelay(pump);

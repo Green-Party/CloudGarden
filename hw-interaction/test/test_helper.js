@@ -1,3 +1,9 @@
+/**
+ * Creation Date: February 10, 2020
+ * Author: Logan McDonald
+ * Provides helper functions for running tests
+ */
+
 const five = require("johnny-five");
 
 module.exports = {
@@ -19,22 +25,5 @@ function initializeButton(pin, pressCallback, releaseCallback) {
     button.on("press", pressCallback);
 
     button.on("release", releaseCallback);
-
-    // // led.on() == led.close()
-    // button.on("press", () => {
-    //   console.log("press");
-    //   led.on();
-    //   pump.on();
-    //   console.log(led.isOn);
-    //   console.log(pump.isOn);
-    // });
-
-    // button.on("release", () => {
-    //   console.log("release");
-    //   led.off();
-    //   pump.off();
-    //   console.log(led.isOn);
-    //   console.log(pump.isOn);
-    // });
   }
 }

@@ -1,3 +1,9 @@
+/**
+ * Creation Date: February 5, 2020
+ * Author: Logan McDonald
+ * Class to extend the functionality of the Pump class to multiple objects
+ */
+
 const Pump = require("./pump");
 
 module.exports = class Pumps {

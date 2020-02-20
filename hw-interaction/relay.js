@@ -1,3 +1,10 @@
+/**
+ * Creation Date: February 5, 2020
+ * Author: Logan McDonald
+ * Wrapper class for the johnny-five Relay class
+ * See https://github.com/rwaldron/johnny-five/wiki/Relay for documentation
+ */
+
 const five = require("johnny-five");
 
 module.exports = class Relay {

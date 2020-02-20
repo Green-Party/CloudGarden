@@ -1,3 +1,9 @@
+/**
+ * Creation Date: February 5, 2020
+ * Author: Logan McDonald
+ * Class to extend the functionality of the ThermoSensor class to multiple objects
+ */
+
 const ThermoSensor = require("./thermo_sensor");
 
 module.exports = class ThermoSensors {

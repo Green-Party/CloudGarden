@@ -1,3 +1,9 @@
+/**
+ * Creation Date: February 10, 2020
+ * Author: Logan McDonald
+ * Tests water level switch control of all water pumps
+ */
+
 const testHelper = require("./test_helper");
 const Pumps = require("../pumps");
 const WaterLevelSwitch = require("../water_level_switch");

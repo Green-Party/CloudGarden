@@ -1,3 +1,10 @@
+/**
+ * Creation Date: February 7, 2020
+ * Author: Logan McDonald
+ * Class to represent a soil humidity sensor
+ * Extends AnalogSensor class
+ */
+
 const AnalogSensor = require("./analog_sensor");
 
 module.exports = class SoilHumiditySensor extends AnalogSensor {

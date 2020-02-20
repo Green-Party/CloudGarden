@@ -1,3 +1,10 @@
+/**
+ * Creation Date: February 19, 2020
+ * Author: Logan McDonald
+ * Wrapper class for the johnny-five Sensor class
+ * See https://github.com/rwaldron/johnny-five/wiki/Sensor for documentation
+ */
+
 const five = require("johnny-five");
 
 module.exports = class AnalogSensor {

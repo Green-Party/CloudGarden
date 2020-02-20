@@ -1,9 +1,13 @@
+/**
+ * Creation Date: February 3, 2020
+ * Author: Logan McDonald
+ * Tests the SI1145 device
+ */
+
+const testHelper = require("./test_helper");
 const Si1145 = require("../si1145");
-const five = require("johnny-five");
 
-let board = new five.Board();
-
-board.on("ready", () => {
+function testSi1145() {
   let si1145 = new Si1145({
     board: board
   });
@@ -24,9 +28,11 @@ board.on("ready", () => {
         } else {
           console.error("Error: Device not active.");
         }
-      }, 500);
+      }, 1000);
     } else {
       console.error("Error: SI1145 device not found.");
     }
   });
-});
+}
+
+testHelper.runTest(testSi1145);
