@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="70px" height="85px" viewBox="0 0 70 85" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 62 (91390) - https://sketch.com -->
+    <title>Oval</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Mobile2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-dasharray="141.3,94.2" stroke-linecap="round">
+        <g id="MoistureDashboard" transform="translate(-54.000000, -140.000000)" stroke="" stroke-width="10">
+            <g id="Group" transform="translate(44.000000, 145.000000)">
+                <path d="M37.5,75 C58.2106781,75 75,58.2106781 75,37.5 C75,16.7893219 58.2106781,0 37.5,0 C16.7893219,0 0,16.7893219 0,37.5 C0,58.2106781 16.7893219,75 37.5,75 Z" id="Oval"></path>
+            </g>
+        </g>
+    </g>
+</svg>
