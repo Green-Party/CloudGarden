@@ -14,7 +14,7 @@ const wpi = require("node-wiring-pi");
 const Client = require("azure-iot-device").Client;
 const ConnectionString = require("azure-iot-device").ConnectionString;
 const Message = require("azure-iot-device").Message;
-const MqttProtocol = require("azure-iot-device-mqtt").Mqtt;
+const MqttProtocol = require("azure-iot-device-mqtt").MqttWs; //for websockets, Mqtt otherwise
 const AmqpProtocol = require("azure-iot-device-amqp").Amqp;
 
 const bi = require("az-iot-bi");
@@ -24,10 +24,6 @@ const MessageProcessor = require("./messageProcessor.js");
 let isMessageSendOn = true;
 let messageId = 0;
 let client, config, messageProcessor;
-
-module.exports = {
-  setupClient
-};
 
 function sendMessage() {
   if (!isMessageSendOn) {
@@ -247,3 +243,8 @@ function setupClient(connectionString, sensorData) {
     sendMessage();
   });
 }
+
+module.exports = {
+  blinkLED,
+  setupClient
+};
