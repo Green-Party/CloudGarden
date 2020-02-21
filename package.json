@@ -7,9 +7,13 @@
   "description": "",
   "license": "ISC",
   "scripts": {
-    "start": "npm-run-all build:* && nodemon server.js",
+    "start": "npm run clean && npm run build && nodemon server.js",
+    "build": "npm-run-all build:server",
     "build:server": "npm install",
-    "build:client": "cd cloudgarden-pwa && yarn && yarn build"
+    "build:client": "cd cloudgarden-pwa && yarn && yarn build",
+    "clean": "npm-run-all clean:server",
+    "clean:server": "rimraf node_modules",
+    "clean:client": "rimraf cloudgarden-pwa/node_modules"
   },
   "dependencies": {
     "az-iot-bi": "^0.1.20",
@@ -31,6 +35,7 @@
     "path": "^0.12.7"
   },
   "devDependencies": {
-    "node-wiring-pi": "0.0.5"
+    "node-wiring-pi": "0.0.5",
+    "rimraf": "^3.0.2"
   }
 }
