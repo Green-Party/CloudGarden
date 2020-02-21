@@ -13,6 +13,9 @@ const path = require("path");
 const chalk = require("chalk");
 const logger = require("morgan");
 const open = require("open");
+const Azure = require("./hw-interaction/Azure/communication");
+
+require("dotenv").config();
 
 // Static Routes
 // Serve production build of React app
@@ -50,5 +53,9 @@ app.use((err, req, res, _next) => {
   res.status(err.status || 500);
   res.render("error");
 });
+
+// Setup Azure
+let sensorData = {};
+Azure.setupClient(process.env.CONNECTION_STRING, sensorData);
 
 module.exports = app;
