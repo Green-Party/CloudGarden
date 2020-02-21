@@ -13,7 +13,7 @@
     "build:client": "cd cloudgarden-pwa && yarn && yarn build",
     "clean": "npm-run-all clean:server",
     "clean:server": "rimraf node_modules",
-    "clean:client": "rimraf cloudgarden-pwa/node_modules"
+    "clean:client": "rimraf cloudgarden-pwa/node_modules && rimraf cloudgarden-pwa/build"
   },
   "dependencies": {
     "az-iot-bi": "^0.1.20",
@@ -27,13 +27,15 @@
     "dotenv": "^8.2.0",
     "express": "~4.16.1",
     "fs": "0.0.1-security",
+    "http": "0.0.0",
     "http-errors": "~1.6.3",
     "johnny-five": "^1.4.0",
     "morgan": "~1.9.1",
     "nodemon": "^2.0.2",
     "npm-run-all": "^4.1.5",
     "open": "^7.0.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "node-wiring-pi": "0.0.5",
