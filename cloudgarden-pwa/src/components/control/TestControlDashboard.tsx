@@ -8,7 +8,7 @@ import React from "react";
 import "../../Dashboard.css";
 
 import { Button } from "@material-ui/core";
-import Icon from "@material-ui/core/Icon";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { getClient } from "./AzureUtil";
 
 const TestControlDashboard: React.FC = () => {
@@ -24,6 +24,7 @@ const TestControlDashboard: React.FC = () => {
   const deviceId = "RaspberryPi";
 
   const onClick = () => {
+    console.log("Clicked on turn on lights");
     client.invokeDeviceMethod(
       deviceId,
       methodParams,
@@ -50,7 +51,7 @@ const TestControlDashboard: React.FC = () => {
       <Button
         variant="contained"
         color="primary"
-        endIcon={<Icon>send</Icon>}
+        endIcon={<CloudUploadIcon />}
         onClick={onClick}
       >
         Send

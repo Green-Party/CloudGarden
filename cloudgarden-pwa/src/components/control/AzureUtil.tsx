@@ -1,8 +1,8 @@
-const Client = require("azure-iot-device").Client;
+var Client = require("azure-iothub").Client;
 
 export const getClient = () => {
-  console.log(`con string ${process.env.REACT_APP_CONNECTION_STRING}`);
+  console.log(`con string ${process.env.REACT_APP_SERVICE_CONNECTION_STRING}`);
   return Client.fromConnectionString(
-    process.env.REACT_APP_CONNECTION_STRING || ""
+    process.env.REACT_APP_SERVICE_CONNECTION_STRING || ""
   );
 };

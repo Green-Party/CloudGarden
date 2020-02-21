@@ -15,7 +15,7 @@ const logger = require("morgan");
 const open = require("open");
 const Azure = require("./hw-interaction/Azure/communication");
 
-require("dotenv").config({ path: ".cloudgarden-pwa/.env" });
+require("dotenv").config();
 
 // Static Routes
 // Serve production build of React app
@@ -56,6 +56,6 @@ app.use((err, req, res, _next) => {
 
 // Setup Azure
 let sensorData = {};
-Azure.setupClient(process.env.CONNECTION_STRING, sensorData);
+Azure.setupClient(process.env.DEVICE_CONNECTION_STRING, sensorData);
 
 module.exports = app;

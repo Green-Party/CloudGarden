@@ -292,5 +292,6 @@ function onBlinkLight(request, response) {
 }
 
 module.exports = {
-  setupClient
+  setupClient,
+  initClient
 };
