@@ -19,58 +19,68 @@ import {
   Grid,
   Button,
   CardMedia,
-  Typography
+  Typography,
+  GridListTile,
+  GridList,
+  useMediaQuery
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles, useTheme } from "@material-ui/core/styles";
 
-const useStyles = makeStyles({
-  button: {
-    background: "linear-gradient(to right, #45b649, #a8e063)",
-    border: 0,
-    borderRadius: 8,
-    color: "white",
-    height: 24,
-    padding: "0 30px"
-  },
-  card: {
-    width: "100%",
-    transition: "0.3s",
-    boxShadow: "0px 14px 80px rgba(34, 35, 58, 0.2)",
-    position: "relative",
-    overflow: "initial",
-    display: "flex",
-    flexDirection: "row-reverse",
-    alignItems: "center",
-    textAlign: "center",
-    paddingLeft: 8,
-    paddingRight: 8,
-    margin: 8
-  },
-  cardContent: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "start",
-    textAlign: "center"
-  },
-  media: {
-    flexShrink: 0,
-    width: "20%",
-    height: "20%",
-    marginLeft: "auto",
-    marginRight: 8,
-    padding: "2%"
-  },
-  chart: {
-    margin: 8
-  }
-});
+const useStyles = makeStyles(theme =>
+  createStyles({
+    button: {
+      background: theme.palette.secondary.dark,
+      border: 0,
+      borderRadius: 8,
+      color: "white",
+      paddingTop: 0,
+      paddingBottom: 0,
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2)
+    },
+    card: {
+      transition: "0.3s",
+      boxShadow: "0px 14px 80px rgba(34, 35, 58, 0.2)",
+      overflow: "initial",
+      display: "flex",
+      flexDirection: "row-reverse",
+      alignItems: "center",
+      textAlign: "center",
+      paddingLeft: 8,
+      paddingRight: 8,
+      margin: 8
+    },
+    cardContent: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "start",
+      textAlign: "center",
+      color: theme.palette.primary.dark
+    },
+    media: {
+      flexShrink: 0,
+      width: "20%",
+      height: "20%",
+      marginLeft: "auto",
+      marginRight: 8,
+      padding: "2%"
+    },
+    chart: {
+      margin: 8
+    },
+    gridList: {
+      width: "100%",
+      height: "100%"
+    }
+  })
+);
 
 const MoistureDashboard: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const match = useRouteMatch();
+  const theme = useTheme();
+  const styles = useStyles(theme);
+  const smallWidth = useMediaQuery(theme.breakpoints.down("xs"));
 
   const PlantButtons: React.FC = () => {
-    const styles = useStyles();
     return (
       <Fragment>
         <Card className={styles.card}>
@@ -112,7 +122,7 @@ const MoistureDashboard: React.FC = () => {
     return (
       <Card className={styles.chart}>
         <CardContent>
-          <Typography variant={"h6"} gutterBottom>
+          <Typography variant={"subtitle1"} gutterBottom>
             Average Moisture
           </Typography>
           <Divider />
@@ -132,8 +142,8 @@ const MoistureDashboard: React.FC = () => {
           </Typography>
           <Divider />
           <HistoryChart
-            width={800}
-            height={400}
+            width={600}
+            height={300}
             data={[
               { date: new Date("June 12, 2015"), value: 10 },
               { date: new Date("June 15, 2015"), value: 15 },
@@ -151,24 +161,17 @@ const MoistureDashboard: React.FC = () => {
   };
 
   return (
-    <div className="moisture-dashboard column-container">
-      <Grid
-        container
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-      >
-        <Grid item xs={12} md={4}>
-          <MoisturePercentage />
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <HistoryGraph />
-        </Grid>
-      </Grid>
-      <Grid item xs={12} md={12}>
+    <GridList cellHeight="auto" className={styles.gridList} cols={3}>
+      <GridListTile cols={smallWidth ? 3 : 1}>
+        <MoisturePercentage />
+      </GridListTile>
+      <GridListTile cols={smallWidth ? 3 : 2}>
+        <HistoryGraph />
+      </GridListTile>
+      <GridListTile cols={3}>
         <PlantButtons />
-      </Grid>
-    </div>
+      </GridListTile>
+    </GridList>
   );
 };
 

@@ -17,7 +17,9 @@ import {
   Grid,
   Button,
   CardMedia,
-  Typography
+  Typography,
+  GridListTile,
+  GridList
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ToggleButton from "@material-ui/lab/ToggleButton";
@@ -33,10 +35,8 @@ const useStyles = makeStyles({
     padding: "0 30px"
   },
   card: {
-    width: "100%",
     transition: "0.3s",
     boxShadow: "0px 14px 80px rgba(34, 35, 58, 0.2)",
-    position: "relative",
     overflow: "initial",
     display: "flex",
     flexDirection: "row-reverse",
@@ -68,15 +68,18 @@ const useStyles = makeStyles({
     flexDirection: "column",
     alignItems: "center",
     textAlign: "center"
+  },
+  gridList: {
+    width: "100%",
+    height: "100%"
   }
 });
 
 const TempDashboard: React.FC = () => {
   const [open, setOpen] = useState(false);
   const match = useRouteMatch();
-
+  const styles = useStyles();
   const TempChart: React.FC = () => {
-    const styles = useStyles();
     const [units, setUnits] = useState<string>("celsius");
     const [temp, setTemp] = useState<number>(20);
 
@@ -84,14 +87,17 @@ const TempDashboard: React.FC = () => {
       event: React.MouseEvent<HTMLElement>,
       newUnits: string
     ) => {
-      setUnits(newUnits);
-      let newTemp = temp;
-      if (newUnits == "celsius") {
-        newTemp = ((temp - 32) * 5) / 9;
-      } else {
-        newTemp = (temp * 9) / 5 + 32;
+      console.log(units, newUnits);
+      if (newUnits != units && newUnits != null) {
+        setUnits(newUnits);
+        let newTemp = temp;
+        if (newUnits == "celsius") {
+          newTemp = ((temp - 32) * 5) / 9;
+        } else if (newUnits == "ferinheight") {
+          newTemp = (temp * 9) / 5 + 32;
+        }
+        setTemp(newTemp);
       }
-      setTemp(newTemp);
     };
 
     return (
@@ -121,7 +127,6 @@ const TempDashboard: React.FC = () => {
   };
 
   const HistoryGraph: React.FC = () => {
-    const styles = useStyles();
     return (
       <Card className={styles.chart}>
         <CardContent>
@@ -149,14 +154,14 @@ const TempDashboard: React.FC = () => {
   };
 
   return (
-    <Grid container spacing={3} justify="center" direction="column">
-      <Grid item xs={12} md={12}>
+    <GridList cellHeight="auto" className={styles.gridList} cols={3}>
+      <GridListTile cols={2}>
         <TempChart />
-      </Grid>
-      <Grid item xs={12} md={12}>
+      </GridListTile>
+      <GridListTile cols={3}>
         <HistoryGraph />
-      </Grid>
-    </Grid>
+      </GridListTile>
+    </GridList>
   );
 };
 

@@ -6,13 +6,13 @@
 
 import React from "react";
 import "./Dashboard.css";
-import Tab from "./components/Tab";
+import Tabs from "./components/Tabs";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import MoistureDashboard from "./components/moisture/MoistureDashboard";
 import PlantSpecific from "./components/moisture/PlantSpecific";
 import LightDashboard from "./components/light/LightDashboard";
 import TempDashboard from "./components/temp/TempDashboard";
-import { Paper } from "@material-ui/core";
+import { Paper, Grid, Typography } from "@material-ui/core";
 
 const Home: React.FC = () => {
   const match = useRouteMatch();
@@ -20,37 +20,50 @@ const Home: React.FC = () => {
   //Routes point to the various dashboard components
   //(only moisture is implemented currently)
   return (
-    <div className="column-container">
-      <Paper elevation={3} className="tabs">
-        <div className="row-container">
-          <Tab target={`${match.url}/moisture`} label="moisture" />
-          <Tab target={`${match.url}/temp`} label="temperature" />
-          <Tab target={`${match.url}/light`} label="uv/light" />
-          <Tab target={`${match.url}/water`} label="water" />
-        </div>
-      </Paper>
-      <Switch>
-        <Route exact path={`${match.path}/moisture`}>
-          <MoistureDashboard />
-        </Route>
-        <Route exact path={`${match.path}/light`}>
-          <LightDashboard />
-        </Route>
-        <Route exact path={`${match.path}/temp`}>
-          <TempDashboard />
-        </Route>
-        <Route
-          exact
-          path={`${match.path}/:sensorId/:plantId`}
-          component={PlantSpecific}
+    <Grid
+      container
+      direction="column"
+      justify="center"
+      alignItems="center"
+      spacing={4}
+      style={{ marginTop: "16px" }}
+    >
+      <Grid item>
+        <Tabs
+          tabValues={[
+            { target: `${match.url}/moisture`, label: "moisture" },
+            { target: `${match.url}/temp`, label: "temperature" },
+            { target: `${match.url}/light`, label: "uv/light" },
+            { target: `${match.url}/water`, label: "water" }
+          ]}
         />
-        <Route path={match.path}>
-          <div className="row-container">
-            <h3>Please select a sensor.</h3>
-          </div>
-        </Route>
-      </Switch>
-    </div>
+      </Grid>
+      <Grid item>
+        <Switch>
+          <Route exact path={`${match.path}/moisture`}>
+            <MoistureDashboard />
+          </Route>
+          <Route exact path={`${match.path}/light`}>
+            <LightDashboard />
+          </Route>
+          <Route exact path={`${match.path}/temp`}>
+            <TempDashboard />
+          </Route>
+          <Route
+            exact
+            path={`${match.path}/:sensorId/:plantId`}
+            component={PlantSpecific}
+          />
+          <Route path={match.path}>
+            <div className="row-container">
+              <Typography variant="h3" color="secondary">
+                Please select a sensor.
+              </Typography>
+            </div>
+          </Route>
+        </Switch>
+      </Grid>
+    </Grid>
   );
 };
 

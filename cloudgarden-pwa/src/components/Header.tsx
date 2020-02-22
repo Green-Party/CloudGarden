@@ -6,30 +6,50 @@
 
 import React from "react";
 import MenuIcon from "@material-ui/icons/Menu";
-import { IconButton } from "@material-ui/core";
+import {
+  IconButton,
+  Typography,
+  useTheme,
+  AppBar,
+  Toolbar
+} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
 import "../Header.css";
 import Logo from "./Logo";
 interface HeaderProps {
   onMenuClick: Function;
 }
-class Header extends React.Component<HeaderProps> {
-  render() {
-    return (
-      <div className="navigation">
-        <div className="item">
-          <IconButton onClick={() => this.props.onMenuClick(true)}>
-            <MenuIcon htmlColor="white" />
-          </IconButton>
-        </div>
-        <div className="item logo">
-          <Logo />
-        </div>
-        <div className="item">
-          <h1 className="app-name">CloudGarden</h1>
-        </div>
-      </div>
-    );
-  }
+
+const useStyles = makeStyles(theme =>
+  createStyles({
+    root: {
+      background: theme.palette.primary.light,
+      border: 0,
+      color: theme.palette.primary.dark,
+      padding: theme.spacing(1)
+    }
+  })
+);
+
+function Header(props: HeaderProps) {
+  const classes = useStyles(useTheme());
+  return (
+    <AppBar position="static" className={classes.root}>
+      <Toolbar>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          onClick={() => props.onMenuClick(true)}
+        >
+          <MenuIcon fontSize="large" />
+        </IconButton>
+        <Typography variant="h4" className={classes.root}>
+          CloudGarden
+        </Typography>
+      </Toolbar>
+    </AppBar>
+  );
 }
 
 export default Header;

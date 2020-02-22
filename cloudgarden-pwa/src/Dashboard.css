@@ -66,6 +66,7 @@
 
 .active-button svg {
   stroke: white;
+  fill: white;
 }
 
 .active-button span {
@@ -197,4 +198,15 @@
 
 .tabs {
   margin-bottom: 2%;
+}
+
+.moon {
+  transform: rotate(180deg);
+  padding: 5%;
+  margin: 5%;
+}
+
+.sun {
+  padding: 5%;
+  margin: 5%;
 }

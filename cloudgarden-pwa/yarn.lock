@@ -3935,7 +3935,7 @@ clone@^1.0.2:
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha1-2jCcwmPfFZlMaIypAheco8fNfH4=
 
-clsx@^1.0.2, clsx@^1.0.4:
+clsx@^1.0.2, clsx@^1.0.4, clsx@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.1.0.tgz#62937c6adfea771247c34b54d320fb99624f5702"
   integrity sha512-3avwM37fSK5oP6M5rQ9CNe99lwxhXDOeSWVPAOYF6OazUTgZCMb0yWlJpmdD74REy1gkEaFiub2ULv4fq9GUhA==
@@ -12191,6 +12191,16 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+
+typeface-space-mono@^0.0.71:
+  version "0.0.71"
+  resolved "https://registry.yarnpkg.com/typeface-space-mono/-/typeface-space-mono-0.0.71.tgz#19cf08b118a3e0042d6eb399f8fc72a3138c73da"
+  integrity sha512-v5vMp/kIMPfnHjui3OxdchAdseXydcpZ3eh01xnU+JNA4tqKH/KK/7e+LWC/pscS96+pqgMgyIOrdXWzDjT8MA==
+
+typeface-work-sans@^0.0.72:
+  version "0.0.72"
+  resolved "https://registry.yarnpkg.com/typeface-work-sans/-/typeface-work-sans-0.0.72.tgz#2b40abbda07e2cf6d9fbd9d334bb8c3014c80e32"
+  integrity sha512-hJa+mh217r4qlEq0zK0Aqn7chyDzJYziObsd9nokEd0lMBKbGNf/10VHS3AqeVKDye3evfTvZ11tmj5WizIJrA==
 
 typescript@^3.0.1, typescript@^3.7.5:
   version "3.7.5"
