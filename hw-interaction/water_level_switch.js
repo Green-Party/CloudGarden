@@ -30,13 +30,14 @@ module.exports = class WaterLevelSwitch {
     // Events:
     // "open"  - emitted when circuit opens
     // "close" - emitted when circuit closes
-    this.sensor.on("open", this.openCallback);
-    this.sensor.on("close", this.closeCallback);
+    this.sensor.on("open", this.openCallback.bind(this));
+    this.sensor.on("close", this.closeCallback.bind(this));
   }
 
   openCallback() {
     console.log("Switch is open");
     if (this.slave) {
+      this.slave.turnOff();
       this.slave.disable();
     }
   }

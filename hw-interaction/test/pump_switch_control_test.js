@@ -8,10 +8,6 @@ const testHelper = require("./test_helper");
 const Pumps = require("../pumps");
 const WaterLevelSwitch = require("../water_level_switch");
 
-module.exports = {
-  buttonTest
-};
-
 var pumps;
 var counter = 0;
 
@@ -19,6 +15,8 @@ function pumpSwitchControlTest() {
   pumps = new Pumps({
     enabled: false
   });
+
+  // pumps = new Pumps();
 
   let waterLevelSwitch = new WaterLevelSwitch({
     slave: pumps
@@ -29,9 +27,7 @@ function pumpSwitchControlTest() {
 
 function pressCallback() {
   if (counter % 2 == 0) {
-    for (var i = 0; i < pumps.length(); i++) {
-      pumps.turnOn(i);
-    }
+    pumps.turnOn();
   } else {
     for (let pump of pumps.controls) {
       pump.turnOn();
@@ -40,10 +36,8 @@ function pressCallback() {
   counter++;
 }
 
-function pressCallback() {
-  for (var i = 0; i < pumps.length(); i++) {
-    pumps.turnOff(i);
-  }
+function releaseCallback() {
+  pumps.turnOff();
 }
 
 testHelper.runTest(pumpSwitchControlTest);

@@ -29,11 +29,11 @@ board.on("ready", async () => {
   }
   await runRelay(light);
 
+  await runRelay(pumps);
+
   pumps.disable();
 
-  for (let pump of pumps.controls) {
-    await runRelay(pump);
-  }
+  await runRelay(pumps);
   await runRelay(light);
 
   console.log("End of test");

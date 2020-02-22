@@ -8,6 +8,7 @@ const testHelper = require("./test_helper");
 const Si1145 = require("../si1145");
 
 function testSi1145() {
+  let board = this;
   let si1145 = new Si1145({
     board: board
   });

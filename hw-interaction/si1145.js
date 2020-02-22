@@ -200,7 +200,6 @@ module.exports = class Si1145 {
       if (err) {
         callback(err);
       } else {
-        console.log(vis);
         this.valueAtIndex(1, (err, ir) => {
           if (err) {
             callback(err);

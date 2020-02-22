@@ -4,7 +4,7 @@
  * Tests the behaviour of the water level switch
  */
 
-const testHelper = require("./testHelper");
+const testHelper = require("./test_helper");
 const WaterLevelSwitch = require("../water_level_switch");
 
 function waterLevelSwitchTest() {

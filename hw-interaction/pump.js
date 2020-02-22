@@ -20,6 +20,16 @@ module.exports = class Pump extends Relay {
     this.enabled = opts.hasOwnProperty("enabled") ? opts.enabled : true;
   }
 
+  turnOn() {
+    if (this.isEnabled()) {
+      super.turnOn();
+    }
+  }
+
+  isEnabled() {
+    return this.enabled;
+  }
+
   enable() {
     this.enabled = true;
   }

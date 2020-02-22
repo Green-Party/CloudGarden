@@ -33,4 +33,15 @@ module.exports = class AnalogSensor {
   getReading() {
     return this.reading;
   }
+
+  convertReading(reading, high, low, desiredHigh, desiredLow) {
+    let factor = (reading - low) / (high - low);
+    if (factor < 0) {
+      factor = 0;
+    } else if (factor > 1) {
+      factor = 1;
+    }
+
+    return Math.round((1 - factor) * (desiredHigh - desiredLow) + desiredLow);
+  }
 };

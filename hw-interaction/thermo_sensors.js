@@ -27,8 +27,8 @@ module.exports = class ThermoSensors {
   }
 
   getReadings() {
-    return this.sensors.map(sensor => {
-      return sensor.getReading();
+    return this.sensors.map(thermo => {
+      return thermo.getReading();
     });
   }
 };

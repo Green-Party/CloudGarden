@@ -37,9 +37,7 @@ let controls = {
   pumpsEnabled: false
 };
 
-const temp = {
-  3: 0x11912c86a76
-};
+const interval = 5000;
 
 function initialize() {
   let board = new five.Board();
@@ -54,7 +52,7 @@ function initialize() {
       if (si1145.deviceActive()) {
         setInterval(() => {
           if (si1145.deviceActive()) {
-            console.log("Getting data...");
+            // console.log("Getting data...");
             si1145.getDataFromDevice(err => {
               if (!err) {
                 console.log(`Visible: ${si1145.device.parameters[0].value}`);
@@ -70,7 +68,7 @@ function initialize() {
           } else {
             console.error("Error: Device not active.");
           }
-        }, 1000);
+        }, interval);
       } else {
         console.error("Error: SI1145 device not found.");
       }
@@ -102,22 +100,30 @@ function initialize() {
 
     setInterval(() => {
       readings.temp = thermoSensors.getReadings();
+      console.log(`Temperature: ${readings.temp}`);
       readings.soilHumidity = soilHumiditySensors.getReadings();
+      console.log(`Soil humidity: ${readings.soilHumidity}`);
       readings.waterLevel = waterLevelRuler.getReading();
-    }, 1000);
+      console.log(`Water level: ${readings.waterLevel}`);
+    }, interval);
   });
 }
 
 // configure to run for 15 mins at the beginning of every hour
 function configureLightTimeInterval() {
-  let minutes = Date.now().getMinutes();
-  if (minutes > 15) {
+  let date = new Date(Date.now());
+  let minutes = date.getMinutes();
+  if (minutes % 2 == 0) {
     // do something
     controls.light.turnOff();
-    setTimeout(configureLightTimeInterval, Math.max(0, (45 - minutes) * 60000));
+    // setTimeout(configureLightTimeInterval, Math.max(0, (45 - minutes) * 60000));
+    setTimeout(configureLightTimeInterval, 10000);
   } else {
     // do something
     controls.light.turnOn();
-    setTimeout(configureLightTimeInterval, Math.max(0, (15 - minutes) * 60000));
+    // setTimeout(configureLightTimeInterval, Math.max(0, (15 - minutes) * 60000));
+    setTimeout(configureLightTimeInterval, 10000);
   }
 }
+
+// initialize();

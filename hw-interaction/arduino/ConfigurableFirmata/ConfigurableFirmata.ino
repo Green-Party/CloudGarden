@@ -263,10 +263,10 @@ void systemResetCallback()
       // sets the output to 0, configures portConfigInputs
 
       Firmata.setPinMode(i, OUTPUT);
-      // if (i == 3 || i == 4 || i == 5 || i == 6)
-      // {
-      //   digitalWrite(PIN_TO_DIGITAL(i), HIGH);
-      // }
+       if (i == 3 || i == 4 || i == 5 || i == 6)
+       {
+         digitalWrite(PIN_TO_DIGITAL(i), HIGH);
+       }
 #endif
     }
   }

@@ -31,18 +31,16 @@ module.exports = class Relay {
   }
 
   turnOn() {
-    if (this.enabled) {
-      let relay = this.control;
-      switch (relay.type) {
-        case "NO":
-          relay.open();
-          break;
-        case "NC":
-          relay.close();
-          break;
-        default:
-          console.log(`Unsupported relay type: ${relay.type}`);
-      }
+    let relay = this.control;
+    switch (relay.type) {
+      case "NO":
+        relay.open();
+        break;
+      case "NC":
+        relay.close();
+        break;
+      default:
+        console.log(`Unsupported relay type: ${relay.type}`);
     }
   }
 

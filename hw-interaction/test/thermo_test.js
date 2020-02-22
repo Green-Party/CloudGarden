@@ -4,7 +4,7 @@
  * Tests temperature sensors
  */
 
-const testHelper = require("./testHelper");
+const testHelper = require("./test_helper");
 const ThermoSensors = require("../thermo_sensors");
 
 function thermoSensorTest() {

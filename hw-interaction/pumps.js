@@ -26,7 +26,7 @@ module.exports = class Pumps {
         pin: pin,
         type: type,
         number: idx + 1,
-        enabled: enabled
+        enabled: this.enabled
       });
     });
 
@@ -38,14 +38,26 @@ module.exports = class Pumps {
   }
 
   turnOn(idx) {
-    if (this.enabled && idx < this.controls.length) {
-      this.controls[idx].turnOn();
+    if (this.enabled) {
+      if (!idx) {
+        this.controls.map(pump => {
+          pump.turnOn();
+        });
+      } else if (idx < this.controls.length) {
+        this.controls[idx].turnOn();
+      }
     }
   }
 
   turnOff(idx) {
-    if (idx < this.controls.length) {
-      this.controls[idx].turnOff();
+    if (this.enabled) {
+      if (!idx) {
+        this.controls.map(pump => {
+          pump.turnOff();
+        });
+      } else if (idx < this.controls.length) {
+        this.controls[idx].turnOff();
+      }
     }
   }
 

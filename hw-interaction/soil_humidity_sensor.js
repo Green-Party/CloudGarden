@@ -24,19 +24,24 @@ module.exports = class SoilHumiditySensor extends AnalogSensor {
     // emits two events:
     // "change": occurs when change in reading is >= threshold
     // "data"  : occurs at 'freq' interval
-    this.sensor.on("data", this.dataCallback);
+    this.sensor.on("data", this.dataCallback.bind(this));
   }
 
   dataCallback() {
     let reading = this._convertReading(this.sensor.raw);
     this.reading = reading;
-    console.log(`Soil sensor: ${this.number}`);
-    console.log(`Reading: ${reading}`);
+    // console.log(`Soil sensor: ${this.number}`);
+    // console.log(`Reading: ${reading}`);
   }
 
   _convertReading(reading) {
-    // TODO: implement conversion
-    // See https://github.com/rwaldron/johnny-five/wiki/Sensor for scaling function if necessary
-    return reading;
+    // high value occurs 635
+    // low value occurs 320
+    const LOW = 315;
+    const HIGH = 635;
+    const DESIRED_HIGH = 10;
+    const DESIRED_LOW = 1;
+
+    return super.convertReading(reading, HIGH, LOW, DESIRED_HIGH, DESIRED_LOW);
   }
 };

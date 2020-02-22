@@ -4,7 +4,7 @@
  * Tests the soil humidity sensors
  */
 
-const testHelper = require("./testHelper");
+const testHelper = require("./test_helper");
 const SoilHumiditySensors = require("../soil_humidity_sensors");
 
 function soilHumidityTest() {
@@ -13,6 +13,7 @@ function soilHumidityTest() {
     soilHumiditySensors.getReadings().map((reading, idx) => {
       console.log(`Soil humidity sensor ${idx + 1} reading: ${reading}`);
     });
+    console.log();
   }, 1000);
 }
 
