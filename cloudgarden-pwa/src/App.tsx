@@ -4,7 +4,7 @@
  * Author: Gillian Pierce
  * Renders the direct app routes and side navigation
  */
-import React, { lazy, Suspense, useState } from "react";
+import React, { lazy, Suspense, useState, Fragment } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -26,11 +26,14 @@ import "./Header.css";
 import "./Dashboard.css";
 import Header from "./components/Header";
 const Home = lazy(() => import("./Home"));
+const Controls = lazy(() =>
+  import("./components/control/TestControlDashboard")
+);
 
 const App: React.FC = () => {
   const [open, setOpen] = useState(false);
   return (
-    <React.Fragment>
+    <Fragment>
       <Header onMenuClick={setOpen} />
       <Router>
         <Suspense fallback={<div>Loading...</div>}>
@@ -38,8 +41,11 @@ const App: React.FC = () => {
             <Route path="/dashboard">
               <Home />
             </Route>
-            <Route path="/">
+            <Route exact path="/">
               <Redirect to="/dashboard" />
+            </Route>
+            <Route exact path="/controls">
+              <Controls />
             </Route>
           </Switch>
         </Suspense>
@@ -78,7 +84,7 @@ const App: React.FC = () => {
           </MenuList>
         </Sheet>
       </Router>
-    </React.Fragment>
+    </Fragment>
   );
 };
 
