@@ -8,11 +8,16 @@
 //Requires
 const express = require("express");
 const app = express();
+const server = require("http").Server(app);
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const chalk = require("chalk");
 const logger = require("morgan");
 const open = require("open");
+const io = require("socket.io")(server);
+const Azure = require("./hw-interaction/Azure/communication");
+
+require("dotenv").config();
 
 // Static Routes
 // Serve production build of React app
@@ -28,7 +33,7 @@ app.get("/*", (_req, res, _next) =>
 const port = 9000;
 
 //Run Server
-app.listen(process.env.PORT || port, async () => {
+server.listen(process.env.PORT || port, async () => {
   console.log(
     chalk.blueBright(`Listening intently on port http://localhost:${port}`)
   );
@@ -50,5 +55,20 @@ app.use((err, req, res, _next) => {
   res.status(err.status || 500);
   res.render("error");
 });
+
+// Setup Sockets
+
+io.on("connection", socket => {
+  socket.on("toggleLight", data => {
+    console.log(`Toggling light ${data}`);
+    Azure.blinkLED();
+    io.emit("lightToggled", true);
+  });
+  socket.on("disconnect", () => console.log("Client disconnected"));
+});
+
+// Setup Azure
+let sensorData = {};
+Azure.setupClient(process.env.CONNECTION_STRING, sensorData);
 
 module.exports = app;

@@ -1,0 +1,36 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Sensors",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\hw-interaction\\sensors.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Thermo Test",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\hw-interaction\\test\\thermo_test.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "UV Test",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\hw-interaction\\test\\si1145_test.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Relay Test",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\hw-interaction\\test\\relay_test.js"
+    }
+  ]
+}

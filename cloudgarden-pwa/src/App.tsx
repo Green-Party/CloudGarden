@@ -36,6 +36,9 @@ import ControlView from "./components/controls/ControlView";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 const Home = lazy(() => import("./Home"));
+const Controls = lazy(() =>
+  import("./components/control/TestControlDashboard")
+);
 
 let theme = createMuiTheme({
   palette: {
