@@ -240,22 +240,6 @@ module.exports = class Si1145 {
     return true;
   }
 
-  // version based on Adafruit Arduino library
-  // writeParam(p, v) {
-  //   this.board.i2cWriteReg(this.device.addr, this.register.PARAMWR, v);
-  //   this.board.i2cWriteReg(
-  //     this.device.addr,
-  //     this.register.COMMAND,
-  //     p | this.command.PARAM_SET
-  //   );
-  //   this.board.i2cReadOnce(
-  //     this.device.addr,
-  //     this.register.PARAMRD,
-  //     8,
-  //     arrayOfBytes => {}
-  //   );
-  // }
-
   i2cRead(register, bytesToRead) {
     return new Promise((resolve, reject) => {
       this.board.i2cReadOnce(

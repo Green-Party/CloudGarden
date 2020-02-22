@@ -19,7 +19,7 @@ board.on("ready", async () => {
 
   let light = new Light({
     pin: 6,
-    type: "NC"
+    type: "NO"
   });
 
   console.log("Beginning test...");

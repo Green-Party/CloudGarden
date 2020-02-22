@@ -16,8 +16,6 @@ function pumpSwitchControlTest() {
     enabled: false
   });
 
-  // pumps = new Pumps();
-
   let waterLevelSwitch = new WaterLevelSwitch({
     slave: pumps
   });

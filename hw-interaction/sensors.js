@@ -5,6 +5,7 @@
  */
 
 const five = require("johnny-five");
+const utils = require("./utils");
 
 // Sensors
 const Si1145 = require("./si1145");
@@ -19,22 +20,24 @@ const Pumps = require("./pumps");
 const Light = require("./light");
 
 module.exports = {
-  initialize
+  initialize,
+  toggleLight,
+  runPump
 };
 
 let readings = {
   visible: 0,
   ir: 0,
   uvIdx: 0,
+  waterLevel: 0,
   temp: [0, 0, 0],
   soilHumidity: [0, 0, 0],
-  waterLevel: 0
+  pumpsEnabled: false
 };
 
 let controls = {
   pumps: null,
-  light: null,
-  pumpsEnabled: false
+  light: null
 };
 
 const interval = 5000;
@@ -93,7 +96,7 @@ function initialize() {
     // grow light - controlled through relay at pin 6
     controls.light = new Light({
       pin: 6,
-      type: "NC"
+      type: "NO"
     });
 
     configureLightTimeInterval();
@@ -105,6 +108,8 @@ function initialize() {
       console.log(`Soil humidity: ${readings.soilHumidity}`);
       readings.waterLevel = waterLevelRuler.getReading();
       console.log(`Water level: ${readings.waterLevel}`);
+      readings.pumpsEnabled = pumps.isEnabled();
+      console.log(`Pumps enabled: ${readings.pumpsEnabled}`);
     }, interval);
   });
 }
@@ -113,17 +118,27 @@ function initialize() {
 function configureLightTimeInterval() {
   let date = new Date(Date.now());
   let minutes = date.getMinutes();
-  if (minutes % 2 == 0) {
-    // do something
+  if (minutes > 15) {
     controls.light.turnOff();
-    // setTimeout(configureLightTimeInterval, Math.max(0, (45 - minutes) * 60000));
-    setTimeout(configureLightTimeInterval, 10000);
+    setTimeout(configureLightTimeInterval, Math.max(0, (45 - minutes) * 60000));
   } else {
-    // do something
     controls.light.turnOn();
-    // setTimeout(configureLightTimeInterval, Math.max(0, (15 - minutes) * 60000));
-    setTimeout(configureLightTimeInterval, 10000);
+    setTimeout(configureLightTimeInterval, Math.max(0, (15 - minutes) * 60000));
   }
+}
+
+function toggleLight() {
+  if (controls.light.isOn()) {
+    controls.light.turnOff();
+  } else {
+    controls.light.turnOn();
+  }
+}
+
+function runPump(idx) {
+  controls.pumps.turnOn(idx);
+  await utils.sleep(waitTime);
+  controls.pumps.turnOff(idx);
 }
 
 // initialize();

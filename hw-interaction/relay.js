@@ -30,31 +30,35 @@ module.exports = class Relay {
     this.turnOff();
   }
 
+  isOn() {
+    return !this.control.isOn;
+  }
+
   turnOn() {
-    let relay = this.control;
-    switch (relay.type) {
+    switch (this.control.type) {
       case "NO":
-        relay.open();
+        this.control.open();
+        console.log(this.isOn());
         break;
       case "NC":
-        relay.close();
+        this.control.close();
+        console.log(this.isOn());
         break;
       default:
-        console.log(`Unsupported relay type: ${relay.type}`);
+        console.log(`Unsupported relay type: ${this.control.type}`);
     }
   }
 
   turnOff() {
-    let relay = this.control;
-    switch (relay.type) {
+    switch (this.control.type) {
       case "NO":
-        relay.close();
+        this.control.close();
         break;
       case "NC":
-        relay.open();
+        this.control.open();
         break;
       default:
-        console.log(`Unsupported relay type: ${relay.type}`);
+        console.log(`Unsupported relay type: ${this.control.type}`);
     }
   }
 };

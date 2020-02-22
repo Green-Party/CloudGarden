@@ -29,12 +29,6 @@ module.exports = class Pumps {
         enabled: this.enabled
       });
     });
-
-    // this.turnOn = idx => {
-    //   if (this.enabled && idx < this.controls.length) {
-    //     this.controls[idx].turnOn();
-    //   }
-    // };
   }
 
   turnOn(idx) {
