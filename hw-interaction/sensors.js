@@ -1,147 +1,144 @@
 /**
  * Creation Date: January 28, 2020
  * Author: Logan McDonald
- * Main sensor interaction methods
+ * Main sensor interaction methods for CloudGarden
  */
 
 const five = require("johnny-five");
-const Si1145 = require("./si1145");
 const utils = require("./utils");
+
+// Sensors
+const Si1145 = require("./si1145");
+const ThermoSensors = require("./thermo_sensors");
+const SoilHumiditySensors = require("./soil_humidity_sensors");
+const WaterLevelRuler = require("./water_level_ruler");
+
+const WaterLevelSwitch = require("./water_level_switch");
+
+// Controls
+const Pumps = require("./pumps");
+const Light = require("./light");
 
 module.exports = {
   initialize,
-  runPump,
-  toggleLight
+  toggleLight,
+  runPump
 };
 
 let readings = {
   visible: 0,
   ir: 0,
   uvIdx: 0,
+  waterLevel: 0,
+  temp: [0, 0, 0],
   soilHumidity: [0, 0, 0],
-  temp: [0, 0, 0]
+  pumpsEnabled: false
 };
 
 let controls = {
   pumps: null,
-  light: null,
-  pumpsEnabled: false
+  light: null
 };
+
+const interval = 5000;
 
 function initialize() {
   let board = new five.Board();
 
   board.on("ready", async function() {
     // light sensor
-    // code adapted from Arduino Adafruit_SI1145_Library library
     const si1145 = new Si1145({
-      opts: {
-        board: this
-      }
+      board: board
     });
 
-    setInterval(() => {
+    si1145.initialize(() => {
       if (si1145.deviceActive()) {
-        si1145.getDataFromDevice(err => {
-          if (!err) {
-            readings.visible = si1145.device.parameters[0].value;
-            readings.ir = si1145.device.parameters[1].value;
-            readings.uvIdx = si1145.device.parameters[2].value;
+        setInterval(() => {
+          if (si1145.deviceActive()) {
+            // console.log("Getting data...");
+            si1145.getDataFromDevice(err => {
+              if (!err) {
+                console.log(`Visible: ${si1145.device.parameters[0].value}`);
+                console.log(`IR: ${si1145.device.parameters[1].value}`);
+                console.log(`UVIndex: ${si1145.device.parameters[2].value}`);
+                readings.visible = si1145.device.parameters[0].value;
+                readings.ir = si1145.device.parameters[1].value;
+                readings.uvIdx = si1145.device.parameters[2].value;
+              } else {
+                console.error(`Error: ${err}`);
+              }
+            });
+          } else {
+            console.error("Error: Device not active.");
           }
-        });
+        }, interval);
+      } else {
+        console.error("Error: SI1145 device not found.");
       }
-    }, 500);
-
-    // temperature sensor * 3
-    const addresses = [1, 2, 3];
-    let tempSensors = addresses.map((addr, idx, arr) => {
-      return new five.Thermometer({
-        controller: "DS18B20",
-        pin: 2,
-        address: addr
-        // freq: TBD
-      });
     });
 
-    tempSensors.map((temp, idx, arr) => {
-      temp.on("data", () => {
-        const { address, celsius, fahrenheit, kelvin } = temp;
-        console.log(`Thermometer data at address: 0x${address.toString(16)}`);
-        readings.temp[idx] = celsius;
-      });
-      // temp2.on("change", () => {
-      //   const { address, celsius, fahrenheit, kelvin } = temp2;
-      //   console.log(`Thermometer change at address: 0x${address.toString(16)}`);
-      // });
-    });
+    const thermoSensors = new ThermoSensors();
 
-    // soil humidity sensor
-    const soilMoisturePins = ["A0", "A1", "A2"];
-    let soilSensors = soilMoisturePins.map((pin, idx, arr) => {
-      return new five.Sensor({
-        pin: pin,
-        freq: 1000
-        // threshold: TBD,
-      });
-    });
-
-    // emits two events:
-    // change: occurs when reading is >= threshold
-    // data: occurs at 'freq' interval
-    soilSensors.map((sensor, idx, arr) => {
-      sensor.on("data", () => {
-        let reading = this.raw;
-        readings.soilHumidity[idx] = reading;
-        console.log(`Soil data at index 0: ${reading}`);
-      });
-      // sensor.on("change", () => {
-      //   let reading = this.raw;
-      //   console.log(`Soil data at index 0: ${reading}`);
-      // });
-    });
+    const soilHumiditySensors = new SoilHumiditySensors();
 
     // eTape water level sensor
-    waterLevelRuler = new five.Sensor({
-      pin: "A3",
-      freq: 500
-      // threshold: TBD,
-    });
-
-    waterLevelRuler.on("data", () => {
-      let reading = this.raw;
-      console.log(`Water level reading: ${reading}`);
-    });
-
-    // switch based water level sensor
-    // NO switch
-    // output HIGH when closed, indicates sufficient liquid
-    // output LOW when open, indicates low liquid
-    waterLevelSwitch = new five.Switch(7);
-    waterLevelSwitch.on("open", () => {
-      controls.pumpsEnabled = false;
-    });
-
-    waterLevelSwitch.on("close", () => {
-      controls.pumpsEnabled = true;
-    });
+    const waterLevelRuler = new WaterLevelRuler();
 
     // pumps - controlled through relays at pins 3,4,5
-    // relays configured to be NO
-    controls.pumps = new five.Relays([3, 4, 5]);
+    controls.pumps = new Pumps({
+      enabled: false
+    });
+
+    const waterLevelSwitch = new WaterLevelSwitch({
+      slave: controls.pumps
+    });
 
     // grow light - controlled through relay at pin 6
-    // relay configured to be NO
-    controls.light = new five.Relay(6);
+    controls.light = new Light({
+      pin: 6,
+      type: "NO"
+    });
+
+    configureLightTimeInterval();
+
+    setInterval(() => {
+      readings.temp = thermoSensors.getReadings();
+      console.log(`Temperature: ${readings.temp}`);
+      readings.soilHumidity = soilHumiditySensors.getReadings();
+      console.log(`Soil humidity: ${readings.soilHumidity}`);
+      readings.waterLevel = waterLevelRuler.getReading();
+      console.log(`Water level: ${readings.waterLevel}`);
+      readings.pumpsEnabled = pumps.isEnabled();
+      console.log(`Pumps enabled: ${readings.pumpsEnabled}`);
+    }, interval);
   });
 }
 
-async function runPump(idx) {
-  if (controls.pumpsEnabled) {
-    controls.pumps[idx].on();
-    await utils.sleep(4000);
-    controls.pumps[idx].off();
+// configure to run for 15 mins at the beginning of every hour
+function configureLightTimeInterval() {
+  let date = new Date(Date.now());
+  let minutes = date.getMinutes();
+  if (minutes > 15) {
+    controls.light.turnOff();
+    setTimeout(configureLightTimeInterval, Math.max(0, (45 - minutes) * 60000));
+  } else {
+    controls.light.turnOn();
+    setTimeout(configureLightTimeInterval, Math.max(0, (15 - minutes) * 60000));
   }
 }
+
 function toggleLight() {
-  controls.light.toggle();
+  if (controls.light.isOn()) {
+    controls.light.turnOff();
+  } else {
+    controls.light.turnOn();
+  }
 }
+
+function runPump(idx) {
+  controls.pumps.turnOn(idx);
+  await utils.sleep(waitTime);
+  controls.pumps.turnOff(idx);
+}
+
+// initialize();
