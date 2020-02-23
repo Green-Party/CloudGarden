@@ -19,12 +19,6 @@ const WaterLevelSwitch = require("./water_level_switch");
 const Pumps = require("./pumps");
 const Light = require("./light");
 
-module.exports = {
-  initialize,
-  toggleLight,
-  runPump
-};
-
 let readings = {
   visible: 0,
   ir: 0,
@@ -42,8 +36,10 @@ let controls = {
 
 const interval = 5000;
 
-function initialize() {
+function initialize(state) {
   let board = new five.Board();
+
+  Object.assign(state, readings);
 
   board.on("ready", async function() {
     // light sensor
@@ -58,12 +54,12 @@ function initialize() {
             // console.log("Getting data...");
             si1145.getDataFromDevice(err => {
               if (!err) {
-                console.log(`Visible: ${si1145.device.parameters[0].value}`);
-                console.log(`IR: ${si1145.device.parameters[1].value}`);
-                console.log(`UVIndex: ${si1145.device.parameters[2].value}`);
                 readings.visible = si1145.device.parameters[0].value;
                 readings.ir = si1145.device.parameters[1].value;
                 readings.uvIdx = si1145.device.parameters[2].value;
+                console.log(`Visible: ${si1145.device.parameters[0].value}`);
+                console.log(`IR: ${si1145.device.parameters[1].value}`);
+                console.log(`UVIndex: ${si1145.device.parameters[2].value}`);
               } else {
                 console.error(`Error: ${err}`);
               }
@@ -108,7 +104,7 @@ function initialize() {
       console.log(`Soil humidity: ${readings.soilHumidity}`);
       readings.waterLevel = waterLevelRuler.getReading();
       console.log(`Water level: ${readings.waterLevel}`);
-      readings.pumpsEnabled = pumps.isEnabled();
+      readings.pumpsEnabled = controls.pumps.isEnabled();
       console.log(`Pumps enabled: ${readings.pumpsEnabled}`);
     }, interval);
   });
@@ -129,16 +125,22 @@ function configureLightTimeInterval() {
 
 function toggleLight() {
   if (controls.light.isOn()) {
-    controls.light.turnOff();
+    return controls.light.turnOff();
   } else {
-    controls.light.turnOn();
+    return controls.light.turnOn();
   }
 }
 
-function runPump(idx) {
+async function runPump(idx) {
   controls.pumps.turnOn(idx);
   await utils.sleep(waitTime);
   controls.pumps.turnOff(idx);
 }
 
-// initialize();
+// To test sensor initialization
+// initialize({});
+module.exports = {
+  initialize,
+  runPump,
+  toggleLight
+};
