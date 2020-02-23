@@ -5,12 +5,8 @@
  */
 
 import React, { useState, Fragment } from "react";
-import { Layer, IconChevronRight } from "sancho";
 import "../../Dashboard.css";
 import PercentChart from "../PercentChart";
-import { ReactComponent as Cactus } from "../../illustrations/cactus.svg";
-import { ReactComponent as Aloe } from "../../illustrations/aloe_vera.svg";
-import { ReactComponent as Snake } from "../../illustrations/snake_plant.svg";
 import HistoryChart from "../HistoryChart";
 import { Link, useRouteMatch, Route } from "react-router-dom";
 
@@ -76,7 +72,7 @@ const LightDashboard: React.FC = () => {
     return (
       <Card className={styles.chart}>
         <CardContent>
-          <Typography variant={"h6"} gutterBottom>
+          <Typography variant={"subtitle1"} gutterBottom>
             UV Index
           </Typography>
           <Divider />
@@ -91,7 +87,7 @@ const LightDashboard: React.FC = () => {
     return (
       <Card className={styles.chart}>
         <CardContent>
-          <Typography variant={"h6"} gutterBottom>
+          <Typography variant={"subtitle1"} gutterBottom>
             Visible Intensity
           </Typography>
           <Divider />
@@ -106,7 +102,7 @@ const LightDashboard: React.FC = () => {
     return (
       <Card className={styles.chart}>
         <CardContent>
-          <Typography variant={"h6"} gutterBottom>
+          <Typography variant={"subtitle1"} gutterBottom>
             Infrared Index
           </Typography>
           <Divider />
@@ -152,17 +148,17 @@ const LightDashboard: React.FC = () => {
         justify="space-between"
         alignItems="center"
       >
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} sm={4}>
           <UVPercentage />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} sm={4}>
           <VisiblePercentage />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} sm={4}>
           <InfraredPercentage />
         </Grid>
       </Grid>
-      <Grid item xs={12} md={12}>
+      <Grid item xs={12} sm={12}>
         <HistoryGraph />
       </Grid>
     </div>

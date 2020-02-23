@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@atlaskit/navigation-next": "^7.3.4",
     "@material-ui/core": "^4.9.1",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.41",
@@ -20,16 +19,17 @@
     "@types/react-router-dom": "^5.1.3",
     "@types/socket.io-client": "^1.4.32",
     "classnames": "^2.2.6",
+    "clsx": "^1.1.0",
     "d3": "^5.15.0",
     "react": "^16.12.0",
     "react-d3-library": "^1.1.8",
     "react-dom": "^16.12.0",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.3.0",
-    "sancho": "^3.5.6",
-    "semantic-ui-react": "^0.88.2",
+    "react-scripts": "^3.4.0",
     "socket.io-client": "^2.3.0",
+    "typeface-space-mono": "^0.0.71",
+    "typeface-work-sans": "^0.0.72",
     "typescript": "^3.7.5"
   },
   "scripts": {
