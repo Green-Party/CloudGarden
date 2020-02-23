@@ -53,7 +53,7 @@ const TestControlDashboard: React.FC = () => {
         color={lightState ? "primary" : "secondary"}
         disabled={buttonDisabled}
         endIcon={<CloudUploadIcon />}
-        onClick={() => onClickPumpCommand(1)}
+        onClick={() => onClickPumpCommand(0)}
       >
         Pump 1
       </Button>
@@ -63,7 +63,7 @@ const TestControlDashboard: React.FC = () => {
         color={lightState ? "primary" : "secondary"}
         disabled={buttonDisabled}
         endIcon={<CloudUploadIcon />}
-        onClick={() => onClickPumpCommand(2)}
+        onClick={() => onClickPumpCommand(1)}
       >
         Pump 2
       </Button>
@@ -73,7 +73,7 @@ const TestControlDashboard: React.FC = () => {
         color={lightState ? "primary" : "secondary"}
         disabled={buttonDisabled}
         endIcon={<CloudUploadIcon />}
-        onClick={() => onClickPumpCommand(3)}
+        onClick={() => onClickPumpCommand(2)}
       >
         Pump 3
       </Button>
