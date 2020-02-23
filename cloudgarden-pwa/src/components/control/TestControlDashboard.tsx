@@ -15,8 +15,11 @@ const TestControlDashboard: React.FC = () => {
   const [buttonDisabled, setButtonDisable] = useState(false);
   const [lightState, setLightState] = useState(false);
   const [currentSocket, setCurrentSocket]: any = useState(null);
-  const onClickSendCommand = () => {
+  const onClickLightCommand = () => {
     currentSocket.emit("toggleLight", true);
+  };
+  const onClickPumpCommand = (idx: number) => {
+    currentSocket.emit("togglePump", idx);
   };
 
   useEffect(() => {
@@ -24,6 +27,7 @@ const TestControlDashboard: React.FC = () => {
     const socket = socketIOClient();
     setCurrentSocket(socket);
     socket.on("lightToggled", (data: boolean) => setLightState(data));
+    socket.on("pumpToggled", (_data: boolean) => console.log("Pump toggled"));
     return () => {
       //stuff that happens when the component unmounts
       //e.g. close socket connection
@@ -39,9 +43,39 @@ const TestControlDashboard: React.FC = () => {
         color={lightState ? "primary" : "secondary"}
         disabled={buttonDisabled}
         endIcon={<CloudUploadIcon />}
-        onClick={onClickSendCommand}
+        onClick={onClickLightCommand}
       >
-        Send
+        Light pls
+      </Button>
+
+      <Button
+        variant="contained"
+        color={lightState ? "primary" : "secondary"}
+        disabled={buttonDisabled}
+        endIcon={<CloudUploadIcon />}
+        onClick={() => onClickPumpCommand(1)}
+      >
+        Pump 1
+      </Button>
+
+      <Button
+        variant="contained"
+        color={lightState ? "primary" : "secondary"}
+        disabled={buttonDisabled}
+        endIcon={<CloudUploadIcon />}
+        onClick={() => onClickPumpCommand(2)}
+      >
+        Pump 2
+      </Button>
+
+      <Button
+        variant="contained"
+        color={lightState ? "primary" : "secondary"}
+        disabled={buttonDisabled}
+        endIcon={<CloudUploadIcon />}
+        onClick={() => onClickPumpCommand(3)}
+      >
+        Pump 3
       </Button>
     </div>
   );
