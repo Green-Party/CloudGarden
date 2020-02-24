@@ -6,7 +6,7 @@
 
 import React from "react";
 import "./Dashboard.css";
-import Tabs from "./components/Tabs";
+import Tabs from "./components/main/Tabs";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import MoistureDashboard from "./components/moisture/MoistureDashboard";
 import PlantSpecific from "./components/moisture/PlantSpecific";

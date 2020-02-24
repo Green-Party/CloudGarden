@@ -6,11 +6,11 @@
 
 import React, { useState, Fragment } from "react";
 import "../../Dashboard.css";
-import PercentChart from "../PercentChart";
+import PercentChart from "../charts/PercentChart";
 import { ReactComponent as Cactus } from "../../illustrations/cactus.svg";
 import { ReactComponent as Aloe } from "../../illustrations/aloe_vera.svg";
 import { ReactComponent as Snake } from "../../illustrations/snake_plant.svg";
-import HistoryChart from "../HistoryChart";
+import HistoryChart from "../charts/HistoryChart";
 import { Link, useRouteMatch, Route } from "react-router-dom";
 import {
   Card,

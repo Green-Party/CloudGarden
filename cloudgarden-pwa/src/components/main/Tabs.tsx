@@ -6,7 +6,6 @@
 
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import "../Dashboard.css";
 import { Tabs as TabsContainer, Tab } from "@material-ui/core";
 
 interface TabsProps {
