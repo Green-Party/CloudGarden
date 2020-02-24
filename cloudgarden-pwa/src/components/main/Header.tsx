@@ -14,8 +14,7 @@ import {
   Toolbar
 } from "@material-ui/core";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
-import "../Header.css";
-import Logo from "./Logo";
+
 interface HeaderProps {
   onMenuClick: Function;
 }
