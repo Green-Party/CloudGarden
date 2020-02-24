@@ -18,7 +18,6 @@ import ControlView from "./components/controls/ControlView";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "./styles/Theme";
 import NavDrawer from "./components/main/NavDrawer";
-import TestDashboard from "./components/TestDashboard";
 
 const Home = lazy(() => import("./Home"));
 
@@ -40,9 +39,6 @@ const App: React.FC = () => {
               </Route>
               <Route path="/controls">
                 <ControlView />
-              </Route>
-              <Route path="/notifications">
-                <TestDashboard />
               </Route>
             </Switch>
           </Suspense>
