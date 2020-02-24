@@ -4,7 +4,6 @@
  * Wrapper class for the johnny-five Relay class
  * See https://github.com/rwaldron/johnny-five/wiki/Relay for documentation
  */
-
 const five = require("johnny-five");
 
 module.exports = class Relay {
@@ -35,30 +34,38 @@ module.exports = class Relay {
   }
 
   turnOn() {
+    let returnState = undefined;
     switch (this.control.type) {
       case "NO":
         this.control.open();
         console.log(this.isOn());
+        returnState = this.isOn();
         break;
       case "NC":
         this.control.close();
         console.log(this.isOn());
+        returnState = this.isOn();
         break;
       default:
         console.log(`Unsupported relay type: ${this.control.type}`);
     }
+    return returnState;
   }
 
   turnOff() {
+    let returnState = undefined;
     switch (this.control.type) {
       case "NO":
         this.control.close();
+        returnState = !this.isOn();
         break;
       case "NC":
         this.control.open();
+        returnState = !this.isOn();
         break;
       default:
         console.log(`Unsupported relay type: ${this.control.type}`);
     }
+    return returnState;
   }
 };

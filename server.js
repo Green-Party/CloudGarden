@@ -15,6 +15,7 @@ const chalk = require("chalk");
 const logger = require("morgan");
 const open = require("open");
 const io = require("socket.io")(server);
+const Sensors = require("./hw-interaction/sensors");
 const Azure = require("./hw-interaction/Azure/communication");
 
 require("dotenv").config();
@@ -60,15 +61,26 @@ app.use((err, req, res, _next) => {
 
 io.on("connection", socket => {
   socket.on("toggleLight", data => {
-    console.log(`Toggling light ${data}`);
+    console.log(`Toggling light prev state:${data}`);
     Azure.blinkLED();
-    io.emit("lightToggled", true);
+    const lightState = Sensors.toggleLight();
+    console.log(`Toggling light new state:${lightState}`);
+    io.emit("lightToggled", lightState);
+  });
+  socket.on("togglePump", async idx => {
+    console.log(`Toggling pump ${idx}`);
+    Azure.blinkLED();
+    await Sensors.runPump(idx);
+    io.emit("pumpToggled", true);
   });
   socket.on("disconnect", () => console.log("Client disconnected"));
 });
 
-// Setup Azure
+// Setup sensors
 let sensorData = {};
+Sensors.initialize(sensorData);
+
+// Setup Azure
 Azure.setupClient(process.env.CONNECTION_STRING, sensorData);
 
 module.exports = app;
