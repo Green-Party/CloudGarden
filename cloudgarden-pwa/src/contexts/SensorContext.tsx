@@ -1,23 +1,15 @@
-import React, { useState, useContext, createContext } from "react";
+/**
+ * Creation Date: February 25, 2020
+ * Author: Luke Slevinsky
+ * This is a React context specifically to provide the web app with sensor data as state
+ */
+import React, { useState, useContext, createContext, useEffect } from "react";
 import * as signalR from "@microsoft/signalr";
 import axios from "axios";
+import { SensorState, SensorData } from "../types";
 
-type SensorState = {
-  sensorData: SensorData[];
-};
-
-type SensorData = {
-  _id: number;
-  visible: number;
-  ir: number;
-  uvIdx: number;
-  waterLevel: number;
-  temp: number[];
-  soilHumidity: number[];
-  pumpsEnabled: boolean;
-};
 type SensorDataProviderProps = { children: React.ReactNode };
-const SensorStateContext = createContext<SensorState | undefined>(undefined);
+const SensorStateContext = createContext<SensorData[] | undefined>(undefined);
 
 // axios configs
 const apiBaseUrl = "https://db-to-signalr-service.azurewebsites.net/";
@@ -26,6 +18,17 @@ const axiosConfig = {};
 function getConnectionInfo() {
   return axios
     .post(`${apiBaseUrl}/api/negotiate`, null, axiosConfig)
+    .then(resp => {
+      return resp.data;
+    })
+    .catch(() => {
+      return {};
+    });
+}
+
+function getSensorData() {
+  return axios
+    .get(`${apiBaseUrl}/api/GetSensorData`, axiosConfig)
     .then(resp => {
       return resp.data;
     })
@@ -50,61 +53,73 @@ function startConnection(connection: signalR.HubConnection) {
 }
 
 function SensorDataProvider({ children }: SensorDataProviderProps) {
-  const [sensorState, updateSensorState]: [SensorState, Function] = useState({
-    sensorData: []
-  });
+  const [sensorData, updateSensorState]: [SensorData[], Function] = useState(
+    []
+  );
 
   function sensorsUpdated(updatedSensor: SensorData) {
-    let sensor = sensorState.sensorData.find(
-      (s: SensorData) => s._id === updatedSensor._id
-    );
-    if (sensor) {
-      Object.assign(sensor, updatedSensor);
-    } else {
-      sensorState.sensorData.push(updatedSensor);
-    }
-    updateSensorState(sensorState);
+    updateSensorState((sensorData: SensorData[]) => {
+      console.log(`Sensor UPDATED ${updatedSensor}`);
+      console.log(updatedSensor);
+      let stateCopy = Array.from(sensorData);
+      let newState;
+      let sensor = stateCopy.find(
+        (s: SensorData) => s._rid === updatedSensor._rid
+      );
+      if (sensor) {
+        Object.assign(sensor, updatedSensor);
+        newState = stateCopy;
+      } else {
+        newState = [...sensorData, updatedSensor];
+      }
+      return newState;
+    });
   }
 
-  getConnectionInfo()
-    .then(info => {
-      let accessToken = info.accessToken;
-      const options = {
-        accessTokenFactory: () => {
-          if (accessToken) {
-            const _accessToken = accessToken;
-            accessToken = null;
-            return _accessToken;
-          } else {
-            return getConnectionInfo().then(info => {
-              return info.accessToken;
-            });
+  useEffect(() => {
+    getSensorData()
+      .then(sensors => sensors.forEach(sensorsUpdated))
+      .then(getConnectionInfo)
+      .then(info => {
+        let accessToken = info.accessToken;
+        const options = {
+          accessTokenFactory: () => {
+            if (accessToken) {
+              const _accessToken = accessToken;
+              accessToken = null;
+              return _accessToken;
+            } else {
+              return getConnectionInfo().then(info => {
+                return info.accessToken;
+              });
+            }
           }
-        }
-      };
-      const connection = new signalR.HubConnectionBuilder()
-        .withUrl(info.url, options)
-        .configureLogging(signalR.LogLevel.Information)
-        .build();
+        };
+        const connection = new signalR.HubConnectionBuilder()
+          .withUrl(info.url, options)
+          .configureLogging(signalR.LogLevel.Information)
+          .build();
 
-      connection.on("sensorsUpdated", sensorsUpdated);
+        connection.on("sensorsUpdated", sensorsUpdated);
 
-      connection.onclose(() => {
-        console.log("disconnected");
-        setTimeout(() => {
-          startConnection(connection);
-        }, 2000);
-      });
-      startConnection(connection);
-    })
-    .catch(console.error);
+        connection.onclose(() => {
+          console.log("disconnected");
+          setTimeout(() => {
+            startConnection(connection);
+          }, 2000);
+        });
+        startConnection(connection);
+      })
+      .catch(console.error);
+  }, []);
 
   return (
-    <SensorStateContext.Provider value={sensorState}>
+    <SensorStateContext.Provider value={sensorData}>
       {children}
     </SensorStateContext.Provider>
   );
 }
+
 function useSensorState() {
   const context = useContext(SensorStateContext);
   if (context === undefined) {

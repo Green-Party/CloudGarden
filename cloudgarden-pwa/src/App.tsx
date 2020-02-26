@@ -28,11 +28,11 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <SensorDataProvider>
-        <Fragment>
-          <Header onMenuClick={setOpen} />
-          <Router>
-            <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div>Loading...</div>}>
+        <SensorDataProvider>
+          <Fragment>
+            <Header onMenuClick={setOpen} />
+            <Router>
               <Switch>
                 <Route path="/dashboard">
                   <Home />
@@ -44,11 +44,11 @@ const App: React.FC = () => {
                   <ControlView />
                 </Route>
               </Switch>
-            </Suspense>
-            <NavDrawer open={open} onCloseFunc={setOpen} />
-          </Router>
-        </Fragment>
-      </SensorDataProvider>
+              <NavDrawer open={open} onCloseFunc={setOpen} />
+            </Router>
+          </Fragment>
+        </SensorDataProvider>
+      </Suspense>
     </ThemeProvider>
   );
 };

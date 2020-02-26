@@ -4,22 +4,21 @@
  * A dashboard component for displaying moisture sensor data
  */
 
-import React, { useState, Fragment } from "react";
+import React from "react";
 import "../../Dashboard.css";
 import PercentChart from "../charts/PercentChart";
 import HistoryChart from "../charts/HistoryChart";
-import { Link, useRouteMatch, Route } from "react-router-dom";
+import { SensorState, SensorData } from "../../types";
 
 import {
   Card,
   CardContent,
   Divider,
   Grid,
-  Button,
-  CardMedia,
   Typography
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { useSensorState } from "../../contexts";
 
 const useStyles = makeStyles({
   button: {
@@ -64,11 +63,13 @@ const useStyles = makeStyles({
 });
 
 const LightDashboard: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const match = useRouteMatch();
+  const sensorData = useSensorState();
+  console.log(`sensor data`);
+  console.log(sensorData);
 
   const UVPercentage: React.FC = () => {
     const styles = useStyles();
+    const lastUvIdx = sensorData[sensorData.length - 1].uvIdx;
     return (
       <Card className={styles.chart}>
         <CardContent>
@@ -76,7 +77,7 @@ const LightDashboard: React.FC = () => {
             UV Index
           </Typography>
           <Divider />
-          <PercentChart percent={20} />
+          <PercentChart percent={lastUvIdx} />
         </CardContent>
       </Card>
     );
@@ -84,6 +85,7 @@ const LightDashboard: React.FC = () => {
 
   const VisiblePercentage: React.FC = () => {
     const styles = useStyles();
+    const lastVisible = sensorData[sensorData.length - 1].visible;
     return (
       <Card className={styles.chart}>
         <CardContent>
@@ -91,7 +93,7 @@ const LightDashboard: React.FC = () => {
             Visible Intensity
           </Typography>
           <Divider />
-          <PercentChart percent={60} />
+          <PercentChart percent={lastVisible} />
         </CardContent>
       </Card>
     );
@@ -99,6 +101,7 @@ const LightDashboard: React.FC = () => {
 
   const InfraredPercentage: React.FC = () => {
     const styles = useStyles();
+    const lastInfared = sensorData[sensorData.length - 1].ir;
     return (
       <Card className={styles.chart}>
         <CardContent>
@@ -106,7 +109,7 @@ const LightDashboard: React.FC = () => {
             Infrared Index
           </Typography>
           <Divider />
-          <PercentChart percent={80} />
+          <PercentChart percent={lastInfared} />
         </CardContent>
       </Card>
     );
@@ -114,26 +117,28 @@ const LightDashboard: React.FC = () => {
 
   const HistoryGraph: React.FC = () => {
     const styles = useStyles();
+
+    const sensorDataToChartData = (sensorData: SensorData[]) => {
+      return sensorData.map(sensor => {
+        return {
+          date: sensor._ts,
+          value: sensor.visible
+        };
+      });
+    };
+
+    console.log("Chart Sensor data", sensorDataToChartData(sensorData));
     return (
       <Card className={styles.chart}>
         <CardContent>
           <Typography variant={"h6"} gutterBottom>
-            History
+            History of Visible
           </Typography>
           <Divider />
           <HistoryChart
             width={800}
             height={400}
-            data={[
-              { date: new Date("June 12, 2015"), value: 10 },
-              { date: new Date("June 15, 2015"), value: 15 },
-              { date: new Date("June 18, 2015"), value: 10 },
-              { date: new Date("June 21, 2015"), value: 20 },
-              { date: new Date("June 23, 2015"), value: 30 },
-              { date: new Date("June 25, 2015"), value: 25 },
-              { date: new Date("June 28, 2015"), value: 18 },
-              { date: new Date("June 30, 2015"), value: 15 }
-            ]}
+            data={sensorDataToChartData(sensorData)}
           />
         </CardContent>
       </Card>
