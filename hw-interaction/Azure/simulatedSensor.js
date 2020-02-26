@@ -16,12 +16,12 @@ class Sensor {
   }
   read(callback) {
     callback(null, {
-      temperature: random(20, 30),
-      soil_humidity: random(60, 80),
-      pumps_emabled: Math.random() >= 0.5,
+      temperature: [random(20, 30), random(20, 30), random(20, 30)],
+      soilHumidity: [random(60, 80), random(60, 80), random(60, 80)],
+      pumpsEnabled: Math.random() >= 0.5,
       visible: random(200, 300),
       ir: random(200, 300),
-      uv: random(1, 9)
+      uvIdx: random(1, 9)
     });
   }
 }
