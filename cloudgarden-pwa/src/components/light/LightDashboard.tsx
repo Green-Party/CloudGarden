@@ -4,22 +4,21 @@
  * A dashboard component for displaying moisture sensor data
  */
 
-import React, { useState, Fragment } from "react";
+import React from "react";
 import "../../Dashboard.css";
-import PercentChart from "../charts/PercentChart";
 import HistoryChart from "../charts/HistoryChart";
-import { Link, useRouteMatch, Route } from "react-router-dom";
-
 import {
   Card,
   CardContent,
   Divider,
   Grid,
-  Button,
-  CardMedia,
   Typography
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import PercentChartNew, {
+  SensorType,
+  SensorUnit
+} from "../charts/PercentChartNew";
 
 const useStyles = makeStyles({
   button: {
@@ -64,9 +63,6 @@ const useStyles = makeStyles({
 });
 
 const LightDashboard: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const match = useRouteMatch();
-
   const UVPercentage: React.FC = () => {
     const styles = useStyles();
     return (
@@ -76,7 +72,11 @@ const LightDashboard: React.FC = () => {
             UV Index
           </Typography>
           <Divider />
-          <PercentChart percent={20} />
+          <PercentChartNew
+            value={20}
+            type={SensorType.UVINDEX}
+            units={SensorUnit.UNITS}
+          />
         </CardContent>
       </Card>
     );
@@ -91,7 +91,11 @@ const LightDashboard: React.FC = () => {
             Visible Intensity
           </Typography>
           <Divider />
-          <PercentChart percent={60} />
+          <PercentChartNew
+            value={60}
+            type={SensorType.VISIBLE}
+            units={SensorUnit.UNITS}
+          />
         </CardContent>
       </Card>
     );
@@ -106,7 +110,11 @@ const LightDashboard: React.FC = () => {
             Infrared Index
           </Typography>
           <Divider />
-          <PercentChart percent={80} />
+          <PercentChartNew
+            value={80}
+            type={SensorType.IR}
+            units={SensorUnit.UNITS}
+          />
         </CardContent>
       </Card>
     );

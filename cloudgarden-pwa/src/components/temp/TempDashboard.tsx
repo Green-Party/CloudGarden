@@ -4,19 +4,14 @@
  * A dashboard component for displaying moisture sensor data
  */
 
-import React, { useState, Fragment } from "react";
+import React, { useState } from "react";
 import "../../Dashboard.css";
-import PercentChart from "../charts/PercentChart";
 import HistoryChart from "../charts/HistoryChart";
-import { Link, useRouteMatch, Route } from "react-router-dom";
-import UnitToggle from "./UnitToggle";
+import { useRouteMatch } from "react-router-dom";
 import {
   Card,
   CardContent,
   Divider,
-  Grid,
-  Button,
-  CardMedia,
   Typography,
   GridListTile,
   GridList
@@ -24,6 +19,10 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import PercentChartNew, {
+  SensorType,
+  SensorUnit
+} from "../charts/PercentChartNew";
 
 const useStyles = makeStyles({
   button: {
@@ -76,24 +75,22 @@ const useStyles = makeStyles({
 });
 
 const TempDashboard: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const match = useRouteMatch();
   const styles = useStyles();
   const TempChart: React.FC = () => {
-    const [units, setUnits] = useState<string>("celsius");
+    const [units, setUnits] = useState<SensorUnit>(SensorUnit.CELSIUS);
     const [temp, setTemp] = useState<number>(20);
 
     const handleUnits = (
       event: React.MouseEvent<HTMLElement>,
-      newUnits: string
+      newUnits: SensorUnit
     ) => {
       console.log(units, newUnits);
-      if (newUnits != units && newUnits != null) {
+      if (newUnits !== units && newUnits !== null) {
         setUnits(newUnits);
         let newTemp = temp;
-        if (newUnits == "celsius") {
+        if (newUnits === SensorUnit.CELSIUS) {
           newTemp = ((temp - 32) * 5) / 9;
-        } else if (newUnits == "ferinheight") {
+        } else if (newUnits === SensorUnit.FERINHEIGHT) {
           newTemp = (temp * 9) / 5 + 32;
         }
         setTemp(newTemp);
@@ -107,17 +104,20 @@ const TempDashboard: React.FC = () => {
             Temperature
           </Typography>
           <Divider />
-          <PercentChart percent={temp} />
+          <PercentChartNew type={SensorType.TEMP} value={temp} units={units} />
           <ToggleButtonGroup
             value={units}
             exclusive
             onChange={handleUnits}
             aria-label="temp units"
           >
-            <ToggleButton value="celsius" aria-label="celsius">
+            <ToggleButton value={SensorUnit.CELSIUS} aria-label="celsius">
               ℃
             </ToggleButton>
-            <ToggleButton value="ferinheight" aria-label="ferinheight">
+            <ToggleButton
+              value={SensorUnit.FERINHEIGHT}
+              aria-label="ferinheight"
+            >
               ℉
             </ToggleButton>
           </ToggleButtonGroup>

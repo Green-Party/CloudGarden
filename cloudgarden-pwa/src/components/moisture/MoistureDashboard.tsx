@@ -4,19 +4,16 @@
  * A dashboard component for displaying moisture sensor data
  */
 
-import React, { useState, Fragment } from "react";
+import React, { Fragment } from "react";
 import "../../Dashboard.css";
-import PercentChart from "../charts/PercentChart";
 import { ReactComponent as Cactus } from "../../illustrations/cactus.svg";
 import { ReactComponent as Aloe } from "../../illustrations/aloe_vera.svg";
 import { ReactComponent as Snake } from "../../illustrations/snake_plant.svg";
 import HistoryChart from "../charts/HistoryChart";
-import { Link, useRouteMatch, Route } from "react-router-dom";
 import {
   Card,
   CardContent,
   Divider,
-  Grid,
   Button,
   CardMedia,
   Typography,
@@ -25,6 +22,10 @@ import {
   useMediaQuery
 } from "@material-ui/core";
 import { makeStyles, createStyles, useTheme } from "@material-ui/core/styles";
+import PercentChartNew, {
+  SensorUnit,
+  SensorType
+} from "../charts/PercentChartNew";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -126,7 +127,11 @@ const MoistureDashboard: React.FC = () => {
             Average Moisture
           </Typography>
           <Divider />
-          <PercentChart percent={60} />
+          <PercentChartNew
+            value={60}
+            units={SensorUnit.UNITS}
+            type={SensorType.MOISTURE}
+          />
         </CardContent>
       </Card>
     );
