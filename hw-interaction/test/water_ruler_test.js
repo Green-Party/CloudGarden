@@ -12,8 +12,11 @@ function waterRulerTest() {
   setInterval(() => {
     let reading = waterLevelRuler.getReading();
     let volume = waterLevelRuler.getVolume();
-    console.log(`Water level reading: ${reading}`);
-    console.log(`Volume reading: ${volume}`);
+    let height = waterLevelRuler.getHeight();
+    console.log(`Resistance: ${reading}`);
+    console.log(`Volume: ${volume}`);
+    console.log(`Water height: ${height}`);
+    console.log();
   }, 1000);
 }
 
