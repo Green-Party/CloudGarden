@@ -3,73 +3,16 @@ import { VictoryPie } from "victory";
 import { Typography, useTheme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
-export enum SensorType {
-  TEMP = "TEMP",
-  MOISTURE = "MOISTURE",
-  UVINDEX = "UVINDEX",
-  IR = "IR",
-  VISIBLE = "VISIBLE",
-  WATER = "WATER"
-}
-
-export enum SensorUnit {
-  CELSIUS = "CELSIUS",
-  FERINHEIGHT = "FERINHEIGHT",
-  UNITS = "UNITS"
-}
-
-interface SensorRangesType {
-  [identifier: string]: any;
-}
-
-const SensorRanges: SensorRangesType = {
-  TEMP: {
-    CELSIUS: {
-      low: 0,
-      high: 100,
-      ideal: 50
-    },
-    FERINHEIGHT: {
-      low: 32,
-      high: 212,
-      ideal: 122
-    }
-  },
-  MOISTURE: {
-    UNITS: {
-      low: 0,
-      high: 100,
-      ideal: 50
-    }
-  },
-  UVINDEX: {
-    UNITS: {
-      low: 0,
-      high: 100,
-      ideal: 50
-    }
-  },
-  IR: {
-    UNITS: { low: 0, high: 100, ideal: 50 }
-  },
-  VISIBLE: {
-    UNITS: { low: 0, high: 100, ideal: 50 }
-  },
-  WATER: {
-    UNITS: { low: 0, high: 100, ideal: 50 }
-  }
-};
-
 interface Data {
-  type: SensorType;
   value: number;
-  units: SensorUnit;
+  range: { low: number; high: number; ideal: number };
+  units: string;
 }
 
 const useStyles = makeStyles({
   chartLabel: {
     position: "absolute",
-    top: "50%",
+    top: "52%",
     left: "50%",
     zIndex: 2,
     marginTop: "-2rem",
@@ -80,20 +23,16 @@ const useStyles = makeStyles({
   }
 });
 
-const PercentChartNew: React.FC<Data> = ({ type, value, units }: Data) => {
+const PercentChartNew: React.FC<Data> = ({ value, range, units }: Data) => {
   const styles = useStyles();
   const theme = useTheme();
 
   let percent = Math.round(
-    ((value - SensorRanges[type][units].low) /
-      (SensorRanges[type][units].high - SensorRanges[type][units].low)) *
-      100
+    ((value - range.low) / (range.high - range.low)) * 100
   );
 
   let idealPercent = Math.round(
-    ((SensorRanges[type][units].ideal - SensorRanges[type][units].low) /
-      (SensorRanges[type][units].high - SensorRanges[type][units].low)) *
-      100
+    ((range.ideal - range.low) / (range.high - range.low)) * 100
   );
 
   function getColor() {
@@ -135,16 +74,18 @@ const PercentChartNew: React.FC<Data> = ({ type, value, units }: Data) => {
           animate={{
             duration: 1000
           }}
-          //cornerRadius={25}
           labels={() => null}
           endAngle={angle}
         />
-        <Typography variant="h3" className={styles.chartLabel}>
-          {Math.round(value)}
+        <Typography variant="h6" className={styles.chartLabel}>
+          {units == ""
+            ? "\xa00" + Math.round(value)
+            : Math.round(value) + "" + units}
         </Typography>
       </div>
       <Typography variant="subtitle1">
-        Ideal: {Math.round(SensorRanges[type][units].ideal)}
+        Ideal: {Math.round(range.ideal)}
+        {units}
       </Typography>
     </div>
   );

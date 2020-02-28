@@ -6,8 +6,6 @@
 
 import React, { useState } from "react";
 import "../../Dashboard.css";
-import HistoryChart from "../charts/HistoryChart";
-import { useRouteMatch } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -19,10 +17,9 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import PercentChartNew, {
-  SensorType,
-  SensorUnit
-} from "../charts/PercentChartNew";
+import PercentChartNew from "../charts/PercentChartNew";
+import HistoryChartNew from "../charts/HistoryChartNew";
+import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
 
 const useStyles = makeStyles({
   button: {
@@ -104,7 +101,15 @@ const TempDashboard: React.FC = () => {
             Temperature
           </Typography>
           <Divider />
-          <PercentChartNew type={SensorType.TEMP} value={temp} units={units} />
+          <PercentChartNew
+            value={temp}
+            range={{
+              low: SensorRanges[SensorType.TEMP][units].low,
+              high: SensorRanges[SensorType.TEMP][units].high,
+              ideal: SensorRanges[SensorType.TEMP][units].ideal
+            }}
+            units={units === SensorUnit.CELSIUS ? "℃" : "℉"}
+          />
           <ToggleButtonGroup
             value={units}
             exclusive
@@ -134,18 +139,20 @@ const TempDashboard: React.FC = () => {
             History
           </Typography>
           <Divider />
-          <HistoryChart
-            width={800}
-            height={400}
+          <HistoryChartNew
+            units={SensorUnit.UNITS}
+            type={SensorType.TEMP}
             data={[
-              { date: new Date("June 12, 2015"), value: 10 },
-              { date: new Date("June 15, 2015"), value: 15 },
-              { date: new Date("June 18, 2015"), value: 10 },
-              { date: new Date("June 21, 2015"), value: 20 },
-              { date: new Date("June 23, 2015"), value: 30 },
-              { date: new Date("June 25, 2015"), value: 25 },
-              { date: new Date("June 28, 2015"), value: 18 },
-              { date: new Date("June 30, 2015"), value: 15 }
+              [
+                { timestamp: new Date("June 12, 2015"), value: 10 },
+                { timestamp: new Date("June 15, 2015"), value: 15 },
+                { timestamp: new Date("June 18, 2015"), value: 10 },
+                { timestamp: new Date("June 21, 2015"), value: 20 },
+                { timestamp: new Date("June 23, 2015"), value: 30 },
+                { timestamp: new Date("June 25, 2015"), value: 25 },
+                { timestamp: new Date("June 28, 2015"), value: 18 },
+                { timestamp: new Date("June 30, 2015"), value: 15 }
+              ]
             ]}
           />
         </CardContent>

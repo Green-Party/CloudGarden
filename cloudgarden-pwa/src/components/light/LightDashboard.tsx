@@ -4,9 +4,9 @@
  * A dashboard component for displaying moisture sensor data
  */
 
-import React from "react";
+import React, { Fragment } from "react";
 import "../../Dashboard.css";
-import HistoryChart from "../charts/HistoryChart";
+
 import {
   Card,
   CardContent,
@@ -15,10 +15,9 @@ import {
   Typography
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import PercentChartNew, {
-  SensorType,
-  SensorUnit
-} from "../charts/PercentChartNew";
+import PercentChartNew from "../charts/PercentChartNew";
+import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
+import HistoryChartNew from "../charts/HistoryChartNew";
 
 const useStyles = makeStyles({
   button: {
@@ -73,9 +72,13 @@ const LightDashboard: React.FC = () => {
           </Typography>
           <Divider />
           <PercentChartNew
-            value={20}
-            type={SensorType.UVINDEX}
-            units={SensorUnit.UNITS}
+            value={4}
+            range={{
+              low: SensorRanges[SensorType.UVINDEX].low,
+              high: SensorRanges[SensorType.UVINDEX].high,
+              ideal: SensorRanges[SensorType.UVINDEX].ideal
+            }}
+            units={""}
           />
         </CardContent>
       </Card>
@@ -92,9 +95,13 @@ const LightDashboard: React.FC = () => {
           </Typography>
           <Divider />
           <PercentChartNew
-            value={60}
-            type={SensorType.VISIBLE}
-            units={SensorUnit.UNITS}
+            value={500}
+            range={{
+              low: SensorRanges[SensorType.VISIBLE].low,
+              high: SensorRanges[SensorType.VISIBLE].high,
+              ideal: SensorRanges[SensorType.VISIBLE].ideal
+            }}
+            units={"nm"}
           />
         </CardContent>
       </Card>
@@ -111,40 +118,96 @@ const LightDashboard: React.FC = () => {
           </Typography>
           <Divider />
           <PercentChartNew
-            value={80}
-            type={SensorType.IR}
-            units={SensorUnit.UNITS}
+            value={900}
+            range={{
+              low: SensorRanges[SensorType.IR].low,
+              high: SensorRanges[SensorType.IR].high,
+              ideal: SensorRanges[SensorType.IR].ideal
+            }}
+            units={"nm"}
           />
         </CardContent>
       </Card>
     );
   };
 
-  const HistoryGraph: React.FC = () => {
+  const HistoryGraphs: React.FC = () => {
     const styles = useStyles();
     return (
-      <Card className={styles.chart}>
-        <CardContent>
-          <Typography variant={"h6"} gutterBottom>
-            History
-          </Typography>
-          <Divider />
-          <HistoryChart
-            width={800}
-            height={400}
-            data={[
-              { date: new Date("June 12, 2015"), value: 10 },
-              { date: new Date("June 15, 2015"), value: 15 },
-              { date: new Date("June 18, 2015"), value: 10 },
-              { date: new Date("June 21, 2015"), value: 20 },
-              { date: new Date("June 23, 2015"), value: 30 },
-              { date: new Date("June 25, 2015"), value: 25 },
-              { date: new Date("June 28, 2015"), value: 18 },
-              { date: new Date("June 30, 2015"), value: 15 }
-            ]}
-          />
-        </CardContent>
-      </Card>
+      <Fragment>
+        <Card className={styles.chart}>
+          <CardContent>
+            <Typography variant={"h6"} gutterBottom>
+              UV Index History
+            </Typography>
+            <Divider />
+            <HistoryChartNew
+              units={SensorUnit.UNITS}
+              type={SensorType.UVINDEX}
+              data={[
+                [
+                  { timestamp: new Date("June 12, 2015"), value: 10 },
+                  { timestamp: new Date("June 15, 2015"), value: 15 },
+                  { timestamp: new Date("June 18, 2015"), value: 10 },
+                  { timestamp: new Date("June 21, 2015"), value: 20 },
+                  { timestamp: new Date("June 23, 2015"), value: 30 },
+                  { timestamp: new Date("June 25, 2015"), value: 25 },
+                  { timestamp: new Date("June 28, 2015"), value: 18 },
+                  { timestamp: new Date("June 30, 2015"), value: 15 }
+                ]
+              ]}
+            />
+          </CardContent>
+        </Card>
+        <Card className={styles.chart}>
+          <CardContent>
+            <Typography variant={"h6"} gutterBottom>
+              Visible History
+            </Typography>
+            <Divider />
+            <HistoryChartNew
+              units={SensorUnit.UNITS}
+              type={SensorType.VISIBLE}
+              data={[
+                [
+                  { timestamp: new Date("June 12, 2015"), value: 12 },
+                  { timestamp: new Date("June 15, 2015"), value: 17 },
+                  { timestamp: new Date("June 18, 2015"), value: 11 },
+                  { timestamp: new Date("June 21, 2015"), value: 27 },
+                  { timestamp: new Date("June 23, 2015"), value: 35 },
+                  { timestamp: new Date("June 25, 2015"), value: 20 },
+                  { timestamp: new Date("June 28, 2015"), value: 12 },
+                  { timestamp: new Date("June 30, 2015"), value: 18 }
+                ]
+              ]}
+            />
+          </CardContent>
+        </Card>
+        <Card className={styles.chart}>
+          <CardContent>
+            <Typography variant={"h6"} gutterBottom>
+              Infared History
+            </Typography>
+            <Divider />
+            <HistoryChartNew
+              units={SensorUnit.UNITS}
+              type={SensorType.IR}
+              data={[
+                [
+                  { timestamp: new Date("June 12, 2015"), value: 13 },
+                  { timestamp: new Date("June 15, 2015"), value: 20 },
+                  { timestamp: new Date("June 18, 2015"), value: 17 },
+                  { timestamp: new Date("June 21, 2015"), value: 25 },
+                  { timestamp: new Date("June 23, 2015"), value: 15 },
+                  { timestamp: new Date("June 25, 2015"), value: 30 },
+                  { timestamp: new Date("June 28, 2015"), value: 19 },
+                  { timestamp: new Date("June 30, 2015"), value: 14 }
+                ]
+              ]}
+            />
+          </CardContent>
+        </Card>
+      </Fragment>
     );
   };
 
@@ -167,7 +230,7 @@ const LightDashboard: React.FC = () => {
         </Grid>
       </Grid>
       <Grid item xs={12} sm={12}>
-        <HistoryGraph />
+        <HistoryGraphs />
       </Grid>
     </div>
   );
