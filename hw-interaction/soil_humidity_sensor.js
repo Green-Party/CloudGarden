@@ -33,8 +33,8 @@ module.exports = class SoilHumiditySensor extends AnalogSensor {
   }
 
   _convertReading(reading) {
-    // high value occurs 635
-    // low value occurs 320
+    // high value occurs 635 (dry)
+    // low value occurs 320 (wet)
     const LOW = 315;
     const HIGH = 635;
     const DESIRED_HIGH = 10;

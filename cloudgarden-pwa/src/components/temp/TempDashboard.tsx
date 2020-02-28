@@ -6,8 +6,8 @@
 
 import React, { useState, Fragment } from "react";
 import "../../Dashboard.css";
-import PercentChart from "../PercentChart";
-import HistoryChart from "../HistoryChart";
+import PercentChart from "../charts/PercentChart";
+import HistoryChart from "../charts/HistoryChart";
 import { Link, useRouteMatch, Route } from "react-router-dom";
 import UnitToggle from "./UnitToggle";
 import {

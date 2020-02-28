@@ -3,6 +3,7 @@
  * Author: Luke Slevinsky
  * Backend server that serves the react front end
  * Based off of: https://create-react-app.dev/docs/deployment/
+ *   and https://socket.io/docs/https://socket.io/docs/
  */
 
 //Requires
@@ -18,19 +19,49 @@ const io = require("socket.io")(server);
 const Sensors = require("./hw-interaction/sensors");
 const Azure = require("./hw-interaction/Azure/communication");
 
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const webPush = require("web-push");
+
 require("dotenv").config();
 
 // Static Routes
 // Serve production build of React app
-app.use(express.static(path.join(__dirname, "cloudgarden-pwa", "build")));
-app.use(logger("dev")); // logging
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(cors());
+app.use(logger("dev")); // logging
+app.use(express.static(path.join(__dirname, "cloudgarden-pwa", "build")));
+app.use(express.urlencoded({ extended: false }));
+
+webPush.setVapidDetails(
+  process.env.WEB_PUSH_CONTACT,
+  process.env.PUBLIC_VAPID_KEY,
+  process.env.PRIVATE_VAPID_KEY
+);
 
 //Main App Route
 app.get("/*", (_req, res, _next) =>
   res.sendFile(path.join(__dirname, "cloudgarden-pwa", "build", "index.html"))
 );
+
+app.post("/notifications/subscribe", (req, res) => {
+  const subscription = req.body;
+  console.log(subscription);
+
+  const payload = JSON.stringify({
+    title: "Hello!",
+    body: "It works."
+  });
+
+  webPush
+    .sendNotification(subscription, payload)
+    .then(result => console.log(result))
+    .catch(e => console.log(e.stack));
+
+  res.status(200).json({ success: true });
+});
+
 const port = 9000;
 
 //Run Server
@@ -53,8 +84,7 @@ app.use((err, req, res, _next) => {
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
-  res.render("error");
+  res.status(err.status || 500).send("error");
 });
 
 // Setup Sockets
@@ -62,14 +92,12 @@ app.use((err, req, res, _next) => {
 io.on("connection", socket => {
   socket.on("toggleLight", data => {
     console.log(`Toggling light prev state:${data}`);
-    Azure.blinkLED();
     const lightState = Sensors.toggleLight();
     console.log(`Toggling light new state:${lightState}`);
     io.emit("lightToggled", lightState);
   });
   socket.on("togglePump", async idx => {
     console.log(`Toggling pump ${idx}`);
-    Azure.blinkLED();
     await Sensors.runPump(idx);
     io.emit("pumpToggled", true);
   });
@@ -81,6 +109,6 @@ let sensorData = {};
 Sensors.initialize(sensorData);
 
 // Setup Azure
-Azure.setupClient(process.env.CONNECTION_STRING, sensorData);
+// Azure.setupClient(process.env.DEVICE_CONNECTION_STRING, sensorData);
 
 module.exports = app;

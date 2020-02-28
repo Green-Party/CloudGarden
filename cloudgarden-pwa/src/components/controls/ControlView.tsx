@@ -5,7 +5,7 @@
  * and turning on and off the light
  */
 
-import React, { useState, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -26,6 +26,7 @@ import LocalDrinkIcon from "@material-ui/icons/LocalDrink";
 import "../../Dashboard.css";
 import { makeStyles, useTheme, createStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
+import socketIOClient from "socket.io-client";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -80,30 +81,80 @@ const useStyles = makeStyles(theme =>
     gridList: {
       width: "100%",
       height: "100%"
+    },
+    "@keyframes wave-animation": {
+      "0%": { backgroundPosition: "0 102%" },
+      "100%": { backgroundPosition: "200px 102%" }
+    },
+    "@keyframes loading-animation": {
+      "0%": { backgroundSize: "100px 0px" },
+      "100%": { backgroundSize: "100px 30px" }
+    },
+    "@keyframes tall-loading-animation": {
+      "0%": { backgroundSize: "400px 0px" },
+      "100%": { backgroundSize: "400px 200px" }
+    },
+    "@keyframes tall-wave-animation": {
+      "0%": { backgroundPosition: "0 105%" },
+      "100%": { backgroundPosition: "400px 105%" }
+    },
+    wave: {
+      backgroundImage: "url(wave.png)",
+      textShadow: "0px 0px rgba(255,255,255,0.06)",
+      animation: `$wave-animation 1s linear infinite, $loading-animation 10s linear infinite alternate`,
+      backgroundSize: "100px 50px",
+      backgroundRepeat: "repeat-x",
+      opacity: 1,
+      backgroundClip: "border-box"
+    },
+    waveTall: {
+      backgroundImage: "url(wave-tall.png)",
+      textShadow: "0px 0px rgba(255,255,255,0.06)",
+      animation: `$tall-wave-animation 1s linear infinite, $tall-loading-animation 10s linear infinite alternate`,
+      backgroundSize: "400px 200px",
+      backgroundRepeat: "repeat-x",
+      opacity: 1,
+      backgroundClip: "border-box"
     }
   })
 );
 
 const ControlView: React.FC = () => {
-  const [lightOn, setLightOn] = useState(false);
   const theme = useTheme();
   const styles = useStyles(theme);
   const smallWidth = useMediaQuery(theme.breakpoints.down("xs"));
+  const [buttonDisabled, setButtonDisable] = useState(false);
+  const [lightState, setLightState] = useState(false);
+  const [currentSocket, setCurrentSocket]: any = useState(null);
+  const onClickLightCommand = () => {
+    currentSocket.emit("toggleLight", true);
+  };
+  const onClickPumpCommand = (idx: number) => {
+    currentSocket.emit("togglePump", idx);
+  };
+
+  useEffect(() => {
+    console.log("connecting client socket");
+    const socket = socketIOClient();
+    setCurrentSocket(socket);
+    socket.on("lightToggled", (data: boolean) => setLightState(data));
+    socket.on("pumpToggled", (_data: boolean) => console.log("Pump toggled"));
+    return () => {
+      //stuff that happens when the component unmounts
+      //e.g. close socket connection
+      console.log("disconnect");
+      socket.disconnect();
+    };
+  }, []);
   return (
     <GridList
-      // container
-      // direction="column"
-      // justify="center"
-      // alignItems="center"
-      // spacing={4}
-      // style={{ marginTop: "16px" }}
       cellHeight="auto"
       className={styles.gridList}
       cols={smallWidth ? 2 : 4}
     >
       <GridListTile cols={2}>
         <Card className={styles.card}>
-          {lightOn ? (
+          {lightState ? (
             <CardMedia
               className={clsx(styles.media, styles.sun)}
               component={WbSunnyIcon}
@@ -114,11 +165,11 @@ const ControlView: React.FC = () => {
           <CardContent className={styles.cardContent}>
             <Typography variant={"overline"}>Light Control</Typography>
             <Typography variant={"h6"} gutterBottom>
-              {lightOn ? "Light On" : "Light Off"}
+              {lightState ? "Light On" : "Light Off"}
             </Typography>
             <Switch
-              checked={lightOn}
-              onChange={() => setLightOn(!lightOn)}
+              checked={lightState}
+              onChange={onClickLightCommand}
               color="secondary"
               size="medium"
             />
@@ -133,19 +184,31 @@ const ControlView: React.FC = () => {
             <Typography variant={"h6"} gutterBottom>
               Plant 1
             </Typography>
-            <Button className={styles.button}>Water</Button>
+            <Button
+              disabled={buttonDisabled}
+              className={clsx(styles.button, styles.wave)}
+              onClick={() => onClickPumpCommand(0)}
+            >
+              Water
+            </Button>
           </CardContent>
         </Card>
       </GridListTile>
       <GridListTile cols={2}>
-        <Card className={styles.card}>
+        <Card className={clsx(styles.card, styles.waveTall)}>
           <CardMedia className={styles.media} component={LocalDrinkIcon} />
           <CardContent className={styles.cardContent}>
             <Typography variant={"overline"}>Water control</Typography>
             <Typography variant={"h6"} gutterBottom>
               Plant 2
             </Typography>
-            <Button className={styles.button}>Water</Button>
+            <Button
+              disabled={buttonDisabled}
+              className={styles.button}
+              onClick={() => onClickPumpCommand(1)}
+            >
+              Water
+            </Button>
           </CardContent>
         </Card>
       </GridListTile>
@@ -157,7 +220,13 @@ const ControlView: React.FC = () => {
             <Typography variant={"h6"} gutterBottom>
               Plant 3
             </Typography>
-            <Button className={styles.button}>Water</Button>
+            <Button
+              disabled={buttonDisabled}
+              className={styles.button}
+              onClick={() => onClickPumpCommand(2)}
+            >
+              Water
+            </Button>
           </CardContent>
         </Card>
       </GridListTile>

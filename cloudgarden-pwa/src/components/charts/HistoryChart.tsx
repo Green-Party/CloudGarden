@@ -10,7 +10,6 @@ import { scaleLinear, scaleTime } from "d3-scale";
 import { line } from "d3-shape";
 import { min, max } from "d3-array";
 import { axisBottom, axisLeft } from "d3-axis";
-import "../Dashboard.css";
 import React from "react";
 
 interface DataPoint {

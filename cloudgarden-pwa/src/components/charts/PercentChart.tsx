@@ -5,13 +5,12 @@
  */
 
 import React from "react";
-import "../Dashboard.css";
 type PercentChartProps = { percent: number };
 //change the color of the graph based on sensor level
 enum StatusColour {
-  EXCELLENT = "#a2d28f",
-  OK = "#f5c78e",
-  POOR = "#fea58e"
+  EXCELLENT = "#578C48",
+  OK = "#FFC93C",
+  POOR = "#FF6F3C"
 }
 const PercentChart: React.FC<PercentChartProps> = ({
   percent
