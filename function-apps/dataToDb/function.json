@@ -1,0 +1,24 @@
+{
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "IoTHubMessages",
+      "direction": "in",
+      "eventHubName": "samples-workitems",
+      "connection": "CloudGarden_events_IOTHUB",
+      "cardinality": "one",
+      "consumerGroup": "reactpwa",
+      "dataType": "string"
+    },
+    {
+      "type": "cosmosDB",
+      "name": "outputDocument",
+      "databaseName": "iot",
+      "collectionName": "messages",
+      "createIfNotExists": true,
+      "connectionStringSetting": "cloudgardendb_DOCUMENTDB",
+      "direction": "out"
+    }
+  ],
+  "disabled": false
+}

@@ -15,8 +15,6 @@ const Message = require("azure-iot-device").Message;
 const MqttProtocol = require("azure-iot-device-mqtt").MqttWs; //for websockets, Mqtt otherwise
 const AmqpProtocol = require("azure-iot-device-amqp").Amqp;
 
-const bi = require("az-iot-bi");
-
 const MessageProcessor = require("./messageProcessor.js");
 
 let isMessageSendOn = true;
@@ -44,7 +42,6 @@ function sendMessage() {
             err.message
         );
       } else {
-        // blinkLED();
         console.log("[Device] Message sent to Azure IoT Hub");
       }
 
@@ -92,22 +89,12 @@ function onStop(request, response) {
 }
 
 function receiveMessageCallback(msg) {
-  // blinkLED();
-
   let message = msg.getData().toString("utf-8");
 
   client.complete(msg, () => {
     console.log("Received message:\n\t" + message);
   });
 }
-
-// function blinkLED() {
-//   // Light up LED for 500 ms
-//   wpi.digitalWrite(config.LEDPin, 1);
-//   setTimeout(function() {
-//     wpi.digitalWrite(config.LEDPin, 0);
-//   }, 500);
-// }
 
 function initClient(connectionStringParam, credentialPath) {
   const connectionString = ConnectionString.parse(connectionStringParam);
@@ -174,40 +161,6 @@ function setupClient(connectionString, sensorData) {
 
   // set up wiring
   messageProcessor = new MessageProcessor(config);
-
-  try {
-    var firstTimeSetting = false;
-    if (
-      !fs.existsSync(
-        path.join(process.env.HOME, ".iot-hub-getting-started/biSettings.json")
-      )
-    ) {
-      firstTimeSetting = true;
-    }
-
-    bi.start();
-
-    var deviceInfo = { device: "RaspberryPi", language: "NodeJS" };
-
-    if (bi.isBIEnabled()) {
-      bi.trackEventWithoutInternalProperties("yes", deviceInfo);
-      bi.trackEvent("success", deviceInfo);
-    } else {
-      bi.disableRecordingClientIP();
-      bi.trackEventWithoutInternalProperties("no", deviceInfo);
-    }
-
-    if (firstTimeSetting) {
-      console.log(
-        "Telemetry setting will be remembered. If you would like to reset, please delete following file and run the sample again"
-      );
-      console.log("~/.iot-hub-getting-started/biSettings.json\n");
-    }
-
-    bi.flush();
-  } catch (e) {
-    //ignore
-  }
 
   // create a client
   // read out the connectionString from process environment
