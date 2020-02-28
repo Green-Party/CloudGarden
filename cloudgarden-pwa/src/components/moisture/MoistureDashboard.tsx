@@ -4,19 +4,15 @@
  * A dashboard component for displaying moisture sensor data
  */
 
-import React, { useState, Fragment } from "react";
+import React, { Fragment } from "react";
 import "../../Dashboard.css";
-import PercentChart from "../charts/PercentChart";
 import { ReactComponent as Cactus } from "../../illustrations/cactus.svg";
 import { ReactComponent as Aloe } from "../../illustrations/aloe_vera.svg";
 import { ReactComponent as Snake } from "../../illustrations/snake_plant.svg";
-import HistoryChart from "../charts/HistoryChart";
-import { Link, useRouteMatch, Route } from "react-router-dom";
 import {
   Card,
   CardContent,
   Divider,
-  Grid,
   Button,
   CardMedia,
   Typography,
@@ -25,6 +21,9 @@ import {
   useMediaQuery
 } from "@material-ui/core";
 import { makeStyles, createStyles, useTheme } from "@material-ui/core/styles";
+import PercentChartNew from "../charts/PercentChartNew";
+import HistoryChartNew from "../charts/HistoryChartNew";
+import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -126,7 +125,15 @@ const MoistureDashboard: React.FC = () => {
             Average Moisture
           </Typography>
           <Divider />
-          <PercentChart percent={60} />
+          <PercentChartNew
+            value={6}
+            range={{
+              low: SensorRanges[SensorType.MOISTURE].low,
+              high: SensorRanges[SensorType.MOISTURE].high,
+              ideal: SensorRanges[SensorType.MOISTURE].ideal
+            }}
+            units={""}
+          />
         </CardContent>
       </Card>
     );
@@ -141,18 +148,40 @@ const MoistureDashboard: React.FC = () => {
             History
           </Typography>
           <Divider />
-          <HistoryChart
-            width={600}
-            height={300}
+          <HistoryChartNew
+            units={SensorUnit.UNITS}
+            type={SensorType.MOISTURE}
             data={[
-              { date: new Date("June 12, 2015"), value: 10 },
-              { date: new Date("June 15, 2015"), value: 15 },
-              { date: new Date("June 18, 2015"), value: 10 },
-              { date: new Date("June 21, 2015"), value: 20 },
-              { date: new Date("June 23, 2015"), value: 30 },
-              { date: new Date("June 25, 2015"), value: 25 },
-              { date: new Date("June 28, 2015"), value: 18 },
-              { date: new Date("June 30, 2015"), value: 15 }
+              [
+                { timestamp: new Date("June 12, 2015"), value: 10 },
+                { timestamp: new Date("June 15, 2015"), value: 15 },
+                { timestamp: new Date("June 18, 2015"), value: 10 },
+                { timestamp: new Date("June 21, 2015"), value: 20 },
+                { timestamp: new Date("June 23, 2015"), value: 30 },
+                { timestamp: new Date("June 25, 2015"), value: 25 },
+                { timestamp: new Date("June 28, 2015"), value: 18 },
+                { timestamp: new Date("June 30, 2015"), value: 15 }
+              ],
+              [
+                { timestamp: new Date("June 12, 2015"), value: 12 },
+                { timestamp: new Date("June 15, 2015"), value: 17 },
+                { timestamp: new Date("June 18, 2015"), value: 11 },
+                { timestamp: new Date("June 21, 2015"), value: 27 },
+                { timestamp: new Date("June 23, 2015"), value: 35 },
+                { timestamp: new Date("June 25, 2015"), value: 20 },
+                { timestamp: new Date("June 28, 2015"), value: 12 },
+                { timestamp: new Date("June 30, 2015"), value: 18 }
+              ],
+              [
+                { timestamp: new Date("June 12, 2015"), value: 13 },
+                { timestamp: new Date("June 15, 2015"), value: 20 },
+                { timestamp: new Date("June 18, 2015"), value: 17 },
+                { timestamp: new Date("June 21, 2015"), value: 25 },
+                { timestamp: new Date("June 23, 2015"), value: 15 },
+                { timestamp: new Date("June 25, 2015"), value: 30 },
+                { timestamp: new Date("June 28, 2015"), value: 19 },
+                { timestamp: new Date("June 30, 2015"), value: 14 }
+              ]
             ]}
           />
         </CardContent>

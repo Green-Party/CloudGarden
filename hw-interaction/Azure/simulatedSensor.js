@@ -19,8 +19,8 @@ class Sensor {
       temperature: [random(20, 30), random(20, 30), random(20, 30)],
       soilHumidity: [random(60, 80), random(60, 80), random(60, 80)],
       pumpsEnabled: Math.random() >= 0.5,
-      visible: random(200, 300),
-      ir: random(200, 300),
+      visible: random(400, 800),
+      ir: random(550, 1000),
       uvIdx: random(1, 9)
     });
   }
