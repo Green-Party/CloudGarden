@@ -22,6 +22,7 @@
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "clsx": "^1.1.0",
+    "cra-append-sw": "^2.7.0",
     "d3": "^5.15.0",
     "react": "^16.12.0",
     "react-d3-library": "^1.1.8",
@@ -36,7 +37,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && cra-append-sw --skip-compile ./public/custom-sw.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -57,5 +58,6 @@
   },
   "devDependencies": {
     "arkit": "^1.6.2"
-  }
+  },
+  "proxy": "http://localhost:9000"
 }
