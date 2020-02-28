@@ -4,19 +4,12 @@
  * A dashboard component for displaying moisture sensor data
  */
 
-import React, { useState, Fragment } from "react";
+import React, { useState } from "react";
 import "../../Dashboard.css";
-import PercentChart from "../charts/PercentChart";
-import HistoryChart from "../charts/HistoryChart";
-import { Link, useRouteMatch, Route } from "react-router-dom";
-import UnitToggle from "./UnitToggle";
 import {
   Card,
   CardContent,
   Divider,
-  Grid,
-  Button,
-  CardMedia,
   Typography,
   GridListTile,
   GridList
@@ -24,6 +17,9 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import PercentChartNew from "../charts/PercentChartNew";
+import HistoryChartNew from "../charts/HistoryChartNew";
+import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
 
 const useStyles = makeStyles({
   button: {
@@ -76,24 +72,22 @@ const useStyles = makeStyles({
 });
 
 const TempDashboard: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const match = useRouteMatch();
   const styles = useStyles();
   const TempChart: React.FC = () => {
-    const [units, setUnits] = useState<string>("celsius");
+    const [units, setUnits] = useState<SensorUnit>(SensorUnit.CELSIUS);
     const [temp, setTemp] = useState<number>(20);
 
     const handleUnits = (
       event: React.MouseEvent<HTMLElement>,
-      newUnits: string
+      newUnits: SensorUnit
     ) => {
       console.log(units, newUnits);
-      if (newUnits != units && newUnits != null) {
+      if (newUnits !== units && newUnits !== null) {
         setUnits(newUnits);
         let newTemp = temp;
-        if (newUnits == "celsius") {
+        if (newUnits === SensorUnit.CELSIUS) {
           newTemp = ((temp - 32) * 5) / 9;
-        } else if (newUnits == "ferinheight") {
+        } else if (newUnits === SensorUnit.FERINHEIGHT) {
           newTemp = (temp * 9) / 5 + 32;
         }
         setTemp(newTemp);
@@ -107,17 +101,28 @@ const TempDashboard: React.FC = () => {
             Temperature
           </Typography>
           <Divider />
-          <PercentChart percent={temp} />
+          <PercentChartNew
+            value={temp}
+            range={{
+              low: SensorRanges[SensorType.TEMP][units].low,
+              high: SensorRanges[SensorType.TEMP][units].high,
+              ideal: SensorRanges[SensorType.TEMP][units].ideal
+            }}
+            units={units === SensorUnit.CELSIUS ? "℃" : "℉"}
+          />
           <ToggleButtonGroup
             value={units}
             exclusive
             onChange={handleUnits}
             aria-label="temp units"
           >
-            <ToggleButton value="celsius" aria-label="celsius">
+            <ToggleButton value={SensorUnit.CELSIUS} aria-label="celsius">
               ℃
             </ToggleButton>
-            <ToggleButton value="ferinheight" aria-label="ferinheight">
+            <ToggleButton
+              value={SensorUnit.FERINHEIGHT}
+              aria-label="ferinheight"
+            >
               ℉
             </ToggleButton>
           </ToggleButtonGroup>
@@ -134,18 +139,20 @@ const TempDashboard: React.FC = () => {
             History
           </Typography>
           <Divider />
-          <HistoryChart
-            width={800}
-            height={400}
+          <HistoryChartNew
+            units={SensorUnit.UNITS}
+            type={SensorType.TEMP}
             data={[
-              { date: new Date("June 12, 2015"), value: 10 },
-              { date: new Date("June 15, 2015"), value: 15 },
-              { date: new Date("June 18, 2015"), value: 10 },
-              { date: new Date("June 21, 2015"), value: 20 },
-              { date: new Date("June 23, 2015"), value: 30 },
-              { date: new Date("June 25, 2015"), value: 25 },
-              { date: new Date("June 28, 2015"), value: 18 },
-              { date: new Date("June 30, 2015"), value: 15 }
+              [
+                { timestamp: new Date("June 12, 2015"), value: 10 },
+                { timestamp: new Date("June 15, 2015"), value: 15 },
+                { timestamp: new Date("June 18, 2015"), value: 10 },
+                { timestamp: new Date("June 21, 2015"), value: 20 },
+                { timestamp: new Date("June 23, 2015"), value: 30 },
+                { timestamp: new Date("June 25, 2015"), value: 25 },
+                { timestamp: new Date("June 28, 2015"), value: 18 },
+                { timestamp: new Date("June 30, 2015"), value: 15 }
+              ]
             ]}
           />
         </CardContent>

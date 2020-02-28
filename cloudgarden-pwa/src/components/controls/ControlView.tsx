@@ -9,12 +9,9 @@ import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
-  Divider,
   Button,
   CardMedia,
   Typography,
-  Grid,
-  Paper,
   Switch,
   GridList,
   GridListTile,
