@@ -35,6 +35,7 @@ let controls = {
 };
 
 const interval = 5000;
+const pumpTime = 1000;
 
 function initialize(state) {
   let board = new five.Board();
@@ -132,7 +133,7 @@ function toggleLight() {
 
 async function runPump(idx) {
   controls.pumps.turnOn(idx);
-  await utils.sleep(waitTime);
+  await utils.sleep(pumpTime);
   controls.pumps.turnOff(idx);
 }
 
