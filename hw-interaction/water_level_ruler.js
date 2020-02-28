@@ -47,16 +47,18 @@ module.exports = class WaterLevelRuler extends AnalogSensor {
   }
 
   _readingToVolume(reading) {
-    const conversionSlope = -4.10277995;
-    const conversionConstant = 10412.28946;
+    const VOLUME_CONVERSION_SLOPE = -4.10277995;
+    const VOLUME_CONVERSION_CONSTANT = 10412.28946;
 
-    return conversionSlope * reading + conversionConstant;
+    return VOLUME_CONVERSION_SLOPE * reading + VOLUME_CONVERSION_CONSTANT;
   }
 
   _readingToWaterHeight(reading) {
-    const conversionSlope = -0.006242809;
-    const conversionConstant = 16.15406741;
+    const WATER_HEIGHT_CONVERSION_SLOPE = -0.006242809;
+    const WATER_HEIGHT_CONVERSION_CONSTANT = 16.15406741;
 
-    return conversionSlope * reading + conversionConstant;
+    return (
+      WATER_HEIGHT_CONVERSION_SLOPE * reading + WATER_HEIGHT_CONVERSION_CONSTANT
+    );
   }
 };

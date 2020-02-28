@@ -51,7 +51,6 @@ function initialize(state) {
       if (si1145.deviceActive()) {
         setInterval(() => {
           if (si1145.deviceActive()) {
-            // console.log("Getting data...");
             si1145.getDataFromDevice(err => {
               if (!err) {
                 readings.visible = si1145.device.parameters[0].value;
@@ -139,6 +138,7 @@ async function runPump(idx) {
 
 // To test sensor initialization
 // initialize({});
+
 module.exports = {
   initialize,
   runPump,
