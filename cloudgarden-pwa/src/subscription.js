@@ -1,5 +1,5 @@
 /**
- * Creation Date: February 5, 2020
+ * Creation Date: February 26, 2020
  * Author: Logan McDonald
  * Code for subscribing to notifications
  * Adapted from https://medium.com/@seladir/how-to-implement-web-push-notifications-in-your-node-react-app-9bed79b53f34
@@ -30,7 +30,6 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 function sendSubscription(subscription) {
-  console.log(`Here is the URL boi: ${process.env.REACT_APP_API_URL}`);
   return fetch(`${process.env.REACT_APP_API_URL}/notifications/subscribe`, {
     method: "POST",
 
