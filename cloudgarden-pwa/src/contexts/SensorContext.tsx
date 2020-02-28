@@ -2,11 +2,13 @@
  * Creation Date: February 25, 2020
  * Author: Luke Slevinsky
  * This is a React context specifically to provide the web app with sensor data as state
+ * Ideas modified from: https://kentcdodds.com/blog/how-to-use-react-context-effectively
+ *   and signalR code from: https://anthonychu.ca/post/cosmosdb-real-time-azure-functions-signalr-service/
  */
 import React, { useState, useContext, createContext, useEffect } from "react";
 import * as signalR from "@microsoft/signalr";
 import axios from "axios";
-import { SensorState, SensorData } from "../types";
+import { SensorData } from "../types";
 
 type SensorDataProviderProps = { children: React.ReactNode };
 const SensorStateContext = createContext<SensorData[] | undefined>(undefined);

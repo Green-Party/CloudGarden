@@ -1,0 +1,26 @@
+{
+  "bindings": [
+    {
+      "authLevel": "anonymous",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": ["get", "post"],
+      "route": "GetSensorData"
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "res"
+    },
+    {
+      "type": "cosmosDB",
+      "name": "inputDocument",
+      "databaseName": "iot",
+      "collectionName": "messages",
+      "connectionStringSetting": "cloudgardendb_DOCUMENTDB",
+      "direction": "in"
+    }
+  ],
+  "disabled": false
+}
