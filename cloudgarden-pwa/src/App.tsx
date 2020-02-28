@@ -19,6 +19,8 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "./styles/Theme";
 import NavDrawer from "./components/main/NavDrawer";
 
+import { SensorDataProvider } from "./contexts";
+
 const Home = lazy(() => import("./Home"));
 
 const App: React.FC = () => {
@@ -26,25 +28,27 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Fragment>
-        <Header onMenuClick={setOpen} />
-        <Router>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Switch>
-              <Route path="/dashboard">
-                <Home />
-              </Route>
-              <Route exact path="/">
-                <Redirect to="/dashboard" />
-              </Route>
-              <Route path="/controls">
-                <ControlView />
-              </Route>
-            </Switch>
-          </Suspense>
-          <NavDrawer open={open} onCloseFunc={setOpen} />
-        </Router>
-      </Fragment>
+      <Suspense fallback={<div>Loading...</div>}>
+        <SensorDataProvider>
+          <Fragment>
+            <Header onMenuClick={setOpen} />
+            <Router>
+              <Switch>
+                <Route path="/dashboard">
+                  <Home />
+                </Route>
+                <Route exact path="/">
+                  <Redirect to="/dashboard" />
+                </Route>
+                <Route path="/controls">
+                  <ControlView />
+                </Route>
+              </Switch>
+              <NavDrawer open={open} onCloseFunc={setOpen} />
+            </Router>
+          </Fragment>
+        </SensorDataProvider>
+      </Suspense>
     </ThemeProvider>
   );
 };

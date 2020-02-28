@@ -3,6 +3,7 @@
  * Author: Luke Slevinsky
  * Backend server that serves the react front end
  * Based off of: https://create-react-app.dev/docs/deployment/
+ *   and https://socket.io/docs/https://socket.io/docs/
  */
 
 //Requires
@@ -62,14 +63,12 @@ app.use((err, req, res, _next) => {
 io.on("connection", socket => {
   socket.on("toggleLight", data => {
     console.log(`Toggling light prev state:${data}`);
-    Azure.blinkLED();
     const lightState = Sensors.toggleLight();
     console.log(`Toggling light new state:${lightState}`);
     io.emit("lightToggled", lightState);
   });
   socket.on("togglePump", async idx => {
     console.log(`Toggling pump ${idx}`);
-    Azure.blinkLED();
     await Sensors.runPump(idx);
     io.emit("pumpToggled", true);
   });
@@ -81,6 +80,6 @@ let sensorData = {};
 Sensors.initialize(sensorData);
 
 // Setup Azure
-Azure.setupClient(process.env.CONNECTION_STRING, sensorData);
+Azure.setupClient(process.env.DEVICE_CONNECTION_STRING, sensorData);
 
 module.exports = app;

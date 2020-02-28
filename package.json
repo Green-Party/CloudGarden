@@ -16,7 +16,6 @@
     "clean:client": "rimraf cloudgarden-pwa/node_modules && rimraf cloudgarden-pwa/build"
   },
   "dependencies": {
-    "az-iot-bi": "^0.1.20",
     "azure-iot-device": "^1.12.2",
     "azure-iot-device-amqp": "^1.11.2",
     "azure-iot-device-mqtt": "^1.11.2",
@@ -38,7 +37,6 @@
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
-    "node-wiring-pi": "0.0.5",
     "rimraf": "^3.0.2"
   }
 }

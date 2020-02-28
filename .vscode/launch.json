@@ -7,6 +7,13 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Launch Server",
+      "program": "${workspaceFolder}/server.js",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Sensors",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}\\hw-interaction\\sensors.js"
