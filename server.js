@@ -46,9 +46,11 @@ app.get("/*", (_req, res, _next) =>
 );
 
 app.post("/notifications/subscribe", (req, res) => {
+  //TODO: extract subscription info for future notifications
   const subscription = req.body;
   console.log(subscription);
 
+  //NOTE: Test notification
   const payload = JSON.stringify({
     title: "Hello!",
     body: "It works."
