@@ -109,6 +109,6 @@ let sensorData = {};
 Sensors.initialize(sensorData);
 
 // Setup Azure
-// Azure.setupClient(process.env.DEVICE_CONNECTION_STRING, sensorData);
+Azure.setupClient(process.env.DEVICE_CONNECTION_STRING, sensorData);
 
 module.exports = app;

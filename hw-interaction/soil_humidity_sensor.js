@@ -30,8 +30,6 @@ module.exports = class SoilHumiditySensor extends AnalogSensor {
   dataCallback() {
     let reading = this._convertReading(this.sensor.raw);
     this.reading = reading;
-    // console.log(`Soil sensor: ${this.number}`);
-    // console.log(`Reading: ${reading}`);
   }
 
   _convertReading(reading) {

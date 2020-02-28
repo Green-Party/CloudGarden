@@ -17,6 +17,7 @@ module.exports = class WaterLevelRuler extends AnalogSensor {
     super(options);
 
     this.volume = NaN;
+    this.height = NaN;
 
     // emits two events:
     // "change": occurs when change in reading is >= threshold
@@ -27,35 +28,37 @@ module.exports = class WaterLevelRuler extends AnalogSensor {
   dataCallback() {
     this.reading = this._convertReading(this.sensor.raw);
     this.volume = this._readingToVolume(this.reading);
-    // console.log(`Water Level Reading: ${this.reading}`);
+    this.height = this._readingToWaterHeight(this.reading);
   }
 
   getVolume() {
     return this.volume;
   }
 
+  getHeight() {
+    return this.height;
+  }
+
   _convertReading(reading) {
+    console.log(reading);
     const SERIES_RESISTANCE = 560;
-    // console.log(1023 / reading - 1);
     let resistance = SERIES_RESISTANCE / (1023 / reading - 1);
     return resistance;
   }
 
   _readingToVolume(reading) {
-    const ZERO_RESISTANCE = 2248.24;
-    const CALIBRATION_RESISTANCE = 1952.63;
-    const CALIBRATION_VOLUME = 2700;
-    if (
-      reading > ZERO_RESISTANCE ||
-      ZERO_RESISTANCE - CALIBRATION_RESISTANCE == 0.0
-    ) {
-      // Stop if the value is above the zero threshold, or no max resistance is set (would be divide by zero).
-      return 0.0;
-    }
-    // Compute scale factor by mapping resistance to 0...1.0+ range relative to maxResistance value.
-    let scale =
-      (ZERO_RESISTANCE - reading) / (ZERO_RESISTANCE - CALIBRATION_RESISTANCE);
-    // Scale maxVolume based on computed scale factor.
-    return CALIBRATION_VOLUME * scale;
+    const VOLUME_CONVERSION_SLOPE = -4.10277995;
+    const VOLUME_CONVERSION_CONSTANT = 10412.28946;
+
+    return VOLUME_CONVERSION_SLOPE * reading + VOLUME_CONVERSION_CONSTANT;
+  }
+
+  _readingToWaterHeight(reading) {
+    const WATER_HEIGHT_CONVERSION_SLOPE = -0.006242809;
+    const WATER_HEIGHT_CONVERSION_CONSTANT = 16.15406741;
+
+    return (
+      WATER_HEIGHT_CONVERSION_SLOPE * reading + WATER_HEIGHT_CONVERSION_CONSTANT
+    );
   }
 };

@@ -42,16 +42,12 @@ module.exports = class ThermoSensor {
     //"data"  : emitted on freq interval
     //"change": emitted when temperature changes
     this.sensor.on("data", this.dataEventCallback.bind(this));
-    // this.sensor.on("change", this.defaultEventCallback);
   }
 
   dataEventCallback() {
     let address = this.sensor.address;
     let celsius = this.sensor.celsius;
     this.reading = celsius;
-    // console.log(`Thermometer number: ${this.number.toString(16)}`);
-    // console.log(`Thermometer data at address: 0x${address.toString(16)}`);
-    // console.log("Celsius: %d", celsius);
   }
 
   getReading() {
