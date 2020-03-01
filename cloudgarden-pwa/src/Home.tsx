@@ -11,7 +11,7 @@ import { Switch, Route, useRouteMatch } from "react-router-dom";
 import MoistureDashboard from "./components/moisture/MoistureDashboard";
 import PlantSpecific from "./components/moisture/PlantSpecific";
 import LightDashboard from "./components/light/LightDashboard";
-import TempDashboard from "./components/temp/TempDashboard";
+import TemperatureDashboard from "./components/temperature/TemperatureDashboard";
 import { Grid, Typography } from "@material-ui/core";
 
 const Home: React.FC = () => {
@@ -47,7 +47,7 @@ const Home: React.FC = () => {
             <LightDashboard />
           </Route>
           <Route exact path={`${match.path}/temp`}>
-            <TempDashboard />
+            <TemperatureDashboard />
           </Route>
           <Route
             exact
