@@ -1,3 +1,8 @@
+/**
+ * Creation Date: February 28, 2020
+ * Author: Gillian Pierce
+ * A template component that displays passed in time series data as a line graph
+ */
 import React from "react";
 import { VictoryLine, VictoryAxis } from "victory";
 import {

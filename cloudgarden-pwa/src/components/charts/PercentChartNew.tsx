@@ -1,3 +1,8 @@
+/**
+ * Creation Date: February 28, 2020
+ * Author: Gillian Pierce
+ * A template component that displays passed in time series data as a percent chart
+ */
 import React, { useState, useEffect } from "react";
 import { VictoryPie } from "victory";
 import { Typography, useTheme } from "@material-ui/core";

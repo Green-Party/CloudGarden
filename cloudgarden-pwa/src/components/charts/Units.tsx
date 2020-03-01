@@ -1,3 +1,8 @@
+/**
+ * Creation Date: February 28, 2020
+ * Author: Gillian Pierce
+ * Unit types for TypeScript
+ */
 export enum SensorType {
   TEMP = "TEMP",
   MOISTURE = "MOISTURE",
