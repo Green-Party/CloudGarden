@@ -127,7 +127,9 @@ const ControlView: React.FC = () => {
     currentSocket.emit("toggleLight", true);
   };
   const onClickPumpCommand = (idx: number) => {
+    setButtonDisable(true);
     currentSocket.emit("togglePump", idx);
+    setTimeout(() => setButtonDisable(false), 2000);
   };
 
   useEffect(() => {
