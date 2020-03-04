@@ -4,7 +4,7 @@
  * A template component that displays passed in time series data as a line graph
  */
 import React from "react";
-import { VictoryLine, VictoryAxis } from "victory";
+import { VictoryLine, VictoryAxis, VictoryChart } from "victory";
 import {
   Typography,
   useTheme,
@@ -71,6 +71,7 @@ const HistoryChartNew: React.FC<Data> = ({ type, units, data }: Data) => {
       </GridList>
       <svg width="100%" height="100%" viewBox="0 0 450 350">
         {/* Add shared independent axis */}
+
         <VictoryAxis scale="time" standalone={false} />
 
         {/*
@@ -79,17 +80,31 @@ const HistoryChartNew: React.FC<Data> = ({ type, units, data }: Data) => {
         */}
         <VictoryAxis
           dependentAxis
-          domain={[0, 40]}
+          //domain={[0, 40]}
           orientation="left"
           standalone={false}
         />
         {data.map((value, index) => {
+          console.log({
+            x: [
+              Math.min(...value.map(v => v.timestamp.getTime())),
+              Math.max(...value.map(v => v.timestamp.getTime()))
+            ],
+            y: [0, Math.max(...value.map(v => v.value))]
+          });
           return (
             <VictoryLine
               data={value}
               x="timestamp"
               y="value"
               scale={{ x: "time", y: "linear" }}
+              domain={{
+                x: [
+                  Math.min(...value.map(v => v.timestamp.getTime())),
+                  Math.max(...value.map(v => v.timestamp.getTime()))
+                ],
+                y: [0, Math.max(...value.map(v => v.value))]
+              }}
               standalone={false}
               style={{
                 data: { stroke: colors[index] }

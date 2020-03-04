@@ -6,8 +6,8 @@
 
 import React, { useState, Fragment } from "react";
 import "../../Dashboard.css";
-import PercentChart from "../charts/PercentChart";
-import HistoryChart from "../charts/HistoryChart";
+import PercentChartNew from "../charts/PercentChartNew";
+import HistoryChartNew from "../charts/HistoryChartNew";
 import {
   Card,
   CardContent,
@@ -24,9 +24,7 @@ const PlantSpecific: React.FC = () => {
           <Card className="percent-card">
             <CardHeader title="Moisture" />
             <Divider />
-            <CardContent>
-              <PercentChart percent={60} />
-            </CardContent>
+            <CardContent>{/* <PercentChart percent={60} /> */}</CardContent>
           </Card>
         </Grid>
         <Grid item xs={12} md={8}>
@@ -34,7 +32,7 @@ const PlantSpecific: React.FC = () => {
             <CardHeader title="History" />
             <Divider />
             <CardContent>
-              <HistoryChart
+              {/* <HistoryChart
                 width={800}
                 height={400}
                 data={[
@@ -47,7 +45,7 @@ const PlantSpecific: React.FC = () => {
                   { date: new Date("June 28, 2015"), value: 18 },
                   { date: new Date("June 30, 2015"), value: 15 }
                 ]}
-              />
+              /> */}
             </CardContent>
           </Card>
         </Grid>
