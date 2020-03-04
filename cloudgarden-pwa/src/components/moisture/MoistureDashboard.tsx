@@ -74,6 +74,10 @@ const useStyles = makeStyles(theme =>
   })
 );
 
+interface moistureChartProps {
+  soil_moisture: number;
+}
+
 const MoistureDashboard: React.FC = () => {
   const theme = useTheme();
   const styles = useStyles(theme);
@@ -116,17 +120,19 @@ const MoistureDashboard: React.FC = () => {
     );
   };
 
-  const MoisturePercentage: React.FC = () => {
+  const MoisturePercentage: React.FC<moistureChartProps> = ({
+    soil_moisture
+  }: moistureChartProps) => {
     const styles = useStyles();
     return (
       <Card className={styles.chart}>
         <CardContent>
           <Typography variant={"subtitle1"} gutterBottom>
-            Average Moisture
+            Soil Moisture
           </Typography>
           <Divider />
           <PercentChartNew
-            value={6}
+            value={soil_moisture}
             range={{
               low: SensorRanges[SensorType.SOIL_MOISTURE].low,
               high: SensorRanges[SensorType.SOIL_MOISTURE].high,
@@ -191,10 +197,16 @@ const MoistureDashboard: React.FC = () => {
 
   return (
     <GridList cellHeight="auto" className={styles.gridList} cols={3}>
-      <GridListTile cols={smallWidth ? 3 : 1}>
-        <MoisturePercentage />
+      <GridListTile cols={1}>
+        <MoisturePercentage soil_moisture={5} />
       </GridListTile>
-      <GridListTile cols={smallWidth ? 3 : 2}>
+      <GridListTile cols={1}>
+        <MoisturePercentage soil_moisture={4} />
+      </GridListTile>
+      <GridListTile cols={1}>
+        <MoisturePercentage soil_moisture={7} />
+      </GridListTile>
+      <GridListTile cols={3}>
         <HistoryGraph />
       </GridListTile>
       <GridListTile cols={3}>
