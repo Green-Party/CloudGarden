@@ -128,9 +128,9 @@ const MoistureDashboard: React.FC = () => {
           <PercentChartNew
             value={6}
             range={{
-              low: SensorRanges[SensorType.MOISTURE].low,
-              high: SensorRanges[SensorType.MOISTURE].high,
-              ideal: SensorRanges[SensorType.MOISTURE].ideal
+              low: SensorRanges[SensorType.SOIL_MOISTURE].low,
+              high: SensorRanges[SensorType.SOIL_MOISTURE].high,
+              ideal: SensorRanges[SensorType.SOIL_MOISTURE].ideal
             }}
             units={""}
           />
@@ -150,7 +150,7 @@ const MoistureDashboard: React.FC = () => {
           <Divider />
           <HistoryChartNew
             units={SensorUnit.UNITS}
-            type={SensorType.MOISTURE}
+            type={SensorType.SOIL_MOISTURE}
             data={[
               [
                 { timestamp: new Date("June 12, 2015"), value: 10 },

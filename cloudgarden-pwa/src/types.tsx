@@ -9,13 +9,14 @@ export type SensorState = {
 };
 
 export type SensorData = {
-  _rid: string;
+  [identifier: string]: any;
+  id: string;
   visible: number;
   ir: number;
-  uvIdx: number;
-  waterLevel: number;
+  uv_index: number;
+  water_level: number;
   temp: number[];
-  soilHumidity: number[];
-  pumpsEnabled: boolean;
+  soil_humidity: number[];
+  pumps_enabled: boolean;
   _ts: Date;
 };

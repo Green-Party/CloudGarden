@@ -21,7 +21,7 @@ module.exports = class Si1145 {
     this.device.parameters = [
       { name: "visible", type: "integer", value: NaN },
       { name: "ir", type: "integer", value: NaN },
-      { name: "uv", type: "integer", value: NaN }
+      { name: "uv_index", type: "integer", value: NaN }
     ];
 
     // this.board = i2c.openSync(this.device.bus);

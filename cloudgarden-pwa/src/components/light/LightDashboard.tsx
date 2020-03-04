@@ -6,7 +6,6 @@
 
 import React, { Fragment } from "react";
 import "../../Dashboard.css";
-import { SensorState, SensorData } from "../../types";
 import {
   Card,
   CardContent,
@@ -19,6 +18,7 @@ import PercentChartNew from "../charts/PercentChartNew";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
 import HistoryChartNew from "../charts/HistoryChartNew";
 import { useSensorState } from "../../contexts";
+import { sensorDataToChartData } from "../dashboardUtils";
 
 const useStyles = makeStyles({
   button: {
@@ -69,7 +69,7 @@ const LightDashboard: React.FC = () => {
 
   const UVPercentage: React.FC = () => {
     const styles = useStyles();
-    const lastUvIdx = sensorData[sensorData.length - 1].uvIdx;
+    const lastUvIdx = sensorData[sensorData.length - 1].uv_index;
     return (
       <Card className={styles.chart}>
         <CardContent>
@@ -80,9 +80,9 @@ const LightDashboard: React.FC = () => {
           <PercentChartNew
             value={lastUvIdx}
             range={{
-              low: SensorRanges[SensorType.UVINDEX].low,
-              high: SensorRanges[SensorType.UVINDEX].high,
-              ideal: SensorRanges[SensorType.UVINDEX].ideal
+              low: SensorRanges[SensorType.UV_INDEX].low,
+              high: SensorRanges[SensorType.UV_INDEX].high,
+              ideal: SensorRanges[SensorType.UV_INDEX].ideal
             }}
             units={""}
           />
@@ -142,16 +142,10 @@ const LightDashboard: React.FC = () => {
   const HistoryGraphs: React.FC = () => {
     const styles = useStyles();
 
-    const sensorDataToChartData = (sensorData: SensorData[]) => {
-      return sensorData.map(sensor => {
-        return {
-          timestamp: sensor._ts,
-          value: sensor.visible
-        };
-      });
-    };
-
-    console.log("Chart Sensor data", sensorDataToChartData(sensorData));
+    console.log(
+      "uv Chart Sensor data",
+      sensorDataToChartData(sensorData, SensorType.UV_INDEX)
+    );
     return (
       <Fragment>
         <Card className={styles.chart}>
@@ -162,19 +156,8 @@ const LightDashboard: React.FC = () => {
             <Divider />
             <HistoryChartNew
               units={SensorUnit.UNITS}
-              type={SensorType.UVINDEX}
-              data={[
-                [
-                  { timestamp: new Date("June 12, 2015"), value: 10 },
-                  { timestamp: new Date("June 15, 2015"), value: 15 },
-                  { timestamp: new Date("June 18, 2015"), value: 10 },
-                  { timestamp: new Date("June 21, 2015"), value: 20 },
-                  { timestamp: new Date("June 23, 2015"), value: 30 },
-                  { timestamp: new Date("June 25, 2015"), value: 25 },
-                  { timestamp: new Date("June 28, 2015"), value: 18 },
-                  { timestamp: new Date("June 30, 2015"), value: 15 }
-                ]
-              ]}
+              type={SensorType.UV_INDEX}
+              data={[sensorDataToChartData(sensorData, SensorType.UV_INDEX)]}
             />
           </CardContent>
         </Card>
@@ -187,7 +170,7 @@ const LightDashboard: React.FC = () => {
             <HistoryChartNew
               units={SensorUnit.UNITS}
               type={SensorType.VISIBLE}
-              data={[sensorDataToChartData(sensorData)]}
+              data={[sensorDataToChartData(sensorData, SensorType.VISIBLE)]}
             />
           </CardContent>
         </Card>
@@ -200,18 +183,7 @@ const LightDashboard: React.FC = () => {
             <HistoryChartNew
               units={SensorUnit.UNITS}
               type={SensorType.IR}
-              data={[
-                [
-                  { timestamp: new Date("June 12, 2015"), value: 13 },
-                  { timestamp: new Date("June 15, 2015"), value: 20 },
-                  { timestamp: new Date("June 18, 2015"), value: 17 },
-                  { timestamp: new Date("June 21, 2015"), value: 25 },
-                  { timestamp: new Date("June 23, 2015"), value: 15 },
-                  { timestamp: new Date("June 25, 2015"), value: 30 },
-                  { timestamp: new Date("June 28, 2015"), value: 19 },
-                  { timestamp: new Date("June 30, 2015"), value: 14 }
-                ]
-              ]}
+              data={[sensorDataToChartData(sensorData, SensorType.IR)]}
             />
           </CardContent>
         </Card>

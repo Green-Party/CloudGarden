@@ -78,7 +78,7 @@ const TempDashboard: React.FC = () => {
     const [temp, setTemp] = useState<number>(20);
 
     const handleUnits = (
-      event: React.MouseEvent<HTMLElement>,
+      _event: React.MouseEvent<HTMLElement>,
       newUnits: SensorUnit
     ) => {
       console.log(units, newUnits);
@@ -104,9 +104,9 @@ const TempDashboard: React.FC = () => {
           <PercentChartNew
             value={temp}
             range={{
-              low: SensorRanges[SensorType.TEMP][units].low,
-              high: SensorRanges[SensorType.TEMP][units].high,
-              ideal: SensorRanges[SensorType.TEMP][units].ideal
+              low: SensorRanges[SensorType.TEMPERATURE][units].low,
+              high: SensorRanges[SensorType.TEMPERATURE][units].high,
+              ideal: SensorRanges[SensorType.TEMPERATURE][units].ideal
             }}
             units={units === SensorUnit.CELSIUS ? "℃" : "℉"}
           />
@@ -141,7 +141,7 @@ const TempDashboard: React.FC = () => {
           <Divider />
           <HistoryChartNew
             units={SensorUnit.UNITS}
-            type={SensorType.TEMP}
+            type={SensorType.TEMPERATURE}
             data={[
               [
                 { timestamp: new Date("June 12, 2015"), value: 10 },

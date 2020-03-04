@@ -65,9 +65,7 @@ function SensorDataProvider({ children }: SensorDataProviderProps) {
       console.log(updatedSensor);
       let stateCopy = Array.from(sensorData);
       let newState;
-      let sensor = stateCopy.find(
-        (s: SensorData) => s._rid === updatedSensor._rid
-      );
+      let sensor = stateCopy.find((s: SensorData) => s.id === updatedSensor.id);
       if (sensor) {
         Object.assign(sensor, updatedSensor);
         newState = stateCopy;
