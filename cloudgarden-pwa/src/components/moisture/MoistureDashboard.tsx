@@ -17,13 +17,14 @@ import {
   CardMedia,
   Typography,
   GridListTile,
-  GridList,
-  useMediaQuery
+  GridList
 } from "@material-ui/core";
 import { makeStyles, createStyles, useTheme } from "@material-ui/core/styles";
 import PercentChartNew from "../charts/PercentChartNew";
 import HistoryChartNew from "../charts/HistoryChartNew";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
+import { useSensorState } from "../../contexts";
+import { sensorDataToChartData } from "../dashboardUtils";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -82,9 +83,13 @@ interface moistureChartProps {
 }
 
 const MoistureDashboard: React.FC = () => {
+  const sensorData = useSensorState();
   const theme = useTheme();
   const styles = useStyles(theme);
-  const smallWidth = useMediaQuery(theme.breakpoints.down("xs"));
+
+  const soilMoisture1 = sensorData[sensorData.length - 1].soil_moisture[0];
+  const soilMoisture2 = sensorData[sensorData.length - 1].soil_moisture[1];
+  const soilMoisture3 = sensorData[sensorData.length - 1].soil_moisture[2];
 
   const PlantButtons: React.FC = () => {
     return (
@@ -161,36 +166,9 @@ const MoistureDashboard: React.FC = () => {
             units={SensorUnit.UNITS}
             type={SensorType.SOIL_MOISTURE}
             data={[
-              [
-                { timestamp: new Date("June 12, 2015"), value: 10 },
-                { timestamp: new Date("June 15, 2015"), value: 15 },
-                { timestamp: new Date("June 18, 2015"), value: 10 },
-                { timestamp: new Date("June 21, 2015"), value: 20 },
-                { timestamp: new Date("June 23, 2015"), value: 30 },
-                { timestamp: new Date("June 25, 2015"), value: 25 },
-                { timestamp: new Date("June 28, 2015"), value: 18 },
-                { timestamp: new Date("June 30, 2015"), value: 15 }
-              ],
-              [
-                { timestamp: new Date("June 12, 2015"), value: 12 },
-                { timestamp: new Date("June 15, 2015"), value: 17 },
-                { timestamp: new Date("June 18, 2015"), value: 11 },
-                { timestamp: new Date("June 21, 2015"), value: 27 },
-                { timestamp: new Date("June 23, 2015"), value: 35 },
-                { timestamp: new Date("June 25, 2015"), value: 20 },
-                { timestamp: new Date("June 28, 2015"), value: 12 },
-                { timestamp: new Date("June 30, 2015"), value: 18 }
-              ],
-              [
-                { timestamp: new Date("June 12, 2015"), value: 13 },
-                { timestamp: new Date("June 15, 2015"), value: 20 },
-                { timestamp: new Date("June 18, 2015"), value: 17 },
-                { timestamp: new Date("June 21, 2015"), value: 25 },
-                { timestamp: new Date("June 23, 2015"), value: 15 },
-                { timestamp: new Date("June 25, 2015"), value: 30 },
-                { timestamp: new Date("June 28, 2015"), value: 19 },
-                { timestamp: new Date("June 30, 2015"), value: 14 }
-              ]
+              sensorDataToChartData(sensorData, SensorType.SOIL_MOISTURE, 0),
+              sensorDataToChartData(sensorData, SensorType.SOIL_MOISTURE, 1),
+              sensorDataToChartData(sensorData, SensorType.SOIL_MOISTURE, 2)
             ]}
           />
         </CardContent>
@@ -201,13 +179,13 @@ const MoistureDashboard: React.FC = () => {
   return (
     <GridList cellHeight="auto" className={styles.gridList} cols={3}>
       <GridListTile cols={1}>
-        <MoisturePercentage soil_moisture={5} />
+        <MoisturePercentage soil_moisture={soilMoisture1} />
       </GridListTile>
       <GridListTile cols={1}>
-        <MoisturePercentage soil_moisture={4} />
+        <MoisturePercentage soil_moisture={soilMoisture2} />
       </GridListTile>
       <GridListTile cols={1}>
-        <MoisturePercentage soil_moisture={7} />
+        <MoisturePercentage soil_moisture={soilMoisture3} />
       </GridListTile>
       <GridListTile cols={3}>
         <HistoryGraph />

@@ -8,12 +8,16 @@ import { SensorType } from "./charts/Units";
 
 export const sensorDataToChartData = (
   sensorData: SensorData[],
-  sensorType: SensorType
+  sensorType: SensorType,
+  sensorIdx: number = 0
 ) => {
   return sensorData.map(sensor => {
     return {
       timestamp: sensor._ts,
-      value: sensor[sensorType.toLowerCase()]
+      value:
+        sensor[sensorType.toLowerCase()] instanceof Array
+          ? sensor[sensorType.toLowerCase()][sensorIdx]
+          : sensor[sensorType.toLowerCase()]
     };
   });
 };

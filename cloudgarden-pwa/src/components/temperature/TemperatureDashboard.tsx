@@ -20,6 +20,8 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import PercentChartNew from "../charts/PercentChartNew";
 import HistoryChartNew from "../charts/HistoryChartNew";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
+import { useSensorState } from "../../contexts";
+import { sensorDataToChartData } from "../dashboardUtils";
 
 const useStyles = makeStyles({
   button: {
@@ -71,16 +73,21 @@ const useStyles = makeStyles({
   }
 });
 
-interface temperatureChartProps {
+interface TemperatureChartProps {
   temperature: number;
 }
 
 const TemperatureDashboard: React.FC = () => {
   const styles = useStyles();
+  const sensorData = useSensorState();
 
-  const TemperatureChart: React.FC<temperatureChartProps> = ({
+  const temperature1 = sensorData[sensorData.length - 1].temperature[0];
+  const temperature2 = sensorData[sensorData.length - 1].temperature[1];
+  const temperature3 = sensorData[sensorData.length - 1].temperature[2];
+
+  const TemperatureChart: React.FC<TemperatureChartProps> = ({
     temperature
-  }: temperatureChartProps) => {
+  }: TemperatureChartProps) => {
     const [units, setUnits] = useState<SensorUnit>(SensorUnit.CELSIUS);
     const [temp, setTemp] = useState<number>(temperature);
 
@@ -150,36 +157,9 @@ const TemperatureDashboard: React.FC = () => {
             units={SensorUnit.UNITS}
             type={SensorType.TEMPERATURE}
             data={[
-              [
-                { timestamp: new Date("June 12, 2015"), value: 10 },
-                { timestamp: new Date("June 15, 2015"), value: 15 },
-                { timestamp: new Date("June 18, 2015"), value: 10 },
-                { timestamp: new Date("June 21, 2015"), value: 20 },
-                { timestamp: new Date("June 23, 2015"), value: 30 },
-                { timestamp: new Date("June 25, 2015"), value: 25 },
-                { timestamp: new Date("June 28, 2015"), value: 18 },
-                { timestamp: new Date("June 30, 2015"), value: 15 }
-              ],
-              [
-                { timestamp: new Date("June 12, 2015"), value: 13 },
-                { timestamp: new Date("June 15, 2015"), value: 18 },
-                { timestamp: new Date("June 18, 2015"), value: 23 },
-                { timestamp: new Date("June 21, 2015"), value: 20 },
-                { timestamp: new Date("June 23, 2015"), value: 16 },
-                { timestamp: new Date("June 25, 2015"), value: 25 },
-                { timestamp: new Date("June 28, 2015"), value: 19 },
-                { timestamp: new Date("June 30, 2015"), value: 15 }
-              ],
-              [
-                { timestamp: new Date("June 12, 2015"), value: 12 },
-                { timestamp: new Date("June 15, 2015"), value: 18 },
-                { timestamp: new Date("June 18, 2015"), value: 15 },
-                { timestamp: new Date("June 21, 2015"), value: 22 },
-                { timestamp: new Date("June 23, 2015"), value: 26 },
-                { timestamp: new Date("June 25, 2015"), value: 23 },
-                { timestamp: new Date("June 28, 2015"), value: 20 },
-                { timestamp: new Date("June 30, 2015"), value: 16 }
-              ]
+              sensorDataToChartData(sensorData, SensorType.TEMPERATURE, 0),
+              sensorDataToChartData(sensorData, SensorType.TEMPERATURE, 1),
+              sensorDataToChartData(sensorData, SensorType.TEMPERATURE, 2)
             ]}
           />
         </CardContent>
@@ -190,13 +170,13 @@ const TemperatureDashboard: React.FC = () => {
   return (
     <GridList cellHeight="auto" className={styles.gridList} cols={3}>
       <GridListTile cols={1}>
-        <TemperatureChart temperature={20} />
+        <TemperatureChart temperature={temperature1} />
       </GridListTile>
       <GridListTile cols={1}>
-        <TemperatureChart temperature={40} />
+        <TemperatureChart temperature={temperature2} />
       </GridListTile>
       <GridListTile cols={1}>
-        <TemperatureChart temperature={30} />
+        <TemperatureChart temperature={temperature3} />
       </GridListTile>
       <GridListTile cols={3}>
         <HistoryGraph />
