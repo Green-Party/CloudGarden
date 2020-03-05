@@ -48,6 +48,7 @@ const HistoryChartNew: React.FC<Data> = ({ type, units, data }: Data) => {
     theme.palette.primary.main,
     theme.palette.primary.dark
   ];
+  console.log("DATA", data.flat());
 
   return (
     <div>
@@ -72,7 +73,14 @@ const HistoryChartNew: React.FC<Data> = ({ type, units, data }: Data) => {
       <svg width="100%" height="100%" viewBox="0 0 450 350">
         {/* Add shared independent axis */}
 
-        <VictoryAxis scale="time" standalone={false} />
+        <VictoryAxis
+          scale="time"
+          standalone={false}
+          domain={[
+            new Date(Math.min(...data.flat().map(v => v.timestamp.getTime()))),
+            new Date(Math.max(...data.flat().map(v => v.timestamp.getTime())))
+          ]}
+        />
 
         {/*
           Add the dependent axis for the first data set.
@@ -80,18 +88,11 @@ const HistoryChartNew: React.FC<Data> = ({ type, units, data }: Data) => {
         */}
         <VictoryAxis
           dependentAxis
-          //domain={[0, 40]}
+          domain={[0, Math.max(...data.flat().map(v => v.value))]}
           orientation="left"
           standalone={false}
         />
         {data.map((value, index) => {
-          console.log({
-            x: [
-              Math.min(...value.map(v => v.timestamp.getTime())),
-              Math.max(...value.map(v => v.timestamp.getTime()))
-            ],
-            y: [0, Math.max(...value.map(v => v.value))]
-          });
           return (
             <VictoryLine
               data={value}
