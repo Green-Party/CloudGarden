@@ -64,8 +64,6 @@ const useStyles = makeStyles({
 
 const LightDashboard: React.FC = () => {
   const sensorData = useSensorState();
-  console.log(`sensor data`);
-  console.log(sensorData);
 
   const UVPercentage: React.FC = () => {
     const styles = useStyles();
