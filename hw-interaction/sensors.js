@@ -40,7 +40,7 @@ const pumpTime = 1000;
 function initialize(state) {
   let board = new five.Board();
 
-  Object.assign(state, readings);
+  state.sensorData = readings;
 
   board.on("ready", async function() {
     // light sensor

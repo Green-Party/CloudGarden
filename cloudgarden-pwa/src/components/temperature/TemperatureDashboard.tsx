@@ -71,11 +71,18 @@ const useStyles = makeStyles({
   }
 });
 
-const TempDashboard: React.FC = () => {
+interface temperatureChartProps {
+  temperature: number;
+}
+
+const TemperatureDashboard: React.FC = () => {
   const styles = useStyles();
-  const TempChart: React.FC = () => {
+
+  const TemperatureChart: React.FC<temperatureChartProps> = ({
+    temperature
+  }: temperatureChartProps) => {
     const [units, setUnits] = useState<SensorUnit>(SensorUnit.CELSIUS);
-    const [temp, setTemp] = useState<number>(20);
+    const [temp, setTemp] = useState<number>(temperature);
 
     const handleUnits = (
       _event: React.MouseEvent<HTMLElement>,
@@ -152,6 +159,26 @@ const TempDashboard: React.FC = () => {
                 { timestamp: new Date("June 25, 2015"), value: 25 },
                 { timestamp: new Date("June 28, 2015"), value: 18 },
                 { timestamp: new Date("June 30, 2015"), value: 15 }
+              ],
+              [
+                { timestamp: new Date("June 12, 2015"), value: 13 },
+                { timestamp: new Date("June 15, 2015"), value: 18 },
+                { timestamp: new Date("June 18, 2015"), value: 23 },
+                { timestamp: new Date("June 21, 2015"), value: 20 },
+                { timestamp: new Date("June 23, 2015"), value: 16 },
+                { timestamp: new Date("June 25, 2015"), value: 25 },
+                { timestamp: new Date("June 28, 2015"), value: 19 },
+                { timestamp: new Date("June 30, 2015"), value: 15 }
+              ],
+              [
+                { timestamp: new Date("June 12, 2015"), value: 12 },
+                { timestamp: new Date("June 15, 2015"), value: 18 },
+                { timestamp: new Date("June 18, 2015"), value: 15 },
+                { timestamp: new Date("June 21, 2015"), value: 22 },
+                { timestamp: new Date("June 23, 2015"), value: 26 },
+                { timestamp: new Date("June 25, 2015"), value: 23 },
+                { timestamp: new Date("June 28, 2015"), value: 20 },
+                { timestamp: new Date("June 30, 2015"), value: 16 }
               ]
             ]}
           />
@@ -162,8 +189,14 @@ const TempDashboard: React.FC = () => {
 
   return (
     <GridList cellHeight="auto" className={styles.gridList} cols={3}>
-      <GridListTile cols={2}>
-        <TempChart />
+      <GridListTile cols={1}>
+        <TemperatureChart temperature={20} />
+      </GridListTile>
+      <GridListTile cols={1}>
+        <TemperatureChart temperature={40} />
+      </GridListTile>
+      <GridListTile cols={1}>
+        <TemperatureChart temperature={30} />
       </GridListTile>
       <GridListTile cols={3}>
         <HistoryGraph />
@@ -172,4 +205,4 @@ const TempDashboard: React.FC = () => {
   );
 };
 
-export default TempDashboard;
+export default TemperatureDashboard;
