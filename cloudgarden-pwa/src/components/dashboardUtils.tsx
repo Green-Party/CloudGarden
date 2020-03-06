@@ -13,7 +13,7 @@ export const sensorDataToChartData = (
 ) => {
   return sensorData.map(sensor => {
     return {
-      timestamp: sensor._ts,
+      timestamp: new Date(sensor._ts * 1000),
       value:
         sensor[sensorType.toLowerCase()] instanceof Array
           ? sensor[sensorType.toLowerCase()][sensorIdx]
