@@ -13,6 +13,18 @@ import { SensorData } from "../types";
 type SensorDataProviderProps = { children: React.ReactNode };
 const SensorStateContext = createContext<SensorData[] | undefined>(undefined);
 
+const defaultState: SensorData = {
+  id: "0",
+  visible: 0,
+  ir: 0,
+  uv_index: 0,
+  water_level: 0,
+  temperature: [0, 0, 0],
+  soil_moisture: [0, 0, 0],
+  pumps_enabled: true,
+  _ts: 0
+};
+
 // axios configs
 const apiBaseUrl = "https://db-to-signalr-service.azurewebsites.net/";
 const axiosConfig = {};
@@ -55,9 +67,9 @@ function startConnection(connection: signalR.HubConnection) {
 }
 
 function SensorDataProvider({ children }: SensorDataProviderProps) {
-  const [sensorData, updateSensorState]: [SensorData[], Function] = useState(
-    []
-  );
+  const [sensorData, updateSensorState]: [SensorData[], Function] = useState([
+    defaultState
+  ]);
 
   function sensorsUpdated(updatedSensor: SensorData) {
     updateSensorState((sensorData: SensorData[]) => {

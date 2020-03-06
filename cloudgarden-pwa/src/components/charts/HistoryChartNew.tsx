@@ -4,7 +4,7 @@
  * A template component that displays passed in time series data as a line graph
  */
 import React from "react";
-import { VictoryLine, VictoryAxis } from "victory";
+import { VictoryLine, VictoryAxis, VictoryChart } from "victory";
 import {
   Typography,
   useTheme,
@@ -18,7 +18,7 @@ import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 interface Data {
   type: SensorType;
   units: SensorUnit;
-  data: { value: number; timestamp: Date }[][];
+  data: { value: number; timestamp: number }[][];
 }
 
 const useStyles = makeStyles({
@@ -63,7 +63,8 @@ const HistoryChartNew: React.FC<Data> = ({ type, units, data }: Data) => {
                 <FiberManualRecordIcon
                   style={{ fill: colors[index], marginTop: 2 }}
                 />
-                {type} {index === 0 ? "" : index + 1}
+                {type.toLowerCase().replace(/_/g, " ")}{" "}
+                {index === 0 ? "" : index + 1}
               </Typography>
             </GridListTile>
           );
@@ -71,7 +72,16 @@ const HistoryChartNew: React.FC<Data> = ({ type, units, data }: Data) => {
       </GridList>
       <svg width="100%" height="100%" viewBox="0 0 450 350">
         {/* Add shared independent axis */}
-        <VictoryAxis scale="time" standalone={false} />
+
+        <VictoryAxis
+          scale="time"
+          label="Time"
+          standalone={false}
+          domain={[
+            new Date(Math.min(...data.flat().map(v => v.timestamp.getTime()))),
+            new Date(Math.max(...data.flat().map(v => v.timestamp.getTime())))
+          ]}
+        />
 
         {/*
           Add the dependent axis for the first data set.
@@ -79,9 +89,10 @@ const HistoryChartNew: React.FC<Data> = ({ type, units, data }: Data) => {
         */}
         <VictoryAxis
           dependentAxis
-          domain={[0, 40]}
+          domain={[0, Math.max(...data.flat().map(v => v.value))]}
           orientation="left"
           standalone={false}
+          label={`${type.toLowerCase().replace(/_/g, " ")}`}
         />
         {data.map((value, index) => {
           return (

@@ -29,14 +29,17 @@ import { sensorDataToChartData } from "../dashboardUtils";
 const useStyles = makeStyles(theme =>
   createStyles({
     button: {
-      background: theme.palette.secondary.dark,
+      background: theme.palette.primary.main,
       border: 0,
       borderRadius: 8,
       color: "white",
       paddingTop: 0,
       paddingBottom: 0,
       paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2)
+      paddingRight: theme.spacing(2),
+      "&:hover": {
+        background: theme.palette.secondary.main
+      }
     },
     card: {
       transition: "0.3s",
