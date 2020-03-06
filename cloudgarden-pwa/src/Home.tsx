@@ -9,10 +9,10 @@ import "./Dashboard.css";
 import Tabs from "./components/main/Tabs";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import MoistureDashboard from "./components/moisture/MoistureDashboard";
-import PlantSpecific from "./components/moisture/PlantSpecific";
 import LightDashboard from "./components/light/LightDashboard";
 import TemperatureDashboard from "./components/temperature/TemperatureDashboard";
 import { Grid, Typography } from "@material-ui/core";
+import WaterLevelDashboard from "./components/waterLevel/WaterLevelDashboard";
 
 const Home: React.FC = () => {
   const match = useRouteMatch();
@@ -49,11 +49,9 @@ const Home: React.FC = () => {
           <Route exact path={`${match.path}/temp`}>
             <TemperatureDashboard />
           </Route>
-          <Route
-            exact
-            path={`${match.path}/:sensorId/:plantId`}
-            component={PlantSpecific}
-          />
+          <Route exact path={`${match.path}/water`}>
+            <WaterLevelDashboard />
+          </Route>
           <Route path={match.path}>
             <div className="row-container">
               <Typography variant="h3" color="secondary">
