@@ -82,7 +82,7 @@ const WaterLevelDashboard: React.FC = () => {
         <Card className={styles.chart}>
           <CardContent>
             <Typography variant={"h6"} gutterBottom>
-              History
+              Water Level
             </Typography>
             <Divider />
             <AreaChart

@@ -4,7 +4,7 @@
  * A template component that displays passed in time series data as a line graph
  */
 import React from "react";
-import { VictoryChart, VictoryArea, VictoryTheme } from "victory";
+import { VictoryChart, VictoryArea, VictoryTheme, VictoryAxis } from "victory";
 import { Typography, useTheme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { SensorType, SensorUnit } from "./Units";
@@ -44,20 +44,36 @@ const AreaChart: React.FC<Data> = ({ type, units, data }: Data) => {
   ];
 
   return (
-    <VictoryChart theme={VictoryTheme.material} animate={{ duration: 1000 }}>
-      <VictoryArea
-        style={{
-          data: { fill: "magenta", stroke: "magenta" }
-        }}
-        data={[
-          { x: 1, y: 3 },
-          { x: 2, y: 2 },
-          { x: 3, y: 6 },
-          { x: 4, y: 2 },
-          { x: 5, y: 6 }
-        ]}
-      />
-    </VictoryChart>
+    <div>
+      <VictoryChart theme={VictoryTheme.material}>
+        <VictoryArea
+          interpolation="natural"
+          data={[
+            { x: 1, y: 2000 },
+            { x: 2, y: 3000 },
+            { x: 3, y: 500 },
+            { x: 4, y: 400 },
+            { x: 5, y: 700 }
+          ]}
+        />
+        <VictoryAxis
+          scale="time"
+          label="time"
+          standalone={false}
+          // domain={[
+          //   new Date(Math.min(...data.flat().map(v => v.timestamp.getTime()))),
+          //   new Date(Math.max(...data.flat().map(v => v.timestamp.getTime())))
+          // ]}
+        />
+        <VictoryAxis
+          dependentAxis
+          domain={[0, 4400]}
+          orientation="left"
+          standalone={false}
+          label="Water Level (mL)"
+        />
+      </VictoryChart>
+    </div>
   );
 };
 
