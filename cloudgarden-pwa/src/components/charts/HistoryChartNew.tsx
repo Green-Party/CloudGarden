@@ -18,7 +18,7 @@ import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 interface Data {
   type: SensorType;
   units: SensorUnit;
-  data: { value: number; timestamp: Date }[][];
+  data: { value: number; timestamp: number }[][];
 }
 
 const useStyles = makeStyles({
