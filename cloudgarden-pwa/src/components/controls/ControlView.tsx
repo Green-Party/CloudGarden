@@ -120,20 +120,19 @@ const ControlView: React.FC = () => {
   const theme = useTheme();
   const styles = useStyles(theme);
   const smallWidth = useMediaQuery(theme.breakpoints.down("xs"));
-  const [buttonDisabled, setButtonDisable] = useState(false);
   const [lightState, setLightState] = useState(false);
-  const [watering, setWatering] = useState("");
+  const [watering0, setWatering0] = useState(false);
+  const [watering1, setWatering1] = useState(false);
+  const [watering2, setWatering2] = useState(false);
   const [currentSocket, setCurrentSocket]: any = useState(null);
   const onClickLightCommand = () => {
     currentSocket.emit("toggleLight", true);
   };
-  const onClickPumpCommand = (idx: number) => {
-    setButtonDisable(true);
-    setWatering(styles.waveTall);
+  const onClickPumpCommand = (idx: number, waterFunc: Function) => {
+    waterFunc(true);
     currentSocket.emit("togglePump", idx);
     setTimeout(() => {
-      setButtonDisable(false);
-      setWatering("");
+      waterFunc(false);
     }, 3000);
   };
 
@@ -189,9 +188,10 @@ const ControlView: React.FC = () => {
               Plant 1
             </Typography>
             <Button
-              disabled={buttonDisabled}
-              className={clsx(styles.button, watering)}
-              onClick={() => onClickPumpCommand(0)}
+              id="water-pump-0"
+              disabled={watering0}
+              className={clsx(styles.button, watering0 ? styles.waveTall : "")}
+              onClick={() => onClickPumpCommand(0, setWatering0)}
             >
               Water
             </Button>
@@ -207,9 +207,10 @@ const ControlView: React.FC = () => {
               Plant 2
             </Typography>
             <Button
-              disabled={buttonDisabled}
-              className={clsx(styles.button, watering)}
-              onClick={() => onClickPumpCommand(1)}
+              id="water-pump-1"
+              disabled={watering1}
+              className={clsx(styles.button, watering1 ? styles.waveTall : "")}
+              onClick={() => onClickPumpCommand(1, setWatering1)}
             >
               Water
             </Button>
@@ -225,9 +226,10 @@ const ControlView: React.FC = () => {
               Plant 3
             </Typography>
             <Button
-              disabled={buttonDisabled}
-              className={clsx(styles.button, watering)}
-              onClick={() => onClickPumpCommand(2)}
+              id="water-pump-2"
+              disabled={watering2}
+              className={clsx(styles.button, watering2 ? styles.waveTall : "")}
+              onClick={() => onClickPumpCommand(2, setWatering2)}
             >
               Water
             </Button>

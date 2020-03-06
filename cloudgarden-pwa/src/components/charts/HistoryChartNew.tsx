@@ -48,7 +48,6 @@ const HistoryChartNew: React.FC<Data> = ({ type, units, data }: Data) => {
     theme.palette.primary.main,
     theme.palette.primary.dark
   ];
-  console.log("DATA", data.flat());
 
   return (
     <div>
@@ -64,7 +63,8 @@ const HistoryChartNew: React.FC<Data> = ({ type, units, data }: Data) => {
                 <FiberManualRecordIcon
                   style={{ fill: colors[index], marginTop: 2 }}
                 />
-                {type} {index === 0 ? "" : index + 1}
+                {type.toLowerCase().replace(/_/g, " ")}{" "}
+                {index === 0 ? "" : index + 1}
               </Typography>
             </GridListTile>
           );
@@ -75,6 +75,7 @@ const HistoryChartNew: React.FC<Data> = ({ type, units, data }: Data) => {
 
         <VictoryAxis
           scale="time"
+          label="Time"
           standalone={false}
           domain={[
             new Date(Math.min(...data.flat().map(v => v.timestamp.getTime()))),
@@ -91,6 +92,7 @@ const HistoryChartNew: React.FC<Data> = ({ type, units, data }: Data) => {
           domain={[0, Math.max(...data.flat().map(v => v.value))]}
           orientation="left"
           standalone={false}
+          label={`${type.toLowerCase().replace(/_/g, " ")}`}
         />
         {data.map((value, index) => {
           return (
@@ -99,13 +101,6 @@ const HistoryChartNew: React.FC<Data> = ({ type, units, data }: Data) => {
               x="timestamp"
               y="value"
               scale={{ x: "time", y: "linear" }}
-              domain={{
-                x: [
-                  Math.min(...value.map(v => v.timestamp.getTime())),
-                  Math.max(...value.map(v => v.timestamp.getTime()))
-                ],
-                y: [0, Math.max(...value.map(v => v.value))]
-              }}
               standalone={false}
               style={{
                 data: { stroke: colors[index] }
