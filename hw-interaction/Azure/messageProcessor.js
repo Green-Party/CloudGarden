@@ -36,6 +36,7 @@ class MessageProcessor {
         return;
       }
       let sensorData = {
+        type: "Sensor",
         messageId: messageId,
         deviceId: this.deviceId
       };

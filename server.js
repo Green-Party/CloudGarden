@@ -5,6 +5,7 @@
  * Based off of: https://create-react-app.dev/docs/deployment/
  *   and https://socket.io/docs/https://socket.io/docs/
  */
+"use strict";
 
 //Requires
 const express = require("express");
@@ -47,17 +48,17 @@ app.get("/*", (_req, res, _next) =>
 
 app.post("/notifications/subscribe", (req, res) => {
   //TODO: extract subscription info for future notifications
-  const subscription = req.body;
-  console.log(subscription);
+  global.pushSubscription = req.body;
+  console.log(pushSubscription);
 
   //NOTE: Test notification
   const payload = JSON.stringify({
-    title: "Hello!",
-    body: "It works."
+    title: "Subscribed",
+    body: "Successfully subscribed to push notifications."
   });
 
   webPush
-    .sendNotification(subscription, payload)
+    .sendNotification(pushSubscription, payload)
     .then(result => console.log(result))
     .catch(e => console.log(e.stack));
 
