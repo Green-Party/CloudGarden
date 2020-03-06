@@ -13,7 +13,8 @@ class MessageProcessor {
   constructor(option) {
     option = Object.assign(
       {
-        deviceId: "[Unknown device] node"
+        deviceId: "[Unknown device] node",
+        type: "Sensor"
       },
       option
     );

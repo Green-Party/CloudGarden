@@ -18,5 +18,5 @@ export type SensorData = {
   temperature: number[];
   soil_moisture: number[];
   pumps_enabled: boolean;
-  _ts: Date;
+  _ts: number;
 };
