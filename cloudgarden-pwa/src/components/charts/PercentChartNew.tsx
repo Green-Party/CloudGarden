@@ -83,9 +83,7 @@ const PercentChartNew: React.FC<Data> = ({ value, range, units }: Data) => {
           endAngle={angle}
         />
         <Typography variant="h6" className={styles.chartLabel}>
-          {units == ""
-            ? "\xa00" + Math.round(value)
-            : Math.round(value) + "" + units}
+          {units == "" ? "\xa00" + Math.round(value) : Math.round(value)}
         </Typography>
       </div>
       <Typography variant="subtitle1">

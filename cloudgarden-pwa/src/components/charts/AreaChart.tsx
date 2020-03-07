@@ -45,7 +45,7 @@ const AreaChart: React.FC<Data> = ({ type, units, data }: Data) => {
 
   return (
     <div>
-      <VictoryChart theme={VictoryTheme.material}>
+      <svg width="100%" height="100%" viewBox="0 0 450 350">
         <VictoryArea
           interpolation="natural"
           data={[
@@ -55,16 +55,19 @@ const AreaChart: React.FC<Data> = ({ type, units, data }: Data) => {
             { x: 4, y: 400 },
             { x: 5, y: 700 }
           ]}
-        />
-        <VictoryAxis
-          scale="time"
-          label="time"
+          x="timestamp"
+          y="value"
+          scale={{ x: "time", y: "linear" }}
           standalone={false}
-          // domain={[
-          //   new Date(Math.min(...data.flat().map(v => v.timestamp.getTime()))),
-          //   new Date(Math.max(...data.flat().map(v => v.timestamp.getTime())))
-          // ]}
+          style={{
+            data: { fill: colors[0] }
+          }}
+          animate={{
+            duration: 1000,
+            onLoad: { duration: 1000 }
+          }}
         />
+        <VictoryAxis scale="time" label="time" standalone={false} />
         <VictoryAxis
           dependentAxis
           domain={[0, 4400]}
@@ -72,7 +75,7 @@ const AreaChart: React.FC<Data> = ({ type, units, data }: Data) => {
           standalone={false}
           label="Water Level (mL)"
         />
-      </VictoryChart>
+      </svg>
     </div>
   );
 };

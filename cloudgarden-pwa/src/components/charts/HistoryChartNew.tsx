@@ -4,7 +4,7 @@
  * A template component that displays passed in time series data as a line graph
  */
 import React from "react";
-import { VictoryLine, VictoryAxis, VictoryChart } from "victory";
+import { VictoryLine, VictoryAxis, VictoryLabel } from "victory";
 import {
   Typography,
   useTheme,
@@ -18,7 +18,7 @@ import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 interface Data {
   type: SensorType;
   units: SensorUnit;
-  data: { value: number; timestamp: number }[][];
+  data: { value: number; timestamp: Date }[][];
 }
 
 const useStyles = makeStyles({
@@ -92,6 +92,7 @@ const HistoryChartNew: React.FC<Data> = ({ type, units, data }: Data) => {
           domain={[0, Math.max(...data.flat().map(v => v.value))]}
           orientation="left"
           standalone={false}
+          axisLabelComponent={<VictoryLabel dy={-10} />}
           label={`${type.toLowerCase().replace(/_/g, " ")}`}
         />
         {data.map((value, index) => {
