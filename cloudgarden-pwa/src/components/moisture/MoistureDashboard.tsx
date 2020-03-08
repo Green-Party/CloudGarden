@@ -17,11 +17,12 @@ import {
   CardMedia,
   Typography,
   GridListTile,
-  GridList
+  GridList,
+  useMediaQuery
 } from "@material-ui/core";
 import { makeStyles, createStyles, useTheme } from "@material-ui/core/styles";
-import PercentChartNew from "../charts/PercentChartNew";
-import HistoryChartNew from "../charts/HistoryChartNew";
+import PercentChart from "../charts/PercentChart";
+import HistoryChart from "../charts/HistoryChart";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
 import { useSensorDataState } from "../../contexts";
 import { sensorDataToChartData } from "../dashboardUtils";
@@ -29,14 +30,17 @@ import { sensorDataToChartData } from "../dashboardUtils";
 const useStyles = makeStyles(theme =>
   createStyles({
     button: {
-      background: theme.palette.secondary.dark,
+      background: theme.palette.primary.main,
       border: 0,
       borderRadius: 8,
       color: "white",
       paddingTop: 0,
       paddingBottom: 0,
       paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2)
+      paddingRight: theme.spacing(2),
+      "&:hover": {
+        background: theme.palette.secondary.main
+      }
     },
     card: {
       transition: "0.3s",
@@ -83,6 +87,7 @@ const MoistureDashboard: React.FC = () => {
   const { sensorData } = useSensorDataState();
   const theme = useTheme();
   const styles = useStyles(theme);
+  const smallWidth = useMediaQuery(theme.breakpoints.down("xs"));
 
   const soilMoisture1 = sensorData[sensorData.length - 1].soil_moisture[0];
   const soilMoisture2 = sensorData[sensorData.length - 1].soil_moisture[1];
@@ -136,7 +141,7 @@ const MoistureDashboard: React.FC = () => {
             Soil Moisture
           </Typography>
           <Divider />
-          <PercentChartNew
+          <PercentChart
             value={soil_moisture}
             range={{
               low: SensorRanges[SensorType.SOIL_MOISTURE].low,
@@ -159,7 +164,7 @@ const MoistureDashboard: React.FC = () => {
             History
           </Typography>
           <Divider />
-          <HistoryChartNew
+          <HistoryChart
             units={SensorUnit.UNITS}
             type={SensorType.SOIL_MOISTURE}
             data={[
@@ -175,13 +180,13 @@ const MoistureDashboard: React.FC = () => {
 
   return (
     <GridList cellHeight="auto" className={styles.gridList} cols={3}>
-      <GridListTile cols={1}>
+      <GridListTile cols={smallWidth ? 3 : 1}>
         <MoisturePercentage soil_moisture={soilMoisture1} />
       </GridListTile>
-      <GridListTile cols={1}>
+      <GridListTile cols={smallWidth ? 3 : 1}>
         <MoisturePercentage soil_moisture={soilMoisture2} />
       </GridListTile>
-      <GridListTile cols={1}>
+      <GridListTile cols={smallWidth ? 3 : 1}>
         <MoisturePercentage soil_moisture={soilMoisture3} />
       </GridListTile>
       <GridListTile cols={3}>

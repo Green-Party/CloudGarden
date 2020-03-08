@@ -88,17 +88,17 @@ const useStyles = makeStyles(theme =>
       "100%": { backgroundSize: "100px 30px" }
     },
     "@keyframes tall-loading-animation": {
-      "0%": { backgroundSize: "400px 0px" },
-      "100%": { backgroundSize: "400px 200px" }
+      "0%": { backgroundSize: "200px 0px" },
+      "100%": { backgroundSize: "200px 200px" }
     },
     "@keyframes tall-wave-animation": {
       "0%": { backgroundPosition: "0 105%" },
-      "100%": { backgroundPosition: "400px 105%" }
+      "100%": { backgroundPosition: "200px 105%" }
     },
     wave: {
       backgroundImage: "url(wave.png)",
       textShadow: "0px 0px rgba(255,255,255,0.06)",
-      animation: `$wave-animation 1s linear infinite, $loading-animation 10s linear infinite alternate`,
+      animation: `$wave-animation 1s linear infinite, $loading-animation 5s linear infinite alternate`,
       backgroundSize: "100px 50px",
       backgroundRepeat: "repeat-x",
       opacity: 1,
@@ -120,14 +120,20 @@ const ControlView: React.FC = () => {
   const theme = useTheme();
   const styles = useStyles(theme);
   const smallWidth = useMediaQuery(theme.breakpoints.down("xs"));
-  const [buttonDisabled, setButtonDisable] = useState(false);
   const [lightState, setLightState] = useState(false);
+  const [watering0, setWatering0] = useState(false);
+  const [watering1, setWatering1] = useState(false);
+  const [watering2, setWatering2] = useState(false);
   const [currentSocket, setCurrentSocket]: any = useState(null);
   const onClickLightCommand = () => {
     currentSocket.emit("toggleLight", true);
   };
-  const onClickPumpCommand = (idx: number) => {
+  const onClickPumpCommand = (idx: number, waterFunc: Function) => {
+    waterFunc(true);
     currentSocket.emit("togglePump", idx);
+    setTimeout(() => {
+      waterFunc(false);
+    }, 3000);
   };
 
   useEffect(() => {
@@ -143,6 +149,7 @@ const ControlView: React.FC = () => {
       socket.disconnect();
     };
   }, []);
+
   return (
     <GridList
       cellHeight="auto"
@@ -182,9 +189,10 @@ const ControlView: React.FC = () => {
               Plant 1
             </Typography>
             <Button
-              disabled={buttonDisabled}
-              className={clsx(styles.button, styles.wave)}
-              onClick={() => onClickPumpCommand(0)}
+              id="water-pump-0"
+              disabled={watering0}
+              className={clsx(styles.button, watering0 ? styles.waveTall : "")}
+              onClick={() => onClickPumpCommand(0, setWatering0)}
             >
               Water
             </Button>
@@ -192,7 +200,7 @@ const ControlView: React.FC = () => {
         </Card>
       </GridListTile>
       <GridListTile cols={2}>
-        <Card className={clsx(styles.card, styles.waveTall)}>
+        <Card className={styles.card}>
           <CardMedia className={styles.media} component={LocalDrinkIcon} />
           <CardContent className={styles.cardContent}>
             <Typography variant={"overline"}>Water control</Typography>
@@ -200,9 +208,10 @@ const ControlView: React.FC = () => {
               Plant 2
             </Typography>
             <Button
-              disabled={buttonDisabled}
-              className={styles.button}
-              onClick={() => onClickPumpCommand(1)}
+              id="water-pump-1"
+              disabled={watering1}
+              className={clsx(styles.button, watering1 ? styles.waveTall : "")}
+              onClick={() => onClickPumpCommand(1, setWatering1)}
             >
               Water
             </Button>
@@ -218,9 +227,10 @@ const ControlView: React.FC = () => {
               Plant 3
             </Typography>
             <Button
-              disabled={buttonDisabled}
-              className={styles.button}
-              onClick={() => onClickPumpCommand(2)}
+              id="water-pump-2"
+              disabled={watering2}
+              className={clsx(styles.button, watering2 ? styles.waveTall : "")}
+              onClick={() => onClickPumpCommand(2, setWatering2)}
             >
               Water
             </Button>
