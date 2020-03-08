@@ -23,6 +23,7 @@ const Azure = require("./hw-interaction/Azure/communication");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const webPush = require("web-push");
+const Notification = require("./hw-interaction/Azure/notification");
 
 require("dotenv").config();
 
@@ -47,21 +48,14 @@ app.get("/*", (_req, res, _next) =>
 );
 
 app.post("/notifications/subscribe", (req, res) => {
-  //TODO: extract subscription info for future notifications
   global.pushSubscription = req.body;
-  console.log(pushSubscription);
 
-  //NOTE: Test notification
-  const payload = JSON.stringify({
+  const payload = {
     title: "Subscribed",
     body: "Successfully subscribed to push notifications."
-  });
+  };
 
-  webPush
-    .sendNotification(pushSubscription, payload)
-    .then(result => console.log(result))
-    .catch(e => console.log(e.stack));
-
+  Notification.sendNotification(payload);
   res.status(200).json({ success: true });
 });
 
@@ -87,6 +81,8 @@ app.use((err, req, res, _next) => {
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
   // render the error page
+  // console.error("ERROR ALERT");
+  // console.log(err);
   res.status(err.status || 500).send("error");
 });
 

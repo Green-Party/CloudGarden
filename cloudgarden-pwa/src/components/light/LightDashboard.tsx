@@ -17,7 +17,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import PercentChartNew from "../charts/PercentChartNew";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
 import HistoryChartNew from "../charts/HistoryChartNew";
-import { useSensorState } from "../../contexts";
+import { useSensorDataState } from "../../contexts";
 import { sensorDataToChartData } from "../dashboardUtils";
 
 const useStyles = makeStyles({
@@ -63,7 +63,7 @@ const useStyles = makeStyles({
 });
 
 const LightDashboard: React.FC = () => {
-  const sensorData = useSensorState();
+  const { sensorData } = useSensorDataState();
 
   const UVPercentage: React.FC = () => {
     const styles = useStyles();

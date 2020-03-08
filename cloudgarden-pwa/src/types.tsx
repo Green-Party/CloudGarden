@@ -20,3 +20,21 @@ export type SensorData = {
   pumps_enabled: boolean;
   _ts: number;
 };
+
+export type NotificationState = {
+  notifications: Notification[];
+};
+
+export type Notification = {
+  [identifier: string]: any;
+  deviceId: string;
+  id: string;
+  title: string;
+  body: string;
+  _ts: number;
+};
+
+export type DataState = {
+  sensorData: SensorData[];
+  notifications: Notification[];
+};

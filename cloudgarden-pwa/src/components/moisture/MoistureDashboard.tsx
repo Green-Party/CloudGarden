@@ -23,7 +23,7 @@ import { makeStyles, createStyles, useTheme } from "@material-ui/core/styles";
 import PercentChartNew from "../charts/PercentChartNew";
 import HistoryChartNew from "../charts/HistoryChartNew";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
-import { useSensorState } from "../../contexts";
+import { useSensorDataState } from "../../contexts";
 import { sensorDataToChartData } from "../dashboardUtils";
 
 const useStyles = makeStyles(theme =>
@@ -80,7 +80,7 @@ interface moistureChartProps {
 }
 
 const MoistureDashboard: React.FC = () => {
-  const sensorData = useSensorState();
+  const { sensorData } = useSensorDataState();
   const theme = useTheme();
   const styles = useStyles(theme);
 

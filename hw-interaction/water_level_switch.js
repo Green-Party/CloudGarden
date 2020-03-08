@@ -41,13 +41,14 @@ module.exports = class WaterLevelSwitch {
       this.slave.turnOff();
       this.slave.disable();
 
-      const payload = JSON.stringify({
-        type: "Notification",
+      const payload = {
         title: "Water Level Warning!",
         body:
           "Water resevoir levels have fallen below usable levels. Please refill."
-      });
+      };
       Notification.sendNotification(payload);
+    } else {
+      console.log("Can't notify, no subscription yet.");
     }
   }
 

@@ -6,7 +6,7 @@ function sendNotification(payload) {
     console.log(`Can I has access pls ${pushSubscription}`);
     //  Send notification to client
     webPush
-      .sendNotification(pushSubscription, payload)
+      .sendNotification(pushSubscription, JSON.stringify(payload))
       .then(result => console.log(result))
       .catch(e => console.log(e.stack));
 

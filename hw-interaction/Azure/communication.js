@@ -24,7 +24,7 @@ let messageId = 0;
 let notificationId = 0;
 let client, config, messageProcessor;
 
-function sendSenorData() {
+function sendSensorData() {
   if (!isMessageSendOn) {
     return;
   }
@@ -37,6 +37,7 @@ function sendSenorData() {
     message.contentType = "application/json";
 
     console.log("[Device] Sending message: " + content);
+    console.log(content);
 
     client.sendEvent(message, err => {
       if (err) {
@@ -48,7 +49,7 @@ function sendSenorData() {
         console.log("[Device] Message sent to Azure IoT Hub");
       }
 
-      setTimeout(sendSenorData, config.interval);
+      setTimeout(sendSensorData, config.interval);
     });
   });
 }
@@ -59,18 +60,32 @@ function sendNotification(content) {
   }
 
   notificationId++;
-  const connectionStringParam =
-    process.env["AzureIoTHubDeviceConnectionString"];
-  const connectionString = ConnectionString.parse(connectionStringParam);
-  const deviceId = connectionString.DeviceId;
+  const connectionStringParam = process.env.DEVICE_CONNECTION_STRING;
+  let deviceId;
 
-  (content.messageId = notificationId), (content.deviceId = deviceId);
+  if (connectionStringParam) {
+    const connectionString = ConnectionString.parse(connectionStringParam);
+    deviceId = connectionString.DeviceId;
+  } else {
+    deviceId = "[Unknown device] node";
+  }
+
+  content = Object.assign(
+    {
+      deviceId: deviceId,
+      messageId: notificationId,
+      type: "Notification"
+    },
+    content
+  );
+  content = JSON.stringify(content);
 
   let message = new Message(content.toString("utf-8"));
   message.contentEncoding = "utf-8";
   message.contentType = "application/json";
 
   console.log("[Device] Sending notification: " + content);
+  console.log(content);
 
   client.sendEvent(message, err => {
     if (err) {
@@ -196,8 +211,7 @@ function setupClient(connectionString, sensorData) {
 
   // create a client
   // read out the connectionString from process environment
-  connectionString =
-    connectionString || process.env["AzureIoTHubDeviceConnectionString"];
+  connectionString = connectionString || process.env.DEVICE_CONNECTION_STRING;
   client = initClient(connectionString, config);
 
   client.open(err => {
@@ -221,7 +235,7 @@ function setupClient(connectionString, sensorData) {
         config.interval = twin.properties.desired.interval || config.interval;
       });
     }, config.interval);
-    sendSenorData();
+    sendSensorData();
   });
 }
 
