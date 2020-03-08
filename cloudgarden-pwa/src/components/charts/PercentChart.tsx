@@ -21,14 +21,14 @@ const useStyles = makeStyles({
     left: "50%",
     zIndex: 2,
     marginTop: "-2rem",
-    marginLeft: "-2rem"
+    marginLeft: "-2.3rem"
   },
   container: {
     position: "relative"
   }
 });
 
-const PercentChartNew: React.FC<Data> = ({ value, range, units }: Data) => {
+const PercentChart: React.FC<Data> = ({ value, range, units }: Data) => {
   const styles = useStyles();
   const theme = useTheme();
 
@@ -83,9 +83,7 @@ const PercentChartNew: React.FC<Data> = ({ value, range, units }: Data) => {
           endAngle={angle}
         />
         <Typography variant="h6" className={styles.chartLabel}>
-          {units == ""
-            ? "\xa00" + Math.round(value)
-            : Math.round(value) + "" + units}
+          {value.toPrecision(4)}
         </Typography>
       </div>
       <Typography variant="subtitle1">
@@ -96,4 +94,4 @@ const PercentChartNew: React.FC<Data> = ({ value, range, units }: Data) => {
   );
 };
 
-export default PercentChartNew;
+export default PercentChart;

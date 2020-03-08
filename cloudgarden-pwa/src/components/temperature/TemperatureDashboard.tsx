@@ -12,13 +12,14 @@ import {
   Divider,
   Typography,
   GridListTile,
-  GridList
+  GridList,
+  useMediaQuery
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import PercentChartNew from "../charts/PercentChartNew";
-import HistoryChartNew from "../charts/HistoryChartNew";
+import PercentChart from "../charts/PercentChart";
+import HistoryChart from "../charts/HistoryChart";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
 import { useSensorState } from "../../contexts";
 import { sensorDataToChartData } from "../dashboardUtils";
@@ -79,7 +80,10 @@ interface TemperatureChartProps {
 
 const TemperatureDashboard: React.FC = () => {
   const styles = useStyles();
+  const theme = useTheme();
   const sensorData = useSensorState();
+
+  const smallWidth = useMediaQuery(theme.breakpoints.down("xs"));
 
   const temperature1 = sensorData[sensorData.length - 1].temperature[0];
   const temperature2 = sensorData[sensorData.length - 1].temperature[1];
@@ -115,7 +119,7 @@ const TemperatureDashboard: React.FC = () => {
             Temperature
           </Typography>
           <Divider />
-          <PercentChartNew
+          <PercentChart
             value={temp}
             range={{
               low: SensorRanges[SensorType.TEMPERATURE][units].low,
@@ -153,7 +157,7 @@ const TemperatureDashboard: React.FC = () => {
             History
           </Typography>
           <Divider />
-          <HistoryChartNew
+          <HistoryChart
             units={SensorUnit.UNITS}
             type={SensorType.TEMPERATURE}
             data={[
@@ -169,13 +173,13 @@ const TemperatureDashboard: React.FC = () => {
 
   return (
     <GridList cellHeight="auto" className={styles.gridList} cols={3}>
-      <GridListTile cols={1}>
+      <GridListTile cols={smallWidth ? 3 : 1}>
         <TemperatureChart temperature={temperature1} />
       </GridListTile>
-      <GridListTile cols={1}>
+      <GridListTile cols={smallWidth ? 3 : 1}>
         <TemperatureChart temperature={temperature2} />
       </GridListTile>
-      <GridListTile cols={1}>
+      <GridListTile cols={smallWidth ? 3 : 1}>
         <TemperatureChart temperature={temperature3} />
       </GridListTile>
       <GridListTile cols={3}>

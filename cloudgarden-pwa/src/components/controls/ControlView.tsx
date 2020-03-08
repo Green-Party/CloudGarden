@@ -149,6 +149,7 @@ const ControlView: React.FC = () => {
       socket.disconnect();
     };
   }, []);
+
   return (
     <GridList
       cellHeight="auto"

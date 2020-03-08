@@ -37,7 +37,7 @@ export const SensorRanges: SensorRangesType = {
     }
   },
   SOIL_MOISTURE: {
-    low: 1,
+    low: 0,
     high: 10,
     ideal: 6.5
   },
