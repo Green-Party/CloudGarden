@@ -13,7 +13,7 @@ import {
   Grid,
   Typography
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import PercentChart from "../charts/PercentChart";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
 import HistoryChart from "../charts/HistoryChart";
@@ -64,6 +64,7 @@ const useStyles = makeStyles({
 
 const LightDashboard: React.FC = () => {
   const sensorData = useSensorState();
+  const theme = useTheme();
 
   const UVPercentage: React.FC = () => {
     const styles = useStyles();
@@ -188,7 +189,6 @@ const LightDashboard: React.FC = () => {
       </Fragment>
     );
   };
-
   return (
     <div className="moisture-dashboard column-container">
       <Grid

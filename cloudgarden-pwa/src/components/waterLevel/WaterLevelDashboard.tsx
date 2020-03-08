@@ -13,7 +13,8 @@ import {
   Typography,
   GridListTile,
   GridList,
-  Grid
+  Grid,
+  useMediaQuery
 } from "@material-ui/core";
 import { makeStyles, createStyles, useTheme } from "@material-ui/core/styles";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
@@ -163,24 +164,22 @@ const WaterLevelDashboard: React.FC = () => {
       </Card>
     );
   };
-
+  const smallWidth = useMediaQuery(theme.breakpoints.down("xs"));
   return (
-    <Grid container direction="column" justify="center" alignItems="stretch">
-      <GridList
-        cellHeight="auto"
-        spacing={2}
-        className={styles.gridList}
-        cols={3}
-      >
-        <GridListTile cols={1}>
-          <WaterLevelPercentage water_level={waterLevel} />
-          <CriticalWaterLevel />
-        </GridListTile>
-        <GridListTile cols={2}>
-          <HistoryGraph />
-        </GridListTile>
-      </GridList>
-    </Grid>
+    <GridList
+      cellHeight="auto"
+      spacing={2}
+      className={styles.gridList}
+      cols={3}
+    >
+      <GridListTile cols={smallWidth ? 3 : 1}>
+        <WaterLevelPercentage water_level={waterLevel} />
+        <CriticalWaterLevel />
+      </GridListTile>
+      <GridListTile cols={smallWidth ? 3 : 2}>
+        <HistoryGraph />
+      </GridListTile>
+    </GridList>
   );
 };
 

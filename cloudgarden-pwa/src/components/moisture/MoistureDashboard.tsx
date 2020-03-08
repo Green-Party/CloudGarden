@@ -17,7 +17,8 @@ import {
   CardMedia,
   Typography,
   GridListTile,
-  GridList
+  GridList,
+  useMediaQuery
 } from "@material-ui/core";
 import { makeStyles, createStyles, useTheme } from "@material-ui/core/styles";
 import PercentChart from "../charts/PercentChart";
@@ -86,6 +87,7 @@ const MoistureDashboard: React.FC = () => {
   const sensorData = useSensorState();
   const theme = useTheme();
   const styles = useStyles(theme);
+  const smallWidth = useMediaQuery(theme.breakpoints.down("xs"));
 
   const soilMoisture1 = sensorData[sensorData.length - 1].soil_moisture[0];
   const soilMoisture2 = sensorData[sensorData.length - 1].soil_moisture[1];
@@ -178,13 +180,13 @@ const MoistureDashboard: React.FC = () => {
 
   return (
     <GridList cellHeight="auto" className={styles.gridList} cols={3}>
-      <GridListTile cols={1}>
+      <GridListTile cols={smallWidth ? 3 : 1}>
         <MoisturePercentage soil_moisture={soilMoisture1} />
       </GridListTile>
-      <GridListTile cols={1}>
+      <GridListTile cols={smallWidth ? 3 : 1}>
         <MoisturePercentage soil_moisture={soilMoisture2} />
       </GridListTile>
-      <GridListTile cols={1}>
+      <GridListTile cols={smallWidth ? 3 : 1}>
         <MoisturePercentage soil_moisture={soilMoisture3} />
       </GridListTile>
       <GridListTile cols={3}>
