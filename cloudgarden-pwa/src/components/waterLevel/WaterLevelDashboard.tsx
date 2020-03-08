@@ -10,12 +10,9 @@ import {
   Card,
   CardContent,
   Divider,
-  Button,
-  CardMedia,
   Typography,
   GridListTile,
-  GridList,
-  Grid
+  GridList
 } from "@material-ui/core";
 import { makeStyles, createStyles, useTheme } from "@material-ui/core/styles";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
