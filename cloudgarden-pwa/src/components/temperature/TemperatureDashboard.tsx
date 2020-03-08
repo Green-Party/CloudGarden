@@ -17,8 +17,8 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import PercentChartNew from "../charts/PercentChartNew";
-import HistoryChartNew from "../charts/HistoryChartNew";
+import PercentChart from "../charts/PercentChart";
+import HistoryChart from "../charts/HistoryChart";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
 import { useSensorState } from "../../contexts";
 import { sensorDataToChartData } from "../dashboardUtils";
@@ -115,7 +115,7 @@ const TemperatureDashboard: React.FC = () => {
             Temperature
           </Typography>
           <Divider />
-          <PercentChartNew
+          <PercentChart
             value={temp}
             range={{
               low: SensorRanges[SensorType.TEMPERATURE][units].low,
@@ -153,7 +153,7 @@ const TemperatureDashboard: React.FC = () => {
             History
           </Typography>
           <Divider />
-          <HistoryChartNew
+          <HistoryChart
             units={SensorUnit.UNITS}
             type={SensorType.TEMPERATURE}
             data={[

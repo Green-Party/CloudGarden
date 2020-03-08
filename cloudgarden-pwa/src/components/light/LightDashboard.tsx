@@ -14,9 +14,9 @@ import {
   Typography
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import PercentChartNew from "../charts/PercentChartNew";
+import PercentChart from "../charts/PercentChart";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
-import HistoryChartNew from "../charts/HistoryChartNew";
+import HistoryChart from "../charts/HistoryChart";
 import { useSensorState } from "../../contexts";
 import { sensorDataToChartData } from "../dashboardUtils";
 
@@ -75,7 +75,7 @@ const LightDashboard: React.FC = () => {
             UV Index
           </Typography>
           <Divider />
-          <PercentChartNew
+          <PercentChart
             value={lastUvIdx}
             range={{
               low: SensorRanges[SensorType.UV_INDEX].low,
@@ -99,7 +99,7 @@ const LightDashboard: React.FC = () => {
             Visible Intensity
           </Typography>
           <Divider />
-          <PercentChartNew
+          <PercentChart
             value={lastVisible}
             range={{
               low: SensorRanges[SensorType.VISIBLE].low,
@@ -123,7 +123,7 @@ const LightDashboard: React.FC = () => {
             Infrared Index
           </Typography>
           <Divider />
-          <PercentChartNew
+          <PercentChart
             value={lastInfared}
             range={{
               low: SensorRanges[SensorType.IR].low,
@@ -152,7 +152,7 @@ const LightDashboard: React.FC = () => {
               UV Index History
             </Typography>
             <Divider />
-            <HistoryChartNew
+            <HistoryChart
               units={SensorUnit.UNITS}
               type={SensorType.UV_INDEX}
               data={[sensorDataToChartData(sensorData, SensorType.UV_INDEX)]}
@@ -165,7 +165,7 @@ const LightDashboard: React.FC = () => {
               Visible History
             </Typography>
             <Divider />
-            <HistoryChartNew
+            <HistoryChart
               units={SensorUnit.UNITS}
               type={SensorType.VISIBLE}
               data={[sensorDataToChartData(sensorData, SensorType.VISIBLE)]}
@@ -178,7 +178,7 @@ const LightDashboard: React.FC = () => {
               Infared History
             </Typography>
             <Divider />
-            <HistoryChartNew
+            <HistoryChart
               units={SensorUnit.UNITS}
               type={SensorType.IR}
               data={[sensorDataToChartData(sensorData, SensorType.IR)]}

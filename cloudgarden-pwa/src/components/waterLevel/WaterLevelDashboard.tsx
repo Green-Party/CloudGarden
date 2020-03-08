@@ -21,8 +21,8 @@ import { makeStyles, createStyles, useTheme } from "@material-ui/core/styles";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
 import { useSensorState } from "../../contexts";
 import { sensorDataToChartData } from "../dashboardUtils";
-import HistoryChartNew from "../charts/HistoryChartNew";
-import PercentChartNew from "../charts/PercentChartNew";
+import HistoryChart from "../charts/HistoryChart";
+import PercentChart from "../charts/PercentChart";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -59,7 +59,7 @@ const WaterLevelDashboard: React.FC = () => {
             Water Level
           </Typography>
           <Divider />
-          <HistoryChartNew
+          <HistoryChart
             units={SensorUnit.UNITS}
             type={SensorType.WATER_LEVEL}
             data={[sensorDataToChartData(sensorData, SensorType.WATER_LEVEL)]}
@@ -84,7 +84,7 @@ const WaterLevelDashboard: React.FC = () => {
             Water Level
           </Typography>
           <Divider />
-          <PercentChartNew
+          <PercentChart
             value={water_level}
             range={{
               low: SensorRanges[SensorType.WATER_LEVEL].low,

@@ -28,7 +28,7 @@ const useStyles = makeStyles({
   }
 });
 
-const PercentChartNew: React.FC<Data> = ({ value, range, units }: Data) => {
+const PercentChart: React.FC<Data> = ({ value, range, units }: Data) => {
   const styles = useStyles();
   const theme = useTheme();
 
@@ -94,4 +94,4 @@ const PercentChartNew: React.FC<Data> = ({ value, range, units }: Data) => {
   );
 };
 
-export default PercentChartNew;
+export default PercentChart;

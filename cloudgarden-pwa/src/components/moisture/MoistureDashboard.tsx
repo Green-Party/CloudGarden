@@ -20,8 +20,8 @@ import {
   GridList
 } from "@material-ui/core";
 import { makeStyles, createStyles, useTheme } from "@material-ui/core/styles";
-import PercentChartNew from "../charts/PercentChartNew";
-import HistoryChartNew from "../charts/HistoryChartNew";
+import PercentChart from "../charts/PercentChart";
+import HistoryChart from "../charts/HistoryChart";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
 import { useSensorState } from "../../contexts";
 import { sensorDataToChartData } from "../dashboardUtils";
@@ -139,7 +139,7 @@ const MoistureDashboard: React.FC = () => {
             Soil Moisture
           </Typography>
           <Divider />
-          <PercentChartNew
+          <PercentChart
             value={soil_moisture}
             range={{
               low: SensorRanges[SensorType.SOIL_MOISTURE].low,
@@ -162,7 +162,7 @@ const MoistureDashboard: React.FC = () => {
             History
           </Typography>
           <Divider />
-          <HistoryChartNew
+          <HistoryChart
             units={SensorUnit.UNITS}
             type={SensorType.SOIL_MOISTURE}
             data={[

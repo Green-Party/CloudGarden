@@ -40,7 +40,7 @@ const useStyles = makeStyles({
   }
 });
 
-const HistoryChartNew: React.FC<Data> = ({ type, units, data }: Data) => {
+const HistoryChart: React.FC<Data> = ({ type, units, data }: Data) => {
   const styles = useStyles();
   const theme = useTheme();
   const colors = [
@@ -118,4 +118,4 @@ const HistoryChartNew: React.FC<Data> = ({ type, units, data }: Data) => {
   );
 };
 
-export default HistoryChartNew;
+export default HistoryChart;
