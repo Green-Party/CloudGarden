@@ -21,7 +21,7 @@ const useStyles = makeStyles({
     left: "50%",
     zIndex: 2,
     marginTop: "-2rem",
-    marginLeft: "-2rem"
+    marginLeft: "-2.3rem"
   },
   container: {
     position: "relative"
@@ -83,7 +83,7 @@ const PercentChart: React.FC<Data> = ({ value, range, units }: Data) => {
           endAngle={angle}
         />
         <Typography variant="h6" className={styles.chartLabel}>
-          {units == "" ? "\xa00" + Math.round(value) : Math.round(value)}
+          {value.toPrecision(4)}
         </Typography>
       </div>
       <Typography variant="subtitle1">
