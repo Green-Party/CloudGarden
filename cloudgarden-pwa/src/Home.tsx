@@ -38,7 +38,7 @@ const Home: React.FC = () => {
           ]}
         />
       </Grid>
-      <Grid item>
+      <Grid item style={{ width: "100%" }}>
         <Switch>
           <Route exact path={`${match.path}/moisture`}>
             <MoistureDashboard />
@@ -50,9 +50,7 @@ const Home: React.FC = () => {
             <TemperatureDashboard />
           </Route>
           <Route exact path={`${match.path}/water`}>
-            <Box width={1}>
-              <WaterLevelDashboard />
-            </Box>
+            <WaterLevelDashboard />
           </Route>
           <Route path={match.path}>
             <div className="row-container">

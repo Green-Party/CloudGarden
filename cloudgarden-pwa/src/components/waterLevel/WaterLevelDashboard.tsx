@@ -12,7 +12,8 @@ import {
   Divider,
   Typography,
   GridListTile,
-  GridList
+  GridList,
+  Grid
 } from "@material-ui/core";
 import { makeStyles, createStyles, useTheme } from "@material-ui/core/styles";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
@@ -20,6 +21,8 @@ import { useSensorState } from "../../contexts";
 import { sensorDataToChartData } from "../dashboardUtils";
 import HistoryChart from "../charts/HistoryChart";
 import PercentChart from "../charts/PercentChart";
+import { mdiWaterPump, mdiWaterPumpOff } from "@mdi/js";
+import Icon from "@mdi/react";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -37,6 +40,9 @@ const useStyles = makeStyles(theme =>
     gridList: {
       width: "100%",
       height: "100%"
+    },
+    icon: {
+      margin: 8
     }
   })
 );
@@ -47,6 +53,7 @@ const WaterLevelDashboard: React.FC = () => {
   const styles = useStyles(theme);
 
   const waterLevel = sensorData[sensorData.length - 1].water_level;
+  const criticalWaterLevel = sensorData[sensorData.length - 1].pumps_enabled;
 
   const HistoryGraph: React.FC = () => {
     return (
@@ -95,15 +102,85 @@ const WaterLevelDashboard: React.FC = () => {
     );
   };
 
+  const PumpsEnabled: React.FC = () => (
+    <Icon
+      className={styles.icon}
+      path={mdiWaterPump}
+      size={2}
+      color={theme.palette.primary.main}
+    />
+  );
+
+  const PumpsDisabled: React.FC = () => (
+    <Icon
+      className={styles.icon}
+      path={mdiWaterPumpOff}
+      size={2}
+      color={theme.palette.secondary.dark}
+    />
+  );
+
+  const CriticalWaterLevel: React.FC = () => {
+    return (
+      <Card className={styles.chart} style={{ marginTop: 16 }}>
+        <CardContent>
+          <Typography variant="subtitle1" noWrap>
+            Critical Water Level
+          </Typography>
+          <Divider />
+          {criticalWaterLevel ? (
+            <Grid
+              container
+              direction="row"
+              justify="flex-start"
+              alignItems="center"
+              style={{ marginTop: 8 }}
+            >
+              <Grid item>
+                <PumpsEnabled />
+              </Grid>
+              <Grid item>
+                <Typography>no</Typography>
+              </Grid>
+            </Grid>
+          ) : (
+            <Grid
+              container
+              direction="row"
+              justify="flex-start"
+              alignItems="center"
+              style={{ marginTop: 8 }}
+            >
+              <Grid item>
+                <PumpsDisabled />
+              </Grid>
+              <Grid item>
+                <Typography>yes</Typography>
+              </Grid>
+            </Grid>
+          )}
+        </CardContent>
+      </Card>
+    );
+  };
+
   return (
-    <GridList cellHeight="auto" className={styles.gridList} cols={3}>
-      <GridListTile cols={1}>
-        <WaterLevelPercentage water_level={waterLevel} />
-      </GridListTile>
-      <GridListTile cols={2}>
-        <HistoryGraph />
-      </GridListTile>
-    </GridList>
+    <Grid container direction="column" justify="center" alignItems="stretch">
+      <GridList
+        cellHeight="auto"
+        spacing={2}
+        className={styles.gridList}
+        cols={3}
+      >
+        <GridListTile cols={1}>
+          <WaterLevelPercentage water_level={waterLevel} />
+          <CriticalWaterLevel />
+        </GridListTile>
+        <GridListTile cols={2}>
+          <HistoryGraph />
+        </GridListTile>
+      </GridList>
+    </Grid>
   );
 };
 
