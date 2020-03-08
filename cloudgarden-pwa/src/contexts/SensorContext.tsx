@@ -8,12 +8,12 @@
 import React, { useState, useContext, createContext, useEffect } from "react";
 import * as signalR from "@microsoft/signalr";
 import axios from "axios";
-import { SensorData } from "../types";
+import { SensorData, Notification, DataState } from "../types";
 
 type SensorDataProviderProps = { children: React.ReactNode };
-const SensorStateContext = createContext<SensorData[] | undefined>(undefined);
+const SensorStateContext = createContext<DataState | undefined>(undefined);
 
-const defaultState: SensorData = {
+const defaultSensorData: SensorData = {
   id: "0",
   visible: 0,
   ir: 0,
@@ -22,6 +22,14 @@ const defaultState: SensorData = {
   temperature: [0, 0, 0],
   soil_moisture: [0, 0, 0],
   pumps_enabled: true,
+  _ts: 0
+};
+
+const defaultNotification: Notification = {
+  id: "0",
+  title: "TITLE",
+  body: "BODY",
+  deviceId: "0",
   _ts: 0
 };
 
@@ -51,6 +59,17 @@ function getSensorData() {
     });
 }
 
+function getNotifications() {
+  return axios
+    .get(`${apiBaseUrl}/api/GetNotifications`, axiosConfig)
+    .then(resp => {
+      return resp.data;
+    })
+    .catch(() => {
+      return {};
+    });
+}
+
 function startConnection(connection: signalR.HubConnection) {
   console.log("connecting...");
   connection
@@ -68,14 +87,19 @@ function startConnection(connection: signalR.HubConnection) {
 
 function SensorDataProvider({ children }: SensorDataProviderProps) {
   const [sensorData, updateSensorState]: [SensorData[], Function] = useState([
-    defaultState
+    defaultSensorData
   ]);
+  const [notifications, updateNotificationState]: [
+    Notification[],
+    Function
+  ] = useState([defaultNotification]);
 
   function sensorsUpdated(updatedSensor: SensorData) {
     updateSensorState((sensorData: SensorData[]) => {
       console.log(`Sensor UPDATED ${updatedSensor}`);
       console.log(updatedSensor);
-      let stateCopy = Array.from(sensorData);
+
+      const stateCopy = Array.from(sensorData);
       let newState;
       let sensor = stateCopy.find((s: SensorData) => s.id === updatedSensor.id);
       if (sensor) {
@@ -84,6 +108,33 @@ function SensorDataProvider({ children }: SensorDataProviderProps) {
       } else {
         newState = [...sensorData, updatedSensor];
       }
+
+      if (newState[0] === defaultSensorData) {
+        newState = Array.from(newState.slice(1));
+      }
+      return newState;
+    });
+  }
+
+  function notificationsUpdated(updatedNotification: Notification) {
+    updateNotificationState((notificationData: Notification[]) => {
+      console.log(`Notification UPDATED ${updatedNotification}`);
+      console.log(updatedNotification);
+
+      const stateCopy = Array.from(notificationData);
+      let newState;
+      let notification = stateCopy.find(
+        (n: Notification) => n.id === updatedNotification.id
+      );
+      if (notification) {
+        Object.assign(notification, updatedNotification);
+        newState = stateCopy;
+      } else {
+        newState = [...notificationData, updatedNotification];
+      }
+      if (newState[0] === defaultNotification) {
+        newState = Array.from(newState.slice(1));
+      }
       return newState;
     });
   }
@@ -91,6 +142,8 @@ function SensorDataProvider({ children }: SensorDataProviderProps) {
   useEffect(() => {
     getSensorData()
       .then(sensors => sensors.forEach(sensorsUpdated))
+      .then(getNotifications)
+      .then(notificationData => notificationData.forEach(notificationsUpdated))
       .then(getConnectionInfo)
       .then(info => {
         let accessToken = info.accessToken;
@@ -113,6 +166,7 @@ function SensorDataProvider({ children }: SensorDataProviderProps) {
           .build();
 
         connection.on("sensorsUpdated", sensorsUpdated);
+        connection.on("notificationsUpdated", notificationsUpdated);
 
         connection.onclose(() => {
           console.log("disconnected");
@@ -125,19 +179,26 @@ function SensorDataProvider({ children }: SensorDataProviderProps) {
       .catch(console.error);
   }, []);
 
+  const state: DataState = {
+    sensorData: sensorData,
+    notifications: notifications
+  };
+
   return (
-    <SensorStateContext.Provider value={sensorData}>
+    <SensorStateContext.Provider value={state}>
       {children}
     </SensorStateContext.Provider>
   );
 }
 
-function useSensorState() {
+function useSensorDataState() {
   const context = useContext(SensorStateContext);
   if (context === undefined) {
-    throw new Error("useSensorState must be used within a SensorDataProvider");
+    throw new Error(
+      "useSensorDataState must be used within a SensorDataProvider"
+    );
   }
   return context;
 }
 
-export { SensorDataProvider, useSensorState };
+export { SensorDataProvider, useSensorDataState };

@@ -18,7 +18,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles, createStyles, useTheme } from "@material-ui/core/styles";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
-import { useSensorState } from "../../contexts";
+import { useSensorDataState } from "../../contexts";
 import { sensorDataToChartData } from "../dashboardUtils";
 import HistoryChart from "../charts/HistoryChart";
 import PercentChart from "../charts/PercentChart";
@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme =>
 );
 
 const WaterLevelDashboard: React.FC = () => {
-  const sensorData = useSensorState();
+  const { sensorData } = useSensorDataState();
   const theme = useTheme();
   const styles = useStyles(theme);
 

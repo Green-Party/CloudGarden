@@ -7,6 +7,7 @@
  */
 
 const five = require("johnny-five");
+const Notification = require("./Azure/notification");
 
 module.exports = class WaterLevelSwitch {
   /**
@@ -39,6 +40,15 @@ module.exports = class WaterLevelSwitch {
     if (this.slave) {
       this.slave.turnOff();
       this.slave.disable();
+
+      const payload = {
+        title: "Water Level Warning!",
+        body:
+          "Water resevoir levels have fallen below usable levels. Please refill."
+      };
+      Notification.sendNotification(payload);
+    } else {
+      console.log("Can't notify, no subscription yet.");
     }
   }
 

@@ -21,7 +21,7 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import PercentChart from "../charts/PercentChart";
 import HistoryChart from "../charts/HistoryChart";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
-import { useSensorState } from "../../contexts";
+import { useSensorDataState } from "../../contexts";
 import { sensorDataToChartData } from "../dashboardUtils";
 
 const useStyles = makeStyles({
@@ -80,8 +80,8 @@ interface TemperatureChartProps {
 
 const TemperatureDashboard: React.FC = () => {
   const styles = useStyles();
+  const { sensorData } = useSensorDataState();
   const theme = useTheme();
-  const sensorData = useSensorState();
 
   const smallWidth = useMediaQuery(theme.breakpoints.down("xs"));
 

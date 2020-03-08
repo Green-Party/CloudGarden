@@ -15,6 +15,7 @@ import "./Header.css";
 import "./Dashboard.css";
 import Header from "./components/main/Header";
 import ControlView from "./components/controls/ControlView";
+import { TestNotificationView } from "./components/notifications";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "./styles/Theme";
 import NavDrawer from "./components/main/NavDrawer";
@@ -42,6 +43,9 @@ const App: React.FC = () => {
                 </Route>
                 <Route path="/controls">
                   <ControlView />
+                </Route>
+                <Route path="/notifications">
+                  <TestNotificationView />
                 </Route>
               </Switch>
               <NavDrawer open={open} onCloseFunc={setOpen} />

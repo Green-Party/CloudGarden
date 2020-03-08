@@ -17,11 +17,14 @@ const AmqpProtocol = require("azure-iot-device-amqp").Amqp;
 
 const MessageProcessor = require("./messageProcessor.js");
 
+require("dotenv").config({ path: "../../.env" });
+
 let isMessageSendOn = true;
 let messageId = 0;
+let notificationId = 0;
 let client, config, messageProcessor;
 
-function sendMessage() {
+function sendSensorData() {
   if (!isMessageSendOn) {
     return;
   }
@@ -34,6 +37,7 @@ function sendMessage() {
     message.contentType = "application/json";
 
     console.log("[Device] Sending message: " + content);
+    console.log(content);
 
     client.sendEvent(message, err => {
       if (err) {
@@ -45,8 +49,53 @@ function sendMessage() {
         console.log("[Device] Message sent to Azure IoT Hub");
       }
 
-      setTimeout(sendMessage, config.interval);
+      setTimeout(sendSensorData, config.interval);
     });
+  });
+}
+
+function sendNotification(content) {
+  if (!isMessageSendOn) {
+    return;
+  }
+
+  notificationId++;
+  const connectionStringParam = process.env.DEVICE_CONNECTION_STRING;
+  let deviceId;
+
+  if (connectionStringParam) {
+    const connectionString = ConnectionString.parse(connectionStringParam);
+    deviceId = connectionString.DeviceId;
+  } else {
+    deviceId = "[Unknown device] node";
+  }
+
+  content = Object.assign(
+    {
+      deviceId: deviceId,
+      messageId: notificationId,
+      type: "Notification"
+    },
+    content
+  );
+  content = JSON.stringify(content);
+
+  let message = new Message(content.toString("utf-8"));
+  message.contentEncoding = "utf-8";
+  message.contentType = "application/json";
+
+  console.log("[Device] Sending notification: " + content);
+  console.log(content);
+
+  client.sendEvent(message, err => {
+    if (err) {
+      console.error(
+        "[Device] Failed to send message to Azure IoT Hub due to:\n\t" +
+          err.message
+      );
+    } else {
+      console.log("[Device] Notification sent to Azure IoT Hub");
+    }
   });
 }
 
@@ -57,9 +106,7 @@ function onStart(request, response) {
 
   isMessageSendOn = true;
 
-  response.send(200, "Successully start sending message to cloud", function(
-    err
-  ) {
+  response.send(200, "Successully start sending message to cloud", err => {
     if (err) {
       console.error(
         "[IoT Hub Client] Failed sending a start method response due to:\n\t" +
@@ -134,7 +181,7 @@ function initClient(connectionStringParam, credentialPath) {
       sa: fs.readFileSync(config.iotEdgeRootCertFilePath, "utf-8")
     };
 
-    client.setOptions(deviceClientOptions, function(err) {
+    client.setOptions(deviceClientOptions, err => {
       if (err) {
         console.error(
           "[Device] error specifying IoT Edge root certificate: " + err
@@ -164,8 +211,7 @@ function setupClient(connectionString, sensorData) {
 
   // create a client
   // read out the connectionString from process environment
-  connectionString =
-    connectionString || process.env["AzureIoTHubDeviceConnectionString"];
+  connectionString = connectionString || process.env.DEVICE_CONNECTION_STRING;
   client = initClient(connectionString, config);
 
   client.open(err => {
@@ -189,10 +235,11 @@ function setupClient(connectionString, sensorData) {
         config.interval = twin.properties.desired.interval || config.interval;
       });
     }, config.interval);
-    sendMessage();
+    sendSensorData();
   });
 }
 
 module.exports = {
-  setupClient
+  setupClient,
+  sendNotification
 };

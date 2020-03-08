@@ -16,7 +16,6 @@ class Sensor {
   }
   read(callback) {
     callback(null, {
-      type: "Sensor",
       temperature: [random(20, 30), random(20, 30), random(20, 30)],
       soil_moisture: [random(1, 10), random(1, 10), random(1, 10)],
       pumps_enabled: Math.random() >= 0.5,
