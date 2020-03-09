@@ -40,7 +40,6 @@ module.exports = class WaterLevelRuler extends AnalogSensor {
   }
 
   _convertReading(reading) {
-    console.log(reading);
     const SERIES_RESISTANCE = 560;
     let resistance = SERIES_RESISTANCE / (1023 / reading - 1);
     return resistance;
