@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core";
 import { FixedSizeList, ListChildComponentProps } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
-import CloseIcon from "@material-ui/icons/Close";
+import DeleteIcon from "@material-ui/icons/Delete";
 import styled from "styled-components";
 import theme from "../../styles/Theme";
 interface ListProps {
@@ -21,8 +21,11 @@ const StyledListItem = styled(ListItem)`
     background-color: ${theme.palette.primary.light};
   }
   button {
-    color: white;
-    background-color: ${theme.palette.secondary.dark};
+    padding: 8px;
+    color: ${theme.palette.secondary.main};
+    &:hover {
+      color: ${theme.palette.primary.dark};
+    }
   }
 `;
 
@@ -41,9 +44,14 @@ function renderRow(props: ListChildComponentProps) {
     >
       <ListItemText
         primary={
-          <Typography variant="h5" color="textPrimary">
-            {item.title}
-          </Typography>
+          <React.Fragment>
+            <Typography variant="overline" color="textPrimary">
+              {new Date(item._ts * 1000).toLocaleString()}
+            </Typography>
+            <Typography variant="h5" color="textPrimary">
+              {item.title}
+            </Typography>
+          </React.Fragment>
         }
         secondary={
           <Typography variant="body2" color="textPrimary">
@@ -51,8 +59,8 @@ function renderRow(props: ListChildComponentProps) {
           </Typography>
         }
       />
-      <IconButton edge="end" aria-label="delete" size="small">
-        <CloseIcon fontSize="large" />
+      <IconButton edge="end" aria-label="delete">
+        <DeleteIcon fontSize="large" />
       </IconButton>
     </StyledListItem>
   );
@@ -65,8 +73,8 @@ const VirtualizedList: React.FC<ListProps> = props => {
     <AutoSizer className={props.className}>
       {({ height, width }) => (
         <FixedSizeList
-          itemData={props.data}
-          itemSize={90}
+          itemData={props.data.reverse()}
+          itemSize={150}
           itemCount={props.data.length}
           height={height}
           width={width}
