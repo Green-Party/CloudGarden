@@ -25,7 +25,8 @@ const useStyles = makeStyles(theme =>
       background: theme.palette.primary.light,
       border: 0,
       color: theme.palette.primary.dark,
-      padding: theme.spacing(1)
+      padding: theme.spacing(1),
+      "& a": { textDecoration: "none" }
     }
   })
 );
@@ -43,7 +44,12 @@ function Header(props: HeaderProps) {
         >
           <MenuIcon fontSize="large" />
         </IconButton>
-        <Typography variant="h4" className={classes.root}>
+        <Typography
+          variant="h4"
+          className={classes.root}
+          component="a"
+          href="/"
+        >
           CloudGarden
         </Typography>
       </Toolbar>

@@ -21,6 +21,7 @@ import theme from "./styles/Theme";
 import NavDrawer from "./components/main/NavDrawer";
 
 import { SensorDataProvider } from "./contexts";
+import { Box } from "@material-ui/core";
 
 const Home = lazy(() => import("./Home"));
 
