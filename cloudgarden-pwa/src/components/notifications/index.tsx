@@ -1,2 +1,2 @@
-import TestNotificationView from "./TestNotificationView";
-export { TestNotificationView };
+import NotificationView from "./NotificationView";
+export { NotificationView };

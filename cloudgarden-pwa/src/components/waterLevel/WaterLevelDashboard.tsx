@@ -1,7 +1,7 @@
 /**
- * Creation Date: January 30, 2020
+ * Creation Date: March 6, 2020
  * Author: Gillian Pierce
- * A dashboard component for displaying moisture sensor data
+ * A dashboard component for displaying reservoir water level data
  */
 
 import React from "react";

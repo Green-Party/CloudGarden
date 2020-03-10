@@ -17,7 +17,7 @@ const TestNotificationView: React.FC = () => {
 
   return (
     <div className="moisture-dashboard column-container">
-      <List data={notifications} />
+      <List className={""} data={notifications} />
     </div>
   );
 };
