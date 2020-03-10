@@ -4,7 +4,7 @@
  * A test page for notifications
  */
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "../../Dashboard.css";
 import List from "./List";
 import { useSensorDataState } from "../../contexts";

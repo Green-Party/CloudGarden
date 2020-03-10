@@ -1180,6 +1180,24 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-10.1.0.tgz#f0950bba18819512d42f7197e56c518aa491cf18"
   integrity sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
 
+"@cycjimmy/awesome-js-funcs@^2.1.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@cycjimmy/awesome-js-funcs/-/awesome-js-funcs-2.2.0.tgz#ee86b73231f354a1bebaf1fd21a07808a8c01ced"
+  integrity sha512-O5uTNEaYpWS6zuFCnUsmX7sdgky08awtL8b2UWEYhU5xeyTddOm/cbvFSkXWAtuEsPtM8FnVEfTd9sESjXdm7Q==
+
+"@cycjimmy/jsmpeg-player@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@cycjimmy/jsmpeg-player/-/jsmpeg-player-5.0.0.tgz#0447efade60fa505de841f90fc8bf3751cc5a67a"
+  integrity sha512-PmoW0q/aIwpkdka2uT+alrmNDcP64CVg2kMR2kQowaRwoR6wAn+8Hkn3kMcrH5BwDzZQNknygUwgIgrSIY0LEg==
+  dependencies:
+    "@cycjimmy/awesome-js-funcs" "^2.1.0"
+    "@cycjimmy/sass-lib" "^1.0.3"
+
+"@cycjimmy/sass-lib@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@cycjimmy/sass-lib/-/sass-lib-1.0.3.tgz#df5fbd7edc3dcbb6531bf186713e2e052391c3dc"
+  integrity sha512-OTr8uMjeRapr0bWTKs782Jj84/xQt1XvVl5ZyYW1yi4sEbqY1FfW1FYLeflBp4gSU99o4c/nPi2Fx5aRxna5dw==
+
 "@dsherret/to-absolute-glob@^2.0.2":
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@dsherret/to-absolute-glob/-/to-absolute-glob-2.0.2.tgz#1f6475dc8bd974cea07a2daf3864b317b1dd332c"

@@ -13,6 +13,7 @@ import {
 } from "@material-ui/core";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import VideocamIcon from "@material-ui/icons/Videocam";
 import TuneIcon from "@material-ui/icons/Tune";
 import { makeStyles } from "@material-ui/core/styles";
 import { NavLink } from "react-router-dom";
@@ -81,6 +82,12 @@ const NavDrawer: React.FC<NavDrawerProps> = ({
           to="/notifications"
           icon={<NotificationsIcon />}
           text="Notifications"
+          activeClassName={styles.active}
+        />
+        <NavListItem
+          to="/stream"
+          icon={<VideocamIcon />}
+          text="Live Stream"
           activeClassName={styles.active}
         />
       </List>
