@@ -15,6 +15,11 @@ interface ListProps {
   className: string;
 }
 
+interface AutosizerProps {
+  height: number;
+  width: number;
+}
+
 const StyledListItem = styled(ListItem)`
   background-color: ${theme.palette.secondary.light};
   &:hover {
@@ -71,7 +76,7 @@ const VirtualizedList: React.FC<ListProps> = props => {
   console.log(props.data.length);
   return (
     <AutoSizer className={props.className}>
-      {({ height, width }) => (
+      {({ height, width }: AutosizerProps) => (
         <FixedSizeList
           itemData={props.data.reverse()}
           itemSize={150}
