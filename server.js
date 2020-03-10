@@ -25,18 +25,10 @@ const { spawn } = require("child_process");
 const Notification = require("./hw-interaction/Azure/notification");
 const Sensors = require("./hw-interaction/sensors");
 const Azure = require("./hw-interaction/Azure/communication");
+const CONSTANTS = require("./constants");
+const { NODE_COMMAND, STREAM_RELAY, SECRET } = CONSTANTS;
 
 require("dotenv").config();
-
-const NODE_COMMAND = "node";
-const STREAM_RELAY = "websocket-relay.js";
-const SECRET = "superSecret";
-const STREAM_COMMAND = "ffmpeg";
-const FFMPEG_ARGS = `-f v4l2 \
-  -framerate 25 -video_size 640x480 -i /dev/video0 \
--f mpegts \
-  -codec:v mpeg1video -s 640x480 -b:v 1000k -bf 0 \
-http://localhost:8081/${SECRET}`;
 
 // Static Routes
 // Serve production build of React app
@@ -125,30 +117,13 @@ Azure.setupClient(process.env.DEVICE_CONNECTION_STRING, sensorData);
 const streamRelay = spawn(NODE_COMMAND, [STREAM_RELAY, SECRET]);
 
 streamRelay.stdout.on("data", data => {
-  console.log(`stdout: ${data}`);
+  console.log(`relay stdout: ${data}`);
 });
-
 streamRelay.stderr.on("data", data => {
   console.error(`relay stderr: ${data}`);
 });
-
 streamRelay.on("close", code => {
-  console.log(`child process exited with code ${code}`);
-});
-
-// Run ffmpeg to stream data
-const stream = spawn(STREAM_COMMAND, FFMPEG_ARGS.split(" "));
-
-stream.stdout.on("data", data => {
-  console.log(`stdout: ${data}`);
-});
-
-stream.stderr.on("data", data => {
-  console.error(`stream stderr: ${data}`);
-});
-
-stream.on("close", code => {
-  console.log(`child process exited with code ${code}`);
+  console.log(`relay child process exited with code ${code}`);
 });
 
 module.exports = app;

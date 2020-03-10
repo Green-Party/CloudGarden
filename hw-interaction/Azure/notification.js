@@ -2,7 +2,7 @@ const webPush = require("web-push");
 const Azure = require("./communication");
 
 function sendNotification(payload) {
-  if (pushSubscription != undefined) {
+  if (typeof pushSubscription !== "undefined") {
     console.log(`Can I has access pls ${pushSubscription}`);
     //  Send notification to client
     webPush

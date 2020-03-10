@@ -10,9 +10,13 @@
 // node websocket-relay yoursecret 8081 8082
 // ffmpeg -i <some input> -f mpegts http://localhost:8081/yoursecret
 
+const CONSTANTS = require("./constants");
+const { STREAM_COMMAND, FFMPEG_ARGS } = CONSTANTS;
+
 var fs = require("fs"),
   http = require("http"),
-  WebSocket = require("ws");
+  WebSocket = require("ws"),
+  spawn = require("child_process").spawn;
 
 if (process.argv.length < 3) {
   console.log(
@@ -108,3 +112,16 @@ console.log(
 console.log(
   "Awaiting WebSocket connections on ws://127.0.0.1:" + WEBSOCKET_PORT + "/"
 );
+
+// Run ffmpeg to stream data
+const stream = spawn(STREAM_COMMAND, FFMPEG_ARGS.split(" "));
+
+stream.stdout.on("data", data => {
+  console.log(`stream stdout: ${data}`);
+});
+stream.stderr.on("data", data => {
+  console.error(`stream stderr: ${data}`);
+});
+stream.on("close", code => {
+  console.log(`stream child process exited with code ${code}`);
+});
