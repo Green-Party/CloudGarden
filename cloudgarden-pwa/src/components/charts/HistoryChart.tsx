@@ -54,7 +54,7 @@ const HistoryChart: React.FC<Data> = ({ type, units, data }: Data) => {
       <GridList cellHeight="auto" cols={data.length}>
         {data.map((value, index) => {
           return (
-            <GridListTile cols={1} className={styles.legend}>
+            <GridListTile cols={1} className={styles.legend} key={index}>
               <Typography
                 variant="caption"
                 align="center"
