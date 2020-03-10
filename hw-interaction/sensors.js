@@ -24,7 +24,7 @@ let readings = {
   ir: 0,
   uv_index: 0,
   water_level: 0,
-  temperature: [0, 0, 0],
+  temperature: [-40, -40, -40],
   soil_moisture: [0, 0, 0],
   pump_senabled: false
 };
@@ -35,7 +35,7 @@ let controls = {
 };
 
 const interval = 5000;
-const pumpTime = 1000;
+const pumpTime = 2000;
 
 function initialize(state) {
   let board = new five.Board();
@@ -85,13 +85,13 @@ function initialize(state) {
       enabled: false
     });
 
-    const waterLevelSwitch = new WaterLevelSwitch({
+    const _waterLevelSwitch = new WaterLevelSwitch({
       slave: controls.pumps
     });
 
     // grow light - controlled through relay at pin 6
     controls.light = new Light({
-      pin: 6,
+      pin: 47,
       type: "NO"
     });
 

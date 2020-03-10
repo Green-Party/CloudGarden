@@ -15,12 +15,11 @@ import "./Header.css";
 import "./Dashboard.css";
 import Header from "./components/main/Header";
 import ControlView from "./components/controls/ControlView";
-import { TestNotificationView } from "./components/notifications";
 import { TestLiveStreamView } from "./components/stream";
+import { NotificationView } from "./components/notifications";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "./styles/Theme";
 import NavDrawer from "./components/main/NavDrawer";
-
 import { SensorDataProvider } from "./contexts";
 
 const Home = lazy(() => import("./Home"));
@@ -46,7 +45,7 @@ const App: React.FC = () => {
                   <ControlView />
                 </Route>
                 <Route path="/notifications">
-                  <TestNotificationView />
+                  <NotificationView />
                 </Route>
                 <Route path="/stream">
                   <TestLiveStreamView />
