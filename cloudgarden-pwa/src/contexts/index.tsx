@@ -7,12 +7,20 @@ import {
   SensorDataProvider,
   useSensorDataState,
   useSensorDataDispatch,
-  useSensorData
+  useSensorData,
+  ADD_SENSOR_DATA,
+  REMOVE_SENSOR_DATA,
+  ADD_NOTIFICATION_DATA,
+  REMOVE_NOTIFICATION_DATA
 } from "./SensorContext";
 
 export {
   SensorDataProvider,
   useSensorDataState,
   useSensorDataDispatch,
-  useSensorData
+  useSensorData,
+  ADD_SENSOR_DATA,
+  REMOVE_SENSOR_DATA,
+  ADD_NOTIFICATION_DATA,
+  REMOVE_NOTIFICATION_DATA
 };

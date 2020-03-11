@@ -16,6 +16,12 @@ import * as signalR from "@microsoft/signalr";
 import axios from "axios";
 import { SensorData, Notification, DataState } from "../types";
 
+// Action types
+const ADD_SENSOR_DATA = "ADD_SENSOR_DATA";
+const REMOVE_SENSOR_DATA = "REMOVE_SENSOR_DATA";
+const ADD_NOTIFICATION_DATA = "ADD_NOTIFICATION_DATA";
+const REMOVE_NOTIFICATION_DATA = "REMOVE_NOTIFICATION_DATA";
+
 type SensorDataProviderProps = { children: React.ReactNode };
 type NotificationPayload = {
   updatedNotification: Notification;
@@ -23,8 +29,8 @@ type NotificationPayload = {
 type SensorDataPayload = {
   updatedSensor: SensorData;
 };
-type SensorType = "addSensorData" | "removeSensorData";
-type NotificationType = "addNotification" | "removeNotification";
+type SensorType = "ADD_SENSOR_DATA" | "REMOVE_SENSOR_DATA";
+type NotificationType = "ADD_NOTIFICATION_DATA" | "REMOVE_NOTIFICATION_DATA";
 type Action =
   | { type: SensorType; payload: SensorDataPayload }
   | { type: NotificationType; payload: NotificationPayload };
@@ -114,7 +120,7 @@ function startConnection(connection: signalR.HubConnection) {
 
 function dataStateReducer(state: DataState, action: Action) {
   switch (action.type) {
-    case "addSensorData": {
+    case ADD_SENSOR_DATA: {
       const stateCopy: SensorData[] = Array.from(state.sensorData);
       const updatedSensor: SensorData = action.payload.updatedSensor;
       let newState;
@@ -134,7 +140,7 @@ function dataStateReducer(state: DataState, action: Action) {
         notifications: state.notifications
       };
     }
-    case "removeSensorData": {
+    case REMOVE_SENSOR_DATA: {
       const stateCopy: SensorData[] = Array.from(state.sensorData);
       const updatedSensor: SensorData = action.payload.updatedSensor;
       const index = stateCopy.indexOf(updatedSensor);
@@ -148,7 +154,7 @@ function dataStateReducer(state: DataState, action: Action) {
         notifications: state.notifications
       };
     }
-    case "addNotification": {
+    case ADD_NOTIFICATION_DATA: {
       const stateCopy = Array.from(state.notifications);
       const updatedNotification: Notification =
         action.payload.updatedNotification;
@@ -177,7 +183,7 @@ function dataStateReducer(state: DataState, action: Action) {
         sensorData: state.sensorData
       };
     }
-    case "removeNotification": {
+    case REMOVE_NOTIFICATION_DATA: {
       const stateCopy: Notification[] = Array.from(state.notifications);
       const updatedNotification: Notification =
         action.payload.updatedNotification;
@@ -202,10 +208,10 @@ function SensorDataProvider({ children }: SensorDataProviderProps) {
   const [state, dispatch] = useReducer(dataStateReducer, defaultDataState);
 
   const sensorsUpdated = (updatedSensor: SensorData) => {
-    dispatch({ type: "addSensorData", payload: { updatedSensor } });
+    dispatch({ type: ADD_SENSOR_DATA, payload: { updatedSensor } });
   };
   const notificationsUpdated = (updatedNotification: Notification) => {
-    dispatch({ type: "addNotification", payload: { updatedNotification } });
+    dispatch({ type: ADD_NOTIFICATION_DATA, payload: { updatedNotification } });
   };
 
   useEffect(() => {
@@ -284,5 +290,9 @@ export {
   SensorDataProvider,
   useSensorDataState,
   useSensorDataDispatch,
-  useSensorData
+  useSensorData,
+  ADD_SENSOR_DATA,
+  REMOVE_SENSOR_DATA,
+  ADD_NOTIFICATION_DATA,
+  REMOVE_NOTIFICATION_DATA
 };

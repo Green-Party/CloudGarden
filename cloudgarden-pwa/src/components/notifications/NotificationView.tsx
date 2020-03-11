@@ -6,7 +6,7 @@
 
 import React from "react";
 import List from "./List";
-import { useSensorData } from "../../contexts";
+import { useSensorData, REMOVE_NOTIFICATION_DATA } from "../../contexts";
 import { Grid } from "@material-ui/core";
 import {
   createStyles,
@@ -61,7 +61,7 @@ const NotificationView: React.FC = () => {
       );
       if (updatedNotification) {
         dispatch({
-          type: "removeNotification",
+          type: REMOVE_NOTIFICATION_DATA,
           payload: { updatedNotification }
         });
       } else {
