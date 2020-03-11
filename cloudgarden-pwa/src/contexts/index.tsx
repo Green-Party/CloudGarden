@@ -3,6 +3,16 @@
  * Author: Luke Slevinsky
  * Exporting all contexts in one place
  */
-import { SensorDataProvider, useSensorDataState } from "./SensorContext";
+import {
+  SensorDataProvider,
+  useSensorDataState,
+  useSensorDataDispatch,
+  useSensorData
+} from "./SensorContext";
 
-export { SensorDataProvider, useSensorDataState };
+export {
+  SensorDataProvider,
+  useSensorDataState,
+  useSensorDataDispatch,
+  useSensorData
+};

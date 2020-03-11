@@ -12,9 +12,18 @@
     },
     {
       "type": "cosmosDB",
-      "name": "outputDocument",
+      "name": "sensorDocument",
       "databaseName": "iot",
       "collectionName": "messages",
+      "createIfNotExists": true,
+      "connectionStringSetting": "cloudgardendb_DOCUMENTDB",
+      "direction": "out"
+    },
+    {
+      "type": "cosmosDB",
+      "name": "notificationDocument",
+      "databaseName": "iot",
+      "collectionName": "notifications",
       "createIfNotExists": true,
       "connectionStringSetting": "cloudgardendb_DOCUMENTDB",
       "direction": "out"
