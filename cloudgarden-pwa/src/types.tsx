@@ -31,6 +31,7 @@ export type Notification = {
   id: string;
   title: string;
   body: string;
+  deleted?: boolean;
   _ts: number;
 };
 

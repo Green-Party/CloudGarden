@@ -1,0 +1,22 @@
+{
+  "bindings": [
+    {
+      "type": "cosmosDBTrigger",
+      "name": "updatedNotifications",
+      "direction": "in",
+      "leaseCollectionName": "notificationLeases",
+      "connectionStringSetting": "cloudgardendb_DOCUMENTDB",
+      "databaseName": "iot",
+      "collectionName": "notifications",
+      "createLeaseCollectionIfNotExists": true
+    },
+    {
+      "type": "signalR",
+      "name": "signalRMessages",
+      "hubName": "CloudGardenSignalR",
+      "connectionStringSetting": "SIGNALR_CONNECTION_STRING",
+      "direction": "out"
+    }
+  ],
+  "disabled": false
+}

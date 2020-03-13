@@ -13,6 +13,8 @@ import theme from "../../styles/Theme";
 interface ListProps {
   data: any[];
   className: string;
+  onClickDelete: Function;
+  dataSorter?: (a: any, b: any) => number;
 }
 
 interface AutosizerProps {
@@ -34,7 +36,7 @@ const StyledListItem = styled(ListItem)`
   }
 `;
 
-function renderRow(props: ListChildComponentProps) {
+function renderRow(props: ListChildComponentProps, onClick: Function) {
   const { index, style } = props;
 
   const item = props.data[props.index];
@@ -64,7 +66,11 @@ function renderRow(props: ListChildComponentProps) {
           </Typography>
         }
       />
-      <IconButton edge="end" aria-label="delete">
+      <IconButton
+        edge="end"
+        aria-label="delete"
+        onClick={() => onClick(item.id)}
+      >
         <DeleteIcon fontSize="large" />
       </IconButton>
     </StyledListItem>
@@ -74,6 +80,10 @@ function renderRow(props: ListChildComponentProps) {
 const VirtualizedList: React.FC<ListProps> = props => {
   console.log("props.data.length");
   console.log(props.data.length);
+
+  if (props.dataSorter) {
+    props.data.sort(props.dataSorter);
+  }
   return (
     <AutoSizer className={props.className}>
       {({ height, width }: AutosizerProps) => (
@@ -84,7 +94,9 @@ const VirtualizedList: React.FC<ListProps> = props => {
           height={height}
           width={width}
         >
-          {renderRow}
+          {(renderProps: ListChildComponentProps) =>
+            renderRow(renderProps, props.onClickDelete)
+          }
         </FixedSizeList>
       )}
     </AutoSizer>

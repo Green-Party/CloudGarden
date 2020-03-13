@@ -1,0 +1,37 @@
+{
+  "bindings": [
+    {
+      "authLevel": "anonymous",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": ["post"],
+      "route": "DeleteNotification"
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "$return"
+    },
+    {
+      "type": "cosmosDB",
+      "name": "notification",
+      "databaseName": "iot",
+      "collectionName": "notifications",
+      "connectionStringSetting": "cloudgardendb_DOCUMENTDB",
+      "id": "{Query.id}",
+      "partitionKey": "{Query.id}",
+      "direction": "in"
+    },
+    {
+      "type": "cosmosDB",
+      "name": "outputDocument",
+      "databaseName": "iot",
+      "collectionName": "notifications",
+      "createIfNotExists": false,
+      "connectionStringSetting": "cloudgardendb_DOCUMENTDB",
+      "direction": "out"
+    }
+  ],
+  "disabled": false
+}
