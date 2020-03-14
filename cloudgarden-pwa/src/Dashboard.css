@@ -210,3 +210,8 @@
   padding: 5%;
   margin: 5%;
 }
+
+.video {
+  height: 50vh;
+  width: 95vw;
+}

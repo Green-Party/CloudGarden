@@ -7,6 +7,7 @@
 import React from "react";
 import "../../Dashboard.css";
 import JsmpegPlayer from "./JsmpegPlayer";
+import { Grid } from "@material-ui/core";
 
 const TestNotificationView: React.FC = () => {
   const videoOptions = {
@@ -17,14 +18,14 @@ const TestNotificationView: React.FC = () => {
   const videoOverlayOptions = {};
 
   return (
-    <div className="moisture-dashboard column-container">
+    <Grid container direction="column" alignItems="center" justify="center">
       <JsmpegPlayer
-        wrapperClassName="video-wrapper"
+        wrapperClassName="video-wrapper video"
         options={videoOptions}
         overlayOptions={videoOverlayOptions}
         videoUrl={`ws://localhost:8082/`} //${document.location.hostname}
       />
-    </div>
+    </Grid>
   );
 };
 

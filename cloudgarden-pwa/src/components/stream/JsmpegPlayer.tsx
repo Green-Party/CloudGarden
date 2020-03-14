@@ -1,3 +1,8 @@
+/**
+ * Creation Date: March 8, 2020
+ * Author: Luke Slevinsky
+ * React component for displaying streams, based on: https://github.com/cycjimmy/jsmpeg-player/issues/17
+ */
 import React, { useEffect } from "react";
 import JSMpeg from "@cycjimmy/jsmpeg-player";
 

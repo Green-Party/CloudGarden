@@ -37,7 +37,7 @@ var socketServer = new WebSocket.Server({
   perMessageDeflate: false
 });
 socketServer.connectionCount = 0;
-socketServer.on("connection", function(socket, upgradeReq) {
+socketServer.on("connection", (socket, upgradeReq) => {
   socketServer.connectionCount++;
   console.log(
     "New WebSocket Connection: ",
@@ -45,15 +45,15 @@ socketServer.on("connection", function(socket, upgradeReq) {
     (upgradeReq || socket.upgradeReq).headers["user-agent"],
     "(" + socketServer.connectionCount + " total)"
   );
-  socket.on("close", function(code, message) {
+  socket.on("close", (code, message) => {
     socketServer.connectionCount--;
     console.log(
       "Disconnected WebSocket (" + socketServer.connectionCount + " total)"
     );
   });
 });
-socketServer.broadcast = function(data) {
-  socketServer.clients.forEach(function each(client) {
+socketServer.broadcast = data => {
+  socketServer.clients.forEach(client => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(data);
     }
@@ -62,7 +62,7 @@ socketServer.broadcast = function(data) {
 
 // HTTP Server to accept incomming MPEG-TS Stream from ffmpeg
 var streamServer = http
-  .createServer(function(request, response) {
+  .createServer((request, response) => {
     var params = request.url.substr(1).split("/");
 
     if (params[0] !== STREAM_SECRET) {
@@ -83,13 +83,13 @@ var streamServer = http
         ":" +
         request.socket.remotePort
     );
-    request.on("data", function(data) {
+    request.on("data", data => {
       socketServer.broadcast(data);
       if (request.socket.recording) {
         request.socket.recording.write(data);
       }
     });
-    request.on("end", function() {
+    request.on("end", () => {
       console.log("close");
       if (request.socket.recording) {
         request.socket.recording.close();
@@ -120,7 +120,7 @@ stream.stdout.on("data", data => {
   console.log(`stream stdout: ${data}`);
 });
 stream.stderr.on("data", data => {
-  console.error(`stream stderr: ${data}`);
+  // console.error(`stream stderr: ${data}`);
 });
 stream.on("close", code => {
   console.log(`stream child process exited with code ${code}`);
