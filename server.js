@@ -17,13 +17,16 @@ const chalk = require("chalk");
 const logger = require("morgan");
 const open = require("open");
 const io = require("socket.io")(server);
-const Sensors = require("./hw-interaction/sensors");
-const Azure = require("./hw-interaction/Azure/communication");
-
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const webPush = require("web-push");
+const { spawn } = require("child_process");
+
 const Notification = require("./hw-interaction/Azure/notification");
+const Sensors = require("./hw-interaction/sensors");
+const Azure = require("./hw-interaction/Azure/communication");
+const CONSTANTS = require("./constants");
+const { NODE_COMMAND, STREAM_RELAY, SECRET } = CONSTANTS;
 
 require("dotenv").config();
 
@@ -109,5 +112,18 @@ Sensors.initialize(sensorData);
 
 // Setup Azure
 Azure.setupClient(process.env.DEVICE_CONNECTION_STRING, sensorData);
+
+// Setup the streaming relay
+const streamRelay = spawn(NODE_COMMAND, [STREAM_RELAY, SECRET]);
+
+streamRelay.stdout.on("data", data => {
+  console.log(`relay stdout: ${data}`);
+});
+streamRelay.stderr.on("data", data => {
+  console.error(`relay stderr: ${data}`);
+});
+streamRelay.on("close", code => {
+  console.log(`relay child process exited with code ${code}`);
+});
 
 module.exports = app;

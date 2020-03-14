@@ -15,6 +15,7 @@ import "./Header.css";
 import "./Dashboard.css";
 import Header from "./components/main/Header";
 import ControlView from "./components/controls/ControlView";
+import { TestLiveStreamView } from "./components/stream";
 import { NotificationView } from "./components/notifications";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "./styles/Theme";
@@ -45,6 +46,9 @@ const App: React.FC = () => {
                 </Route>
                 <Route path="/notifications">
                   <NotificationView />
+                </Route>
+                <Route path="/stream">
+                  <TestLiveStreamView />
                 </Route>
               </Switch>
               <NavDrawer open={open} onCloseFunc={setOpen} />

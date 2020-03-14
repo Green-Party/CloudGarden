@@ -5,13 +5,7 @@
  * Ideas modified from: https://kentcdodds.com/blog/how-to-use-react-context-effectively
  *   and signalR code from: https://anthonychu.ca/post/cosmosdb-real-time-azure-functions-signalr-service/
  */
-import React, {
-  useState,
-  useContext,
-  createContext,
-  useEffect,
-  useReducer
-} from "react";
+import React, { useContext, createContext, useEffect, useReducer } from "react";
 import * as signalR from "@microsoft/signalr";
 import axios from "axios";
 import { SensorData, Notification, DataState } from "../types";
