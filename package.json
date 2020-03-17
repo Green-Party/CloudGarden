@@ -13,7 +13,8 @@
     "build:client": "cd cloudgarden-pwa && yarn && yarn build",
     "clean": "npm-run-all clean:server",
     "clean:server": "rimraf node_modules",
-    "clean:client": "rimraf cloudgarden-pwa/node_modules && rimraf cloudgarden-pwa/build"
+    "clean:client": "rimraf cloudgarden-pwa/node_modules && rimraf cloudgarden-pwa/build",
+    "client": "npm run clean:client && npm run build:client"
   },
   "dependencies": {
     "azure-iot-device": "^1.12.2",
