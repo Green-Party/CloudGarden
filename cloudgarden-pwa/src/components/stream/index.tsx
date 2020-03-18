@@ -1,2 +1,3 @@
 import TestLiveStreamView from "./TestLiveStreamView";
-export { TestLiveStreamView };
+import JsmpegPlayer from "./JsmpegPlayer";
+export { TestLiveStreamView, JsmpegPlayer };
