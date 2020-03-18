@@ -4,7 +4,7 @@
  * A test page for notifications
  */
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "../../Dashboard.css";
 import List from "./List";
 import { useSensorDataState } from "../../contexts";
@@ -17,7 +17,7 @@ const TestNotificationView: React.FC = () => {
 
   return (
     <div className="moisture-dashboard column-container">
-      <List className={""} data={notifications} />
+      <List className={""} data={notifications} onClickDelete={() => {}} />
     </div>
   );
 };

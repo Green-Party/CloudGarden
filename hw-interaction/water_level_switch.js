@@ -22,8 +22,7 @@ module.exports = class WaterLevelSwitch {
     let pin = opts.hasOwnProperty("pin") ? opts.pin : DEFAULT_PIN;
     let type = opts.hasOwnProperty("type") ? opts.type : DEFAULT_TYPE;
 
-    let canSendNotification = true;
-
+    this.canSendNotification = true;
     this.slave = opts.hasOwnProperty("slave") ? opts.slave : null;
     this.sensor = new five.Switch({
       pin: pin,
@@ -48,9 +47,9 @@ module.exports = class WaterLevelSwitch {
         body:
           "Water resevoir levels have fallen below usable levels. Please refill."
       };
-      if (canSendNotification) {
+      if (this.canSendNotification) {
         Notification.sendNotification(payload);
-        canSendNotification = false;
+        this.canSendNotification = false;
       }
     } else {
       console.log("Can't notify, no subscription yet.");
@@ -61,7 +60,7 @@ module.exports = class WaterLevelSwitch {
     console.log("Switch is closed");
     if (this.slave) {
       this.slave.enable();
-      canSendNotification = true;
+      this.canSendNotification = true;
     }
   }
 };

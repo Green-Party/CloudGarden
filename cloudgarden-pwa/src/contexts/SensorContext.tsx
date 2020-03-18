@@ -5,13 +5,35 @@
  * Ideas modified from: https://kentcdodds.com/blog/how-to-use-react-context-effectively
  *   and signalR code from: https://anthonychu.ca/post/cosmosdb-real-time-azure-functions-signalr-service/
  */
-import React, { useState, useContext, createContext, useEffect } from "react";
+import React, { useContext, createContext, useEffect, useReducer } from "react";
 import * as signalR from "@microsoft/signalr";
 import axios from "axios";
 import { SensorData, Notification, DataState } from "../types";
 
+// Action types
+const ADD_SENSOR_DATA = "ADD_SENSOR_DATA";
+const REMOVE_SENSOR_DATA = "REMOVE_SENSOR_DATA";
+const ADD_NOTIFICATION_DATA = "ADD_NOTIFICATION_DATA";
+const REMOVE_NOTIFICATION_DATA = "REMOVE_NOTIFICATION_DATA";
+
 type SensorDataProviderProps = { children: React.ReactNode };
+type NotificationPayload = {
+  updatedNotification: Notification;
+};
+type SensorDataPayload = {
+  updatedSensor: SensorData;
+};
+type SensorType = "ADD_SENSOR_DATA" | "REMOVE_SENSOR_DATA";
+type NotificationType = "ADD_NOTIFICATION_DATA" | "REMOVE_NOTIFICATION_DATA";
+type Action =
+  | { type: SensorType; payload: SensorDataPayload }
+  | { type: NotificationType; payload: NotificationPayload };
+type Dispatch = (action: Action) => void;
+
 const SensorStateContext = createContext<DataState | undefined>(undefined);
+const SensorStateDispatchContext = createContext<Dispatch | undefined>(
+  undefined
+);
 
 const defaultSensorData: SensorData = {
   id: "0",
@@ -27,10 +49,15 @@ const defaultSensorData: SensorData = {
 
 const defaultNotification: Notification = {
   id: "0",
-  title: "TITLE",
-  body: "BODY",
+  title: "EMPTY",
+  body: "NO NOTIFICATIONS",
   deviceId: "0",
   _ts: 0
+};
+
+const defaultDataState: DataState = {
+  sensorData: [defaultSensorData],
+  notifications: [defaultNotification]
 };
 
 // axios configs
@@ -85,59 +112,101 @@ function startConnection(connection: signalR.HubConnection) {
     });
 }
 
-function SensorDataProvider({ children }: SensorDataProviderProps) {
-  const [sensorData, updateSensorState]: [SensorData[], Function] = useState([
-    defaultSensorData
-  ]);
-  const [notifications, updateNotificationState]: [
-    Notification[],
-    Function
-  ] = useState([defaultNotification]);
-
-  function sensorsUpdated(updatedSensor: SensorData) {
-    updateSensorState((sensorData: SensorData[]) => {
-      console.log(`Sensor UPDATED ${updatedSensor}`);
-      console.log(updatedSensor);
-
-      const stateCopy = Array.from(sensorData);
+function dataStateReducer(state: DataState, action: Action) {
+  switch (action.type) {
+    case ADD_SENSOR_DATA: {
+      const stateCopy: SensorData[] = Array.from(state.sensorData);
+      const updatedSensor: SensorData = action.payload.updatedSensor;
       let newState;
       let sensor = stateCopy.find((s: SensorData) => s.id === updatedSensor.id);
       if (sensor) {
         Object.assign(sensor, updatedSensor);
         newState = stateCopy;
       } else {
-        newState = [...sensorData, updatedSensor];
+        newState = [...stateCopy, updatedSensor];
       }
 
       if (newState[0] === defaultSensorData) {
         newState = Array.from(newState.slice(1));
       }
-      return newState;
-    });
-  }
-
-  function notificationsUpdated(updatedNotification: Notification) {
-    updateNotificationState((notificationData: Notification[]) => {
-      console.log(`Notification UPDATED ${updatedNotification}`);
-      console.log(updatedNotification);
-
-      const stateCopy = Array.from(notificationData);
+      return {
+        sensorData: newState,
+        notifications: state.notifications
+      };
+    }
+    case REMOVE_SENSOR_DATA: {
+      const stateCopy: SensorData[] = Array.from(state.sensorData);
+      const updatedSensor: SensorData = action.payload.updatedSensor;
+      const index = stateCopy.indexOf(updatedSensor);
+      if (index > -1) {
+        stateCopy.splice(index, 1);
+      } else {
+        console.log("No sensor to delete");
+      }
+      return {
+        sensorData: stateCopy,
+        notifications: state.notifications
+      };
+    }
+    case ADD_NOTIFICATION_DATA: {
+      const stateCopy = Array.from(state.notifications);
+      const updatedNotification: Notification =
+        action.payload.updatedNotification;
       let newState;
       let notification = stateCopy.find(
         (n: Notification) => n.id === updatedNotification.id
       );
       if (notification) {
-        Object.assign(notification, updatedNotification);
+        if (notification.deleted) {
+          const index = stateCopy.indexOf(notification);
+          if (index > -1) {
+            stateCopy.splice(index, 1);
+          }
+        } else {
+          Object.assign(notification, updatedNotification);
+        }
         newState = stateCopy;
       } else {
-        newState = [...notificationData, updatedNotification];
+        newState = [...stateCopy, updatedNotification];
       }
       if (newState[0] === defaultNotification) {
         newState = Array.from(newState.slice(1));
       }
-      return newState;
-    });
+      return {
+        notifications: newState,
+        sensorData: state.sensorData
+      };
+    }
+    case REMOVE_NOTIFICATION_DATA: {
+      const stateCopy: Notification[] = Array.from(state.notifications);
+      const updatedNotification: Notification =
+        action.payload.updatedNotification;
+      const index = stateCopy.indexOf(updatedNotification);
+      if (index > -1) {
+        stateCopy.splice(index, 1);
+      } else {
+        console.log("No notification to delete");
+      }
+      return {
+        notifications: stateCopy,
+        sensorData: state.sensorData
+      };
+    }
+    default: {
+      throw new Error(`Unhandled action type: ${action}`);
+    }
   }
+}
+
+function SensorDataProvider({ children }: SensorDataProviderProps) {
+  const [state, dispatch] = useReducer(dataStateReducer, defaultDataState);
+
+  const sensorsUpdated = (updatedSensor: SensorData) => {
+    dispatch({ type: ADD_SENSOR_DATA, payload: { updatedSensor } });
+  };
+  const notificationsUpdated = (updatedNotification: Notification) => {
+    dispatch({ type: ADD_NOTIFICATION_DATA, payload: { updatedNotification } });
+  };
 
   useEffect(() => {
     getSensorData()
@@ -178,15 +247,11 @@ function SensorDataProvider({ children }: SensorDataProviderProps) {
       })
       .catch(console.error);
   }, []);
-
-  const state: DataState = {
-    sensorData: sensorData,
-    notifications: notifications
-  };
-
   return (
     <SensorStateContext.Provider value={state}>
-      {children}
+      <SensorStateDispatchContext.Provider value={dispatch}>
+        {children}
+      </SensorStateDispatchContext.Provider>
     </SensorStateContext.Provider>
   );
 }
@@ -201,4 +266,27 @@ function useSensorDataState() {
   return context;
 }
 
-export { SensorDataProvider, useSensorDataState };
+function useSensorDataDispatch() {
+  const context = React.useContext(SensorStateDispatchContext);
+  if (context === undefined) {
+    throw new Error(
+      "useSensorDataDispatch must be used within a SensorDataProvider"
+    );
+  }
+  return context;
+}
+
+function useSensorData(): [DataState, Dispatch] {
+  return [useSensorDataState(), useSensorDataDispatch()];
+}
+
+export {
+  SensorDataProvider,
+  useSensorDataState,
+  useSensorDataDispatch,
+  useSensorData,
+  ADD_SENSOR_DATA,
+  REMOVE_SENSOR_DATA,
+  ADD_NOTIFICATION_DATA,
+  REMOVE_NOTIFICATION_DATA
+};

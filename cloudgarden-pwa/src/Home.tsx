@@ -18,7 +18,6 @@ const Home: React.FC = () => {
   const match = useRouteMatch();
   //Top layer is used to select which sensor data to display
   //Routes point to the various dashboard components
-  //(only moisture is implemented currently)
   return (
     <Grid
       container

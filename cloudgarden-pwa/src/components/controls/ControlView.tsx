@@ -15,7 +15,8 @@ import {
   Switch,
   GridList,
   GridListTile,
-  useMediaQuery
+  useMediaQuery,
+  Grid
 } from "@material-ui/core";
 import WbSunnyIcon from "@material-ui/icons/WbSunny";
 import Brightness2Icon from "@material-ui/icons/Brightness2";
@@ -24,6 +25,7 @@ import "../../Dashboard.css";
 import { makeStyles, useTheme, createStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import socketIOClient from "socket.io-client";
+import { JsmpegPlayer } from "../stream";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -48,13 +50,18 @@ const useStyles = makeStyles(theme =>
       alignItems: "center",
       textAlign: "center",
       margin: 8,
-      color: theme.palette.primary.dark
+      color: theme.palette.primary.dark,
+      justifyContent: "center"
     },
     cardContent: {
       display: "flex",
       flexDirection: "column",
       alignItems: "start",
       textAlign: "center"
+    },
+    livestream: {
+      maxWidth: "inherit",
+      maxHeight: "inherit"
     },
     media: {
       flexShrink: 0,
@@ -150,6 +157,12 @@ const ControlView: React.FC = () => {
     };
   }, []);
 
+  const videoOptions = {
+    poster: "/" + process.env.PUBLIC_URL + "watering.GIF"
+  };
+
+  const videoOverlayOptions = {};
+
   return (
     <GridList
       cellHeight="auto"
@@ -234,6 +247,32 @@ const ControlView: React.FC = () => {
             >
               Water
             </Button>
+          </CardContent>
+        </Card>
+      </GridListTile>
+      <GridListTile cols={smallWidth ? 2 : 4}>
+        <Card className={styles.card}>
+          <CardContent className={styles.cardContent}>
+            <Typography variant={"h6"} gutterBottom>
+              Live Stream
+            </Typography>
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justify="center"
+            >
+              <JsmpegPlayer
+                wrapperClassName={clsx(
+                  styles.livestream,
+                  "video-wrapper",
+                  "video"
+                )}
+                options={videoOptions}
+                overlayOptions={videoOverlayOptions}
+                videoUrl={`ws://localhost:8082/`} //${document.location.hostname}
+              />
+            </Grid>
           </CardContent>
         </Card>
       </GridListTile>
