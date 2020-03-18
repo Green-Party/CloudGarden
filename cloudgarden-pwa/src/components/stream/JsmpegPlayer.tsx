@@ -31,7 +31,7 @@ const JsmpegPlayer: React.FC<PlayerProps> = props => {
       props.options,
       props.overlayOptions
     );
-  }, []);
+  }, [els.videoWrapper, props.videoUrl, props.options, props.overlayOptions]);
 
   return (
     <div

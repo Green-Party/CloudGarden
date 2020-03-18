@@ -60,7 +60,6 @@ const useStyles = makeStyles(theme =>
       textAlign: "center"
     },
     livestream: {
-      //margin: "5%",
       maxWidth: "inherit",
       maxHeight: "inherit"
     },
@@ -159,8 +158,7 @@ const ControlView: React.FC = () => {
   }, []);
 
   const videoOptions = {
-    poster:
-      "https://cycjimmy.github.io/staticFiles/images/screenshot/big_buck_bunny_640x360.jpg"
+    poster: "/" + process.env.PUBLIC_URL + "watering.GIF"
   };
 
   const videoOverlayOptions = {};
