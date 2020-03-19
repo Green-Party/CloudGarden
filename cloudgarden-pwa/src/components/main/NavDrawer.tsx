@@ -15,6 +15,7 @@ import {
 import BarChartIcon from "@material-ui/icons/BarChart";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import TuneIcon from "@material-ui/icons/Tune";
+import TextFieldsIcon from "@material-ui/icons/TextFields";
 import { makeStyles } from "@material-ui/core/styles";
 import { NavLink } from "react-router-dom";
 import { useSensorDataState } from "../../contexts/SensorContext";
@@ -88,6 +89,12 @@ const NavDrawer: React.FC<NavDrawerProps> = ({
             </Badge>
           }
           text="Notifications"
+          activeClassName={styles.active}
+        />
+        <NavListItem
+          to="/input"
+          icon={<TextFieldsIcon />}
+          text="UserInput"
           activeClassName={styles.active}
         />
       </List>
