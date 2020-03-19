@@ -1,3 +1,9 @@
+/**
+ * Creation Date: March 19, 2020
+ * Author: Luke Slevinsky
+ * Component for custom user inputs
+ */
+
 import React, { useState } from "react";
 import {
   Button,

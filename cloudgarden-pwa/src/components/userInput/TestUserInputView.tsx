@@ -1,8 +1,7 @@
 /**
- * Creation Date: February 19, 2020
- * Author: Gillian Pierce
- * Component that holds controls for watering the plants
- * and turning on and off the light
+ * Creation Date: March 19, 2020
+ * Author: Luke Slevinsky
+ * Test view to test out user input controlled sensor automation
  */
 
 import React, { useState, useEffect } from "react";
