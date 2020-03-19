@@ -21,6 +21,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const webPush = require("web-push");
 const { spawn } = require("child_process");
+const OktaJwtVerifier = require("@okta/jwt-verifier");
 
 const Notification = require("./hw-interaction/Azure/notification");
 const Sensors = require("./hw-interaction/sensors");
@@ -45,8 +46,38 @@ webPush.setVapidDetails(
   process.env.PRIVATE_VAPID_KEY
 );
 
+const oktaJwtVerifier = new OktaJwtVerifier({
+  issuer: "https://${process.env.REACT_APP_OKTA_ORG_URL}/oauth2/default",
+  clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
+  assertClaims: {
+    aud: "api://default"
+  }
+});
+
+function authenticationRequired(req, res, next) {
+  const authHeader = req.headers.authorization || "";
+  const match = authHeader.match(/Bearer (.+)/);
+
+  if (!match) {
+    return res.status(401).end();
+  }
+
+  const accessToken = match[1];
+  const expectedAudience = "api://default";
+
+  return oktaJwtVerifier
+    .verifyAccessToken(accessToken, expectedAudience)
+    .then(jwt => {
+      req.jwt = jwt;
+      next();
+    })
+    .catch(err => {
+      res.status(401).send(err.message);
+    });
+}
+
 //Main App Route
-app.get("/*", (_req, res, _next) =>
+app.get("/*", authenticationRequired, (_req, res, _next) =>
   res.sendFile(path.join(__dirname, "cloudgarden-pwa", "build", "index.html"))
 );
 

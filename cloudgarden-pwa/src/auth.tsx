@@ -10,7 +10,7 @@ export const useAuth = (auth: any) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    auth.isAuthenticated().then((isAuthenticated: boolean) => {
+    auth.getAuthState().then((isAuthenticated: boolean) => {
       if (isAuthenticated != authenticated) {
         setAuthenticated(isAuthenticated);
       }
