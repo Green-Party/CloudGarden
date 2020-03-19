@@ -129,6 +129,15 @@ const TestUserInputView: React.FC = () => {
             />
           </CardContent>
         </Card>
+        <Card className={styles.card}>
+          <CardContent className={styles.cardContent}>
+            <UserInput
+              type="LIGHT"
+              onSubmit={onClickLightUpdate}
+              onTurnOff={turnOffLight}
+            />
+          </CardContent>
+        </Card>
       </GridListTile>
     </GridList>
   );

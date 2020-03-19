@@ -7,9 +7,13 @@ import {
   Switch,
   TextField
 } from "@material-ui/core";
-import { KeyboardTimePicker } from "@material-ui/pickers";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker
+} from "@material-ui/pickers";
 import { makeStyles, useTheme, createStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
+import DateFnsUtils from "@date-io/date-fns";
 
 type InputType = "MOISTURE" | "LIGHT";
 
@@ -66,17 +70,18 @@ const UserInput: React.FC<UserInputProps> = props => {
   const styles = useStyles(theme);
   const [inputState, setInputState]: [boolean, Function] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedNumber, setSelectedNumber] = useState<number | null>(null);
+  const [selectedNumber, setSelectedNumber] = useState<string>("");
+  const { onSubmit } = props;
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
   };
-  const handleNumberChange = (number: number | null) => {
+  const handleNumberChange = (number: string) => {
     setSelectedNumber(number);
   };
   const onSwitchChanged = () => {
     setInputState((lastState: boolean) => {
-      if (!lastState) props.onTurnOff();
+      if (lastState) props.onTurnOff();
       return !lastState;
     });
   };
@@ -93,8 +98,9 @@ const UserInput: React.FC<UserInputProps> = props => {
               shrink: true
             }}
             variant="outlined"
+            value={selectedNumber}
             onChange={e => {
-              handleNumberChange(+e.target.value);
+              handleNumberChange(e.target.value);
             }}
           />
         ) : (
@@ -107,22 +113,34 @@ const UserInput: React.FC<UserInputProps> = props => {
                 shrink: true
               }}
               variant="outlined"
+              value={selectedNumber}
               onChange={e => {
-                handleNumberChange(+e.target.value);
+                handleNumberChange(e.target.value);
               }}
             />
-            <KeyboardTimePicker
-              margin="normal"
-              id="time-picker"
-              label="Time picker"
-              value={selectedDate}
-              onChange={handleDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change time"
-              }}
-            />
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardTimePicker
+                margin="normal"
+                id="time-picker"
+                label="Turn on Light"
+                placeholder="08:00 AM"
+                mask="__:__ _M"
+                value={selectedDate}
+                onChange={handleDateChange}
+                KeyboardButtonProps={{
+                  "aria-label": "change time"
+                }}
+              />
+            </MuiPickersUtilsProvider>
           </>
         )}
+        <Button
+          id="submit-button"
+          className={clsx(styles.button)}
+          onClick={() => onSubmit(+selectedNumber, selectedDate)}
+        >
+          Submit Update
+        </Button>
       </>
     );
   };
@@ -130,9 +148,9 @@ const UserInput: React.FC<UserInputProps> = props => {
   return (
     <Card className={styles.card}>
       <CardContent className={styles.cardContent}>
-        <Typography variant={"overline"}>Light Control</Typography>
+        <Typography variant={"overline"}>Automatic Sensor Control</Typography>
         <Typography variant={"h6"} gutterBottom>
-          Light Off
+          {props.type}
         </Typography>
         <Switch
           checked={inputState}
@@ -142,13 +160,6 @@ const UserInput: React.FC<UserInputProps> = props => {
         />
         {inputState ? <Input type={props.type} /> : null}
       </CardContent>
-      <Button
-        id="submit-button"
-        className={clsx(styles.button)}
-        onClick={() => props.onSubmit(selectedNumber, selectedDate)}
-      >
-        Water
-      </Button>
     </Card>
   );
 };
