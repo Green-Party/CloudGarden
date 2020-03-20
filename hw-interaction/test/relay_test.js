@@ -7,13 +7,12 @@
 const five = require("johnny-five");
 const Pumps = require("../pumps");
 const Light = require("../light");
+const testHelper = require("./test_helper");
 const utils = require("../utils");
 
 const waitTime = 1000;
 
-let board = new five.Board();
-
-board.on("ready", async () => {
+async function runRelayTest() {
   console.log("Initializing...");
   let pumps = new Pumps();
 
@@ -37,7 +36,8 @@ board.on("ready", async () => {
   await runRelay(light);
 
   console.log("End of test");
-});
+  process.exit();
+}
 
 async function runRelay(relay) {
   await utils.sleep(waitTime);
@@ -45,3 +45,5 @@ async function runRelay(relay) {
   await utils.sleep(waitTime);
   relay.turnOff();
 }
+
+testHelper.runTest(runRelayTest);

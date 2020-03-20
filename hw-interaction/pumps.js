@@ -12,7 +12,8 @@ module.exports = class Pumps {
    * @param {*} options pins, type, enabled
    */
   constructor(options) {
-    const DEFAULT_PINS = [3, 4, 5];
+    // const DEFAULT_PINS = [3, 4, 5];
+    const DEFAULT_PINS = [53, 51, 49];
     const DEFAULT_TYPE = "NO";
 
     let opts = options || {};
@@ -33,7 +34,7 @@ module.exports = class Pumps {
 
   turnOn(idx) {
     if (this.enabled) {
-      if (!idx) {
+      if (idx == null) {
         this.controls.map(pump => {
           pump.turnOn();
         });
@@ -45,7 +46,7 @@ module.exports = class Pumps {
 
   turnOff(idx) {
     if (this.enabled) {
-      if (!idx) {
+      if (idx == null) {
         this.controls.map(pump => {
           pump.turnOff();
         });

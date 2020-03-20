@@ -38,12 +38,10 @@ module.exports = class Relay {
     switch (this.control.type) {
       case "NO":
         this.control.open();
-        console.log(this.isOn());
         returnState = this.isOn();
         break;
       case "NC":
         this.control.close();
-        console.log(this.isOn());
         returnState = this.isOn();
         break;
       default:
