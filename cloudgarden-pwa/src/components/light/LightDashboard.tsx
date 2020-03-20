@@ -6,7 +6,6 @@
 
 import React, { Fragment } from "react";
 import "../../Dashboard.css";
-import { SensorState, SensorData } from "../../types";
 import {
   Card,
   CardContent,
@@ -14,11 +13,12 @@ import {
   Grid,
   Typography
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import PercentChartNew from "../charts/PercentChartNew";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import PercentChart from "../charts/PercentChart";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
-import HistoryChartNew from "../charts/HistoryChartNew";
-import { useSensorState } from "../../contexts";
+import { useSensorDataState } from "../../contexts";
+import HistoryChart from "../charts/HistoryChart";
+import { sensorDataToChartData } from "../dashboardUtils";
 
 const useStyles = makeStyles({
   button: {
@@ -63,13 +63,12 @@ const useStyles = makeStyles({
 });
 
 const LightDashboard: React.FC = () => {
-  const sensorData = useSensorState();
-  console.log(`sensor data`);
-  console.log(sensorData);
+  const { sensorData } = useSensorDataState();
+  const theme = useTheme();
 
   const UVPercentage: React.FC = () => {
     const styles = useStyles();
-    const lastUvIdx = sensorData[sensorData.length - 1].uvIdx;
+    const lastUvIdx = sensorData[sensorData.length - 1].uv_index;
     return (
       <Card className={styles.chart}>
         <CardContent>
@@ -77,12 +76,12 @@ const LightDashboard: React.FC = () => {
             UV Index
           </Typography>
           <Divider />
-          <PercentChartNew
+          <PercentChart
             value={lastUvIdx}
             range={{
-              low: SensorRanges[SensorType.UVINDEX].low,
-              high: SensorRanges[SensorType.UVINDEX].high,
-              ideal: SensorRanges[SensorType.UVINDEX].ideal
+              low: SensorRanges[SensorType.UV_INDEX].low,
+              high: SensorRanges[SensorType.UV_INDEX].high,
+              ideal: SensorRanges[SensorType.UV_INDEX].ideal
             }}
             units={""}
           />
@@ -101,7 +100,7 @@ const LightDashboard: React.FC = () => {
             Visible Intensity
           </Typography>
           <Divider />
-          <PercentChartNew
+          <PercentChart
             value={lastVisible}
             range={{
               low: SensorRanges[SensorType.VISIBLE].low,
@@ -125,7 +124,7 @@ const LightDashboard: React.FC = () => {
             Infrared Index
           </Typography>
           <Divider />
-          <PercentChartNew
+          <PercentChart
             value={lastInfared}
             range={{
               low: SensorRanges[SensorType.IR].low,
@@ -142,16 +141,10 @@ const LightDashboard: React.FC = () => {
   const HistoryGraphs: React.FC = () => {
     const styles = useStyles();
 
-    const sensorDataToChartData = (sensorData: SensorData[]) => {
-      return sensorData.map(sensor => {
-        return {
-          timestamp: sensor._ts,
-          value: sensor.visible
-        };
-      });
-    };
-
-    console.log("Chart Sensor data", sensorDataToChartData(sensorData));
+    console.log(
+      "uv Chart Sensor data",
+      sensorDataToChartData(sensorData, SensorType.UV_INDEX)
+    );
     return (
       <Fragment>
         <Card className={styles.chart}>
@@ -160,21 +153,10 @@ const LightDashboard: React.FC = () => {
               UV Index History
             </Typography>
             <Divider />
-            <HistoryChartNew
+            <HistoryChart
               units={SensorUnit.UNITS}
-              type={SensorType.UVINDEX}
-              data={[
-                [
-                  { timestamp: new Date("June 12, 2015"), value: 10 },
-                  { timestamp: new Date("June 15, 2015"), value: 15 },
-                  { timestamp: new Date("June 18, 2015"), value: 10 },
-                  { timestamp: new Date("June 21, 2015"), value: 20 },
-                  { timestamp: new Date("June 23, 2015"), value: 30 },
-                  { timestamp: new Date("June 25, 2015"), value: 25 },
-                  { timestamp: new Date("June 28, 2015"), value: 18 },
-                  { timestamp: new Date("June 30, 2015"), value: 15 }
-                ]
-              ]}
+              type={SensorType.UV_INDEX}
+              data={[sensorDataToChartData(sensorData, SensorType.UV_INDEX)]}
             />
           </CardContent>
         </Card>
@@ -184,10 +166,10 @@ const LightDashboard: React.FC = () => {
               Visible History
             </Typography>
             <Divider />
-            <HistoryChartNew
+            <HistoryChart
               units={SensorUnit.UNITS}
               type={SensorType.VISIBLE}
-              data={[sensorDataToChartData(sensorData)]}
+              data={[sensorDataToChartData(sensorData, SensorType.VISIBLE)]}
             />
           </CardContent>
         </Card>
@@ -197,28 +179,16 @@ const LightDashboard: React.FC = () => {
               Infared History
             </Typography>
             <Divider />
-            <HistoryChartNew
+            <HistoryChart
               units={SensorUnit.UNITS}
               type={SensorType.IR}
-              data={[
-                [
-                  { timestamp: new Date("June 12, 2015"), value: 13 },
-                  { timestamp: new Date("June 15, 2015"), value: 20 },
-                  { timestamp: new Date("June 18, 2015"), value: 17 },
-                  { timestamp: new Date("June 21, 2015"), value: 25 },
-                  { timestamp: new Date("June 23, 2015"), value: 15 },
-                  { timestamp: new Date("June 25, 2015"), value: 30 },
-                  { timestamp: new Date("June 28, 2015"), value: 19 },
-                  { timestamp: new Date("June 30, 2015"), value: 14 }
-                ]
-              ]}
+              data={[sensorDataToChartData(sensorData, SensorType.IR)]}
             />
           </CardContent>
         </Card>
       </Fragment>
     );
   };
-
   return (
     <div className="moisture-dashboard column-container">
       <Grid

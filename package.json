@@ -13,7 +13,8 @@
     "build:client": "cd cloudgarden-pwa && yarn && yarn build",
     "clean": "npm-run-all clean:server",
     "clean:server": "rimraf node_modules",
-    "clean:client": "rimraf cloudgarden-pwa/node_modules && rimraf cloudgarden-pwa/build"
+    "clean:client": "rimraf cloudgarden-pwa/node_modules && rimraf cloudgarden-pwa/build",
+    "client": "npm run clean:client && npm run build:client"
   },
   "dependencies": {
     "azure-iot-device": "^1.12.2",
@@ -21,6 +22,7 @@
     "azure-iot-device-mqtt": "^1.11.2",
     "body-parser": "^1.19.0",
     "chalk": "^3.0.0",
+    "child_process": "^1.0.2",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
@@ -31,6 +33,7 @@
     "http-errors": "~1.6.3",
     "johnny-five": "^1.4.0",
     "morgan": "~1.9.1",
+    "minimist": ">=1.2.3",
     "nodemon": "^2.0.2",
     "npm-run-all": "^4.1.5",
     "open": "^7.0.0",

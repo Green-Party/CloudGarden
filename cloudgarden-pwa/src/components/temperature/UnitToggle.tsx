@@ -1,8 +1,10 @@
+/**
+ * Creation Date: February 7, 2020
+ * Author: Gillian Pierce
+ * A component for toggling units, specifically for use with the Temperature dashboard
+ */
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
-import FormatAlignCenterIcon from "@material-ui/icons/FormatAlignCenter";
-import Grid from "@material-ui/core/Grid";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 

@@ -22,11 +22,11 @@ const Light = require("./light");
 let readings = {
   visible: 0,
   ir: 0,
-  uvIdx: 0,
-  waterLevel: 0,
-  temp: [0, 0, 0],
-  soilHumidity: [0, 0, 0],
-  pumpsEnabled: false
+  uv_index: 0,
+  water_level: 0,
+  temperature: [-40, -40, -40],
+  soil_moisture: [0, 0, 0],
+  pump_senabled: false
 };
 
 let controls = {
@@ -35,12 +35,12 @@ let controls = {
 };
 
 const interval = 5000;
-const pumpTime = 1000;
+const pumpTime = 2000;
 
 function initialize(state) {
   let board = new five.Board();
 
-  Object.assign(state, readings);
+  state.sensorData = readings;
 
   board.on("ready", async function() {
     // light sensor
@@ -56,7 +56,7 @@ function initialize(state) {
               if (!err) {
                 readings.visible = si1145.device.parameters[0].value;
                 readings.ir = si1145.device.parameters[1].value;
-                readings.uvIdx = si1145.device.parameters[2].value;
+                readings.uv_index = si1145.device.parameters[2].value;
                 console.log(`Visible: ${si1145.device.parameters[0].value}`);
                 console.log(`IR: ${si1145.device.parameters[1].value}`);
                 console.log(`UVIndex: ${si1145.device.parameters[2].value}`);
@@ -85,27 +85,27 @@ function initialize(state) {
       enabled: false
     });
 
-    const waterLevelSwitch = new WaterLevelSwitch({
+    const _waterLevelSwitch = new WaterLevelSwitch({
       slave: controls.pumps
     });
 
     // grow light - controlled through relay at pin 6
     controls.light = new Light({
-      pin: 6,
+      pin: 47,
       type: "NO"
     });
 
     configureLightTimeInterval();
 
     setInterval(() => {
-      readings.temp = thermoSensors.getReadings();
-      console.log(`Temperature: ${readings.temp}`);
-      readings.soilHumidity = soilHumiditySensors.getReadings();
-      console.log(`Soil humidity: ${readings.soilHumidity}`);
-      readings.waterLevel = waterLevelRuler.getReading();
-      console.log(`Water level: ${readings.waterLevel}`);
-      readings.pumpsEnabled = controls.pumps.isEnabled();
-      console.log(`Pumps enabled: ${readings.pumpsEnabled}`);
+      readings.temperature = thermoSensors.getReadings();
+      console.log(`Temperature: ${readings.temperature}`);
+      readings.soil_moisture = soilHumiditySensors.getReadings();
+      console.log(`Soil humidity: ${readings.soil_moisture}`);
+      readings.water_level = waterLevelRuler.getReading();
+      console.log(`Water level: ${readings.water_level}`);
+      readings.pumps_enabled = controls.pumps.isEnabled();
+      console.log(`Pumps enabled: ${readings.pumps_enabled}`);
     }, interval);
   });
 }

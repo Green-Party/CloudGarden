@@ -1,68 +1,96 @@
 /**
- * Creation Date: January 30, 2020
+ * Creation Date: February 28, 2020
  * Author: Gillian Pierce
- * A template component that displays the passed in percent value on a donut graph
+ * A template component that displays passed in time series data as a percent chart
  */
+import React, { useState, useEffect } from "react";
+import { VictoryPie } from "victory";
+import { Typography, useTheme } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 
-import React from "react";
-type PercentChartProps = { percent: number };
-//change the color of the graph based on sensor level
-enum StatusColour {
-  EXCELLENT = "#578C48",
-  OK = "#FFC93C",
-  POOR = "#FF6F3C"
+interface Data {
+  value: number;
+  range: { low: number; high: number; ideal: number };
+  units: string;
 }
-const PercentChart: React.FC<PercentChartProps> = ({
-  percent
-}: PercentChartProps) => {
-  const percentString = `${percent} ${100 - percent}`;
-  const statusColour =
-    percent <= 33
-      ? StatusColour.POOR
-      : percent <= 66
-      ? StatusColour.OK
-      : StatusColour.EXCELLENT;
-  return (
-    <svg width="100%" height="100%" viewBox="0 0 42 42" className="donut">
-      <circle
-        className="donut-hole"
-        cx="21"
-        cy="21"
-        r="15.91549430918954"
-        fill="#fff"
-      ></circle>
-      <circle
-        className="donut-ring"
-        cx="21"
-        cy="21"
-        r="15.91549430918954"
-        fill="transparent"
-        stroke="#d2d3d4"
-        strokeWidth="3"
-      ></circle>
 
-      <circle
-        className="donut-segment"
-        cx="21"
-        cy="21"
-        r="15.91549430918954"
-        fill="transparent"
-        stroke={statusColour}
-        strokeWidth="3"
-        strokeDasharray={percentString}
-        strokeDashoffset="25"
-        strokeLinecap="round"
-      ></circle>
-      <text
-        x="50%"
-        y="50%"
-        textAnchor="middle"
-        alignmentBaseline="middle"
-        dy=".1em"
-      >
-        {percent}
-      </text>
-    </svg>
+const useStyles = makeStyles({
+  chartLabel: {
+    position: "absolute",
+    top: "52%",
+    left: "50%",
+    zIndex: 2,
+    marginTop: "-2rem",
+    marginLeft: "-2.3rem"
+  },
+  container: {
+    position: "relative"
+  }
+});
+
+const PercentChart: React.FC<Data> = ({ value, range, units }: Data) => {
+  const styles = useStyles();
+  const theme = useTheme();
+
+  let percent = Math.round(
+    ((value - range.low) / (range.high - range.low)) * 100
+  );
+
+  let idealPercent = Math.round(
+    ((range.ideal - range.low) / (range.high - range.low)) * 100
+  );
+
+  function getColor() {
+    if (Math.abs(percent - idealPercent) <= 10) {
+      return theme.palette.primary.main;
+    } else if (Math.abs(percent - idealPercent) <= 25) {
+      return theme.palette.secondary.main;
+    }
+    return theme.palette.secondary.dark;
+  }
+
+  function getData(percent: number) {
+    return [
+      { x: 1, y: percent },
+      { x: 2, y: 100 - percent }
+    ];
+  }
+
+  const [angle, setAngle] = useState(0);
+
+  useEffect(() => {
+    setTimeout(() => setAngle(360), 1000);
+  }, []);
+
+  return (
+    <div>
+      <div className={styles.container}>
+        <VictoryPie
+          data={getData(percent)}
+          innerRadius={120}
+          style={{
+            data: {
+              fill: ({ datum }) => {
+                const color = getColor();
+                return datum.x === 1 ? color : "grey";
+              }
+            }
+          }}
+          animate={{
+            duration: 1000
+          }}
+          labels={() => null}
+          endAngle={angle}
+        />
+        <Typography variant="h6" className={styles.chartLabel}>
+          {value.toPrecision(4)}
+        </Typography>
+      </div>
+      <Typography variant="subtitle1">
+        Ideal: {Math.round(range.ideal)}
+        {units}
+      </Typography>
+    </div>
   );
 };
 

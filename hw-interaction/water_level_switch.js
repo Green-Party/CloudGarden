@@ -7,6 +7,7 @@
  */
 
 const five = require("johnny-five");
+const Notification = require("./Azure/notification");
 
 module.exports = class WaterLevelSwitch {
   /**
@@ -21,6 +22,7 @@ module.exports = class WaterLevelSwitch {
     let pin = opts.hasOwnProperty("pin") ? opts.pin : DEFAULT_PIN;
     let type = opts.hasOwnProperty("type") ? opts.type : DEFAULT_TYPE;
 
+    this.canSendNotification = true;
     this.slave = opts.hasOwnProperty("slave") ? opts.slave : null;
     this.sensor = new five.Switch({
       pin: pin,
@@ -39,6 +41,18 @@ module.exports = class WaterLevelSwitch {
     if (this.slave) {
       this.slave.turnOff();
       this.slave.disable();
+
+      const payload = {
+        title: "Water Level Warning!",
+        body:
+          "Water resevoir levels have fallen below usable levels. Please refill."
+      };
+      if (this.canSendNotification) {
+        Notification.sendNotification(payload);
+        this.canSendNotification = false;
+      }
+    } else {
+      console.log("Can't notify, no subscription yet.");
     }
   }
 
@@ -46,6 +60,7 @@ module.exports = class WaterLevelSwitch {
     console.log("Switch is closed");
     if (this.slave) {
       this.slave.enable();
+      this.canSendNotification = true;
     }
   }
 };

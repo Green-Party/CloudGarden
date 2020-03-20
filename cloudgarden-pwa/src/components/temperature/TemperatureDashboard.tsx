@@ -12,14 +12,17 @@ import {
   Divider,
   Typography,
   GridListTile,
-  GridList
+  GridList,
+  useMediaQuery
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import PercentChartNew from "../charts/PercentChartNew";
-import HistoryChartNew from "../charts/HistoryChartNew";
+import PercentChart from "../charts/PercentChart";
+import HistoryChart from "../charts/HistoryChart";
 import { SensorUnit, SensorType, SensorRanges } from "../charts/Units";
+import { useSensorDataState } from "../../contexts";
+import { sensorDataToChartData } from "../dashboardUtils";
 
 const useStyles = makeStyles({
   button: {
@@ -71,14 +74,29 @@ const useStyles = makeStyles({
   }
 });
 
-const TempDashboard: React.FC = () => {
+interface TemperatureChartProps {
+  temperature: number;
+}
+
+const TemperatureDashboard: React.FC = () => {
   const styles = useStyles();
-  const TempChart: React.FC = () => {
+  const { sensorData } = useSensorDataState();
+  const theme = useTheme();
+
+  const smallWidth = useMediaQuery(theme.breakpoints.down("xs"));
+
+  const temperature1 = sensorData[sensorData.length - 1].temperature[0];
+  const temperature2 = sensorData[sensorData.length - 1].temperature[1];
+  const temperature3 = sensorData[sensorData.length - 1].temperature[2];
+
+  const TemperatureChart: React.FC<TemperatureChartProps> = ({
+    temperature
+  }: TemperatureChartProps) => {
     const [units, setUnits] = useState<SensorUnit>(SensorUnit.CELSIUS);
-    const [temp, setTemp] = useState<number>(20);
+    const [temp, setTemp] = useState<number>(temperature);
 
     const handleUnits = (
-      event: React.MouseEvent<HTMLElement>,
+      _event: React.MouseEvent<HTMLElement>,
       newUnits: SensorUnit
     ) => {
       console.log(units, newUnits);
@@ -101,12 +119,12 @@ const TempDashboard: React.FC = () => {
             Temperature
           </Typography>
           <Divider />
-          <PercentChartNew
+          <PercentChart
             value={temp}
             range={{
-              low: SensorRanges[SensorType.TEMP][units].low,
-              high: SensorRanges[SensorType.TEMP][units].high,
-              ideal: SensorRanges[SensorType.TEMP][units].ideal
+              low: SensorRanges[SensorType.TEMPERATURE][units].low,
+              high: SensorRanges[SensorType.TEMPERATURE][units].high,
+              ideal: SensorRanges[SensorType.TEMPERATURE][units].ideal
             }}
             units={units === SensorUnit.CELSIUS ? "℃" : "℉"}
           />
@@ -139,20 +157,13 @@ const TempDashboard: React.FC = () => {
             History
           </Typography>
           <Divider />
-          <HistoryChartNew
+          <HistoryChart
             units={SensorUnit.UNITS}
-            type={SensorType.TEMP}
+            type={SensorType.TEMPERATURE}
             data={[
-              [
-                { timestamp: new Date("June 12, 2015"), value: 10 },
-                { timestamp: new Date("June 15, 2015"), value: 15 },
-                { timestamp: new Date("June 18, 2015"), value: 10 },
-                { timestamp: new Date("June 21, 2015"), value: 20 },
-                { timestamp: new Date("June 23, 2015"), value: 30 },
-                { timestamp: new Date("June 25, 2015"), value: 25 },
-                { timestamp: new Date("June 28, 2015"), value: 18 },
-                { timestamp: new Date("June 30, 2015"), value: 15 }
-              ]
+              sensorDataToChartData(sensorData, SensorType.TEMPERATURE, 0),
+              sensorDataToChartData(sensorData, SensorType.TEMPERATURE, 1),
+              sensorDataToChartData(sensorData, SensorType.TEMPERATURE, 2)
             ]}
           />
         </CardContent>
@@ -162,8 +173,14 @@ const TempDashboard: React.FC = () => {
 
   return (
     <GridList cellHeight="auto" className={styles.gridList} cols={3}>
-      <GridListTile cols={2}>
-        <TempChart />
+      <GridListTile cols={smallWidth ? 3 : 1}>
+        <TemperatureChart temperature={temperature1} />
+      </GridListTile>
+      <GridListTile cols={smallWidth ? 3 : 1}>
+        <TemperatureChart temperature={temperature2} />
+      </GridListTile>
+      <GridListTile cols={smallWidth ? 3 : 1}>
+        <TemperatureChart temperature={temperature3} />
       </GridListTile>
       <GridListTile cols={3}>
         <HistoryGraph />
@@ -172,4 +189,4 @@ const TempDashboard: React.FC = () => {
   );
 };
 
-export default TempDashboard;
+export default TemperatureDashboard;

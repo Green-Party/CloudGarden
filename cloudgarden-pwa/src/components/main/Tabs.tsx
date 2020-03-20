@@ -19,7 +19,7 @@ const Tabs: React.FC<TabsProps> = ({ tabValues }: TabsProps) => {
   let location = useLocation();
   const initialValue = tabValues.map(t => t.target).indexOf(location.pathname);
   const [value, setValue] = React.useState(initialValue);
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
   return (

@@ -1,10 +1,16 @@
+/**
+ * Creation Date: February 28, 2020
+ * Author: Gillian Pierce
+ * Unit types for TypeScript
+ */
 export enum SensorType {
-  TEMP = "TEMP",
-  MOISTURE = "MOISTURE",
-  UVINDEX = "UVINDEX",
+  TEMPERATURE = "TEMPERATURE",
+  SOIL_MOISTURE = "SOIL_MOISTURE",
+  UV_INDEX = "UV_INDEX",
   IR = "IR",
   VISIBLE = "VISIBLE",
-  WATER = "WATER"
+  WATER_LEVEL = "WATER_LEVEL",
+  PUMPS_ENABLED = "PUMPS_ENABLED"
 }
 
 export enum SensorUnit {
@@ -18,7 +24,7 @@ interface SensorRangesType {
 }
 
 export const SensorRanges: SensorRangesType = {
-  TEMP: {
+  TEMPERATURE: {
     CELSIUS: {
       low: 0,
       high: 100,
@@ -30,12 +36,12 @@ export const SensorRanges: SensorRangesType = {
       ideal: 122
     }
   },
-  MOISTURE: {
-    low: 1,
+  SOIL_MOISTURE: {
+    low: 0,
     high: 10,
     ideal: 6.5
   },
-  UVINDEX: {
+  UV_INDEX: {
     low: 0,
     high: 11,
     ideal: 4
@@ -50,7 +56,7 @@ export const SensorRanges: SensorRangesType = {
     high: 800,
     ideal: 530
   },
-  WATER: {
+  WATER_LEVEL: {
     low: 0,
     high: 4400,
     ideal: 4400

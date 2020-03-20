@@ -9,13 +9,33 @@ export type SensorState = {
 };
 
 export type SensorData = {
-  _rid: string;
+  [identifier: string]: any;
+  id: string;
   visible: number;
   ir: number;
-  uvIdx: number;
-  waterLevel: number;
-  temp: number[];
-  soilHumidity: number[];
-  pumpsEnabled: boolean;
-  _ts: Date;
+  uv_index: number;
+  water_level: number;
+  temperature: number[];
+  soil_moisture: number[];
+  pumps_enabled: boolean;
+  _ts: number;
+};
+
+export type NotificationState = {
+  notifications: Notification[];
+};
+
+export type Notification = {
+  [identifier: string]: any;
+  deviceId: string;
+  id: string;
+  title: string;
+  body: string;
+  deleted?: boolean;
+  _ts: number;
+};
+
+export type DataState = {
+  sensorData: SensorData[];
+  notifications: Notification[];
 };

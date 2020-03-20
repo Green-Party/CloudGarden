@@ -9,16 +9,15 @@ import "./Dashboard.css";
 import Tabs from "./components/main/Tabs";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import MoistureDashboard from "./components/moisture/MoistureDashboard";
-import PlantSpecific from "./components/moisture/PlantSpecific";
 import LightDashboard from "./components/light/LightDashboard";
-import TempDashboard from "./components/temp/TempDashboard";
-import { Grid, Typography } from "@material-ui/core";
+import TemperatureDashboard from "./components/temperature/TemperatureDashboard";
+import { Grid, Typography, Box } from "@material-ui/core";
+import WaterLevelDashboard from "./components/waterLevel/WaterLevelDashboard";
 
 const Home: React.FC = () => {
   const match = useRouteMatch();
   //Top layer is used to select which sensor data to display
   //Routes point to the various dashboard components
-  //(only moisture is implemented currently)
   return (
     <Grid
       container
@@ -38,7 +37,7 @@ const Home: React.FC = () => {
           ]}
         />
       </Grid>
-      <Grid item>
+      <Grid item style={{ width: "100%" }}>
         <Switch>
           <Route exact path={`${match.path}/moisture`}>
             <MoistureDashboard />
@@ -47,13 +46,11 @@ const Home: React.FC = () => {
             <LightDashboard />
           </Route>
           <Route exact path={`${match.path}/temp`}>
-            <TempDashboard />
+            <TemperatureDashboard />
           </Route>
-          <Route
-            exact
-            path={`${match.path}/:sensorId/:plantId`}
-            component={PlantSpecific}
-          />
+          <Route exact path={`${match.path}/water`}>
+            <WaterLevelDashboard />
+          </Route>
           <Route path={match.path}>
             <div className="row-container">
               <Typography variant="h3" color="secondary">

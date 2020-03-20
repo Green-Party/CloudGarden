@@ -9,13 +9,16 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  Badge
 } from "@material-ui/core";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import TuneIcon from "@material-ui/icons/Tune";
+import TextFieldsIcon from "@material-ui/icons/TextFields";
 import { makeStyles } from "@material-ui/core/styles";
 import { NavLink } from "react-router-dom";
+import { useSensorDataState } from "../../contexts/SensorContext";
 
 const useStyles = makeStyles({
   active: {
@@ -62,6 +65,7 @@ const NavDrawer: React.FC<NavDrawerProps> = ({
   onCloseFunc
 }: NavDrawerProps) => {
   const styles = useStyles();
+  const { notifications } = useSensorDataState();
   return (
     <Drawer open={open} onClose={() => onCloseFunc(false)}>
       <List className={styles.inactive}>
@@ -79,8 +83,18 @@ const NavDrawer: React.FC<NavDrawerProps> = ({
         />
         <NavListItem
           to="/notifications"
-          icon={<NotificationsIcon />}
+          icon={
+            <Badge badgeContent={notifications.length} color="error">
+              <NotificationsIcon />
+            </Badge>
+          }
           text="Notifications"
+          activeClassName={styles.active}
+        />
+        <NavListItem
+          to="/input"
+          icon={<TextFieldsIcon />}
+          text="UserInput"
           activeClassName={styles.active}
         />
       </List>

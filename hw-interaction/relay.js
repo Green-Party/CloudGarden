@@ -55,11 +55,11 @@ module.exports = class Relay {
     switch (this.control.type) {
       case "NO":
         this.control.close();
-        returnState = !this.isOn();
+        returnState = this.isOn();
         break;
       case "NC":
         this.control.open();
-        returnState = !this.isOn();
+        returnState = this.isOn();
         break;
       default:
         console.log(`Unsupported relay type: ${this.control.type}`);
