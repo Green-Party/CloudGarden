@@ -107,8 +107,8 @@ io.on("connection", socket => {
     console.log(`Moisture threshold ${isOn}: ${threshold}`);
     io.emit("moistureThresholdUpdated", isOn);
   });
-  socket.on("updateLight", ({ isOn, timeOfDay, duration }) => {
-    console.log(`Update Light ${isOn}: ${timeOfDay} - ${duration}`);
+  socket.on("updateLight", ({ isOn, timeOfDayStart, timeOfDayEnd }) => {
+    console.log(`Update Light ${isOn}: ${timeOfDayStart} - ${timeOfDayEnd}`);
     io.emit("lightUpdated", isOn);
   });
   socket.on("disconnect", () => console.log("Client disconnected"));
