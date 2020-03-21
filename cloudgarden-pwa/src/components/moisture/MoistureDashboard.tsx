@@ -93,43 +93,6 @@ const MoistureDashboard: React.FC = () => {
   const soilMoisture2 = sensorData[sensorData.length - 1].soil_moisture[1];
   const soilMoisture3 = sensorData[sensorData.length - 1].soil_moisture[2];
 
-  const PlantButtons: React.FC = () => {
-    return (
-      <Fragment>
-        <Card className={styles.card}>
-          <CardMedia className={styles.media} component={Aloe} />
-          <CardContent className={styles.cardContent}>
-            <Typography variant={"overline"}>Soil Moisture Data</Typography>
-            <Typography variant={"h6"} gutterBottom>
-              Plant 1
-            </Typography>
-            <Button className={styles.button}>View Details</Button>
-          </CardContent>
-        </Card>
-        <Card className={styles.card}>
-          <CardMedia className={styles.media} component={Cactus} />
-          <CardContent className={styles.cardContent}>
-            <Typography variant={"overline"}>Soil Moisture Data</Typography>
-            <Typography variant={"h6"} gutterBottom>
-              Plant 2
-            </Typography>
-            <Button className={styles.button}>View Details</Button>
-          </CardContent>
-        </Card>
-        <Card className={styles.card}>
-          <CardMedia className={styles.media} component={Snake} />
-          <CardContent className={styles.cardContent}>
-            <Typography variant={"overline"}>Soil Moisture Data</Typography>
-            <Typography variant={"h6"} gutterBottom>
-              Plant 3
-            </Typography>
-            <Button className={styles.button}>View Details</Button>
-          </CardContent>
-        </Card>
-      </Fragment>
-    );
-  };
-
   const MoisturePercentage: React.FC<moistureChartProps> = ({
     soil_moisture
   }: moistureChartProps) => {
@@ -191,9 +154,6 @@ const MoistureDashboard: React.FC = () => {
       </GridListTile>
       <GridListTile cols={3}>
         <HistoryGraph />
-      </GridListTile>
-      <GridListTile cols={3}>
-        <PlantButtons />
       </GridListTile>
     </GridList>
   );
