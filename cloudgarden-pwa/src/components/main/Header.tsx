@@ -14,7 +14,6 @@ import {
   Toolbar
 } from "@material-ui/core";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
-
 interface HeaderProps {
   onMenuClick: Function;
 }
@@ -27,6 +26,9 @@ const useStyles = makeStyles(theme =>
       color: theme.palette.primary.dark,
       padding: theme.spacing(1),
       "& a": { textDecoration: "none" }
+    },
+    logo: {
+      marginLeft: theme.spacing(3)
     }
   })
 );

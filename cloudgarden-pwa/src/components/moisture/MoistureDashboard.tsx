@@ -4,17 +4,12 @@
  * A dashboard component for displaying moisture sensor data
  */
 
-import React, { Fragment } from "react";
+import React from "react";
 import "../../Dashboard.css";
-import { ReactComponent as Cactus } from "../../illustrations/cactus.svg";
-import { ReactComponent as Aloe } from "../../illustrations/aloe_vera.svg";
-import { ReactComponent as Snake } from "../../illustrations/snake_plant.svg";
 import {
   Card,
   CardContent,
   Divider,
-  Button,
-  CardMedia,
   Typography,
   GridListTile,
   GridList,

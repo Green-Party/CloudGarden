@@ -11,7 +11,7 @@ import { Switch, Route, useRouteMatch } from "react-router-dom";
 import MoistureDashboard from "./components/moisture/MoistureDashboard";
 import LightDashboard from "./components/light/LightDashboard";
 import TemperatureDashboard from "./components/temperature/TemperatureDashboard";
-import { Grid, Typography, Box } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import WaterLevelDashboard from "./components/waterLevel/WaterLevelDashboard";
 
 const Home: React.FC = () => {
