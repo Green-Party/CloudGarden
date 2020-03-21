@@ -270,7 +270,7 @@ const ControlView: React.FC = () => {
                 )}
                 options={videoOptions}
                 overlayOptions={videoOverlayOptions}
-                videoUrl={`ws://localhost:8082/`} //${document.location.hostname}
+                videoUrl={`ws://${document.location.hostname}:8082/`}
               />
             </Grid>
           </CardContent>

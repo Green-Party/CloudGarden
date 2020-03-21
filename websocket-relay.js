@@ -51,6 +51,10 @@ socketServer.on("connection", (socket, upgradeReq) => {
       "Disconnected WebSocket (" + socketServer.connectionCount + " total)"
     );
   });
+  socket.on("error", (code, message) => {
+    socketServer.connectionCount--;
+    console.log("error");
+  });
 });
 socketServer.broadcast = data => {
   socketServer.clients.forEach(client => {
