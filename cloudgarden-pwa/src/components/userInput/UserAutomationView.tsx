@@ -59,11 +59,15 @@ const UserAutomationView: React.FC = () => {
   const styles = useStyles(theme);
   const [currentSocket, setCurrentSocket]: any = useState(null);
 
-  const onClickLightUpdate = (selectedNumber: number, selectedDate: Date) => {
+  const onClickLightUpdate = (
+    _selectedNumber: number,
+    selectedStartTime: Date,
+    selectedEndTime: Date
+  ) => {
     currentSocket.emit("updateLight", {
       isOn: true,
-      timeOfDay: selectedDate,
-      duration: selectedNumber
+      timeOfDayStart: selectedStartTime,
+      timeOfDayEnd: selectedEndTime
     });
   };
   const turnOffLight = () => {
@@ -75,7 +79,8 @@ const UserAutomationView: React.FC = () => {
   };
   const onClickMoistureUpdate = (
     selectedNumber: number,
-    _selectedDate: any
+    _selectedStartTime: Date,
+    _selectedEndTime: Date
   ) => {
     currentSocket.emit("updateMoistureThreshold", {
       isOn: true,

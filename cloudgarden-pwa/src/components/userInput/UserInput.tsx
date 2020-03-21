@@ -103,12 +103,16 @@ const UserInput: React.FC<UserInputProps> = props => {
   const theme = useTheme();
   const styles = useStyles(theme);
   const [inputState, setInputState]: [boolean, Function] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedStartTime, setSelectedStartTime] = useState<Date | null>(null);
+  const [selectedEndTime, setSelectedEndTime] = useState<Date | null>(null);
   const [selectedNumber, setSelectedNumber] = useState<string>("");
   const { onSubmit } = props;
 
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
+  const handleStartTimeChange = (date: Date | null) => {
+    setSelectedStartTime(date);
+  };
+  const handleEndTimeChange = (date: Date | null) => {
+    setSelectedEndTime(date);
   };
   const handleNumberChange = (number: string) => {
     setSelectedNumber(number);
@@ -161,36 +165,35 @@ const UserInput: React.FC<UserInputProps> = props => {
                   margin="normal"
                   id="time-picker"
                   mask="__:__ _M"
-                  value={selectedDate}
-                  onChange={handleDateChange}
+                  value={selectedStartTime}
+                  onChange={handleStartTimeChange}
                   KeyboardButtonProps={{
-                    "aria-label": "change time"
+                    "aria-label": "change start time"
+                  }}
+                  className={styles.helperText}
+                  placeholder="8:00 AM"
+                />
+                <InputLabel
+                  className={
+                    !props.disabled ? styles.disabled : styles.helperText
+                  }
+                >
+                  Turn off light at
+                </InputLabel>
+                <KeyboardTimePicker
+                  disabled={!props.disabled}
+                  margin="normal"
+                  id="time-picker"
+                  mask="__:__ _M"
+                  value={selectedEndTime}
+                  onChange={handleEndTimeChange}
+                  KeyboardButtonProps={{
+                    "aria-label": "change end time"
                   }}
                   className={styles.helperText}
                   placeholder="8:00 AM"
                 />
               </MuiPickersUtilsProvider>
-              <FormControl
-                className={styles.formControl}
-                disabled={!props.disabled}
-              >
-                <InputLabel classes={{ root: styles.helperText }}>
-                  For
-                </InputLabel>
-                <Select
-                  autoWidth
-                  id="light-select"
-                  value={selectedNumber}
-                  onChange={e => {
-                    handleNumberChange(e.target.value as string);
-                  }}
-                >
-                  {_.range(0, 25, 0.5).map((i: number) => (
-                    <MenuItem value={i}>{i} hours</MenuItem>
-                  ))}
-                  }
-                </Select>
-              </FormControl>
             </>
           )}
         </CardContent>
@@ -198,12 +201,15 @@ const UserInput: React.FC<UserInputProps> = props => {
           <Button
             disabled={
               !props.disabled ||
-              selectedNumber == "" ||
-              (selectedDate == null && props.type == "LIGHT")
+              (selectedNumber == "" && props.type == "MOISTURE") ||
+              ((selectedStartTime == null || selectedEndTime == null) &&
+                props.type == "LIGHT")
             }
             id="submit-button"
             className={styles.button}
-            onClick={() => onSubmit(+selectedNumber, selectedDate)}
+            onClick={() =>
+              onSubmit(+selectedNumber, selectedStartTime, selectedEndTime)
+            }
           >
             Submit Update
           </Button>
