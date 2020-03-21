@@ -1,7 +1,16 @@
 /**
  * Creation Date: February 10, 2020
  * Author: Logan McDonald
- * Tests water level switch control of all water pumps
+ * Sets up a button to control pumps
+ * Actions to button presses are ordered as follows:
+ *
+ * Pump 0 on
+ * Pump 0 off
+ * Pump 1 on
+ * Pump 1 off
+ * Pump 2 on
+ * Pump 2 off
+ * Repeat
  */
 
 const testHelper = require("./test_helper");
@@ -10,6 +19,7 @@ const WaterLevelSwitch = require("../water_level_switch");
 
 var pumps;
 var counter = 0;
+var pumpOff = true;
 
 function pumpSwitchControlTest() {
   pumps = new Pumps({
@@ -24,18 +34,23 @@ function pumpSwitchControlTest() {
 }
 
 function pressCallback() {
-  if (counter % 2 == 0) {
-    pumps.turnOn();
+  if (pumpOff) {
+    pumps.turnOn(counter);
+    pumpOff = false;
   } else {
-    for (let pump of pumps.controls) {
-      pump.turnOn();
+    pumps.turnOff(counter);
+    pumpOff = true;
+  }
+  if (pumpOff) {
+    counter++;
+    if (counter > 2) {
+      counter = 0;
     }
   }
-  counter++;
 }
 
 function releaseCallback() {
-  pumps.turnOff();
+  console.log("Release");
 }
 
 testHelper.runTest(pumpSwitchControlTest);
