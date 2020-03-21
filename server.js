@@ -112,9 +112,9 @@ io.on("connection", socket => {
     Sensors.configureSoilMoistureAutomation(isOn, threshold);
     io.emit("moistureThresholdUpdated", isOn);
   });
-  socket.on("updateLight", ({ isOn, startTime, endTime }) => {
-    console.log(`Update Light ${isOn}: ${startTime} - ${endTime}`);
-    Sensors.configureLightAutomation(isOn, startTime, endTime);
+  socket.on("updateLight", ({ isOn, timeOfDayStart, timeOfDayEnd }) => {
+    console.log(`Update Light ${isOn}: ${timeOfDayStart} - ${timeOfDayEnd}`);
+    Sensors.configureLightAutomation(isOn, timeOfDayStart, timeOfDayEnd);
     io.emit("lightUpdated", isOn);
   });
   socket.on("disconnect", () => console.log("Client disconnected"));
