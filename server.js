@@ -89,6 +89,10 @@ app.use((err, req, res, _next) => {
   res.status(err.status || 500).send("error");
 });
 
+// Setup sensors
+let sensorData = {};
+Sensors.initialize(sensorData);
+
 // Setup Sockets
 
 io.on("connection", socket => {
@@ -105,18 +109,16 @@ io.on("connection", socket => {
   });
   socket.on("updateMoistureThreshold", ({ isOn, threshold }) => {
     console.log(`Moisture threshold ${isOn}: ${threshold}`);
+    Sensors.configureSoilMoistureAutomation(isOn, threshold);
     io.emit("moistureThresholdUpdated", isOn);
   });
-  socket.on("updateLight", ({ isOn, timeOfDay, duration }) => {
-    console.log(`Update Light ${isOn}: ${timeOfDay} - ${duration}`);
+  socket.on("updateLight", ({ isOn, startTime, endTime }) => {
+    console.log(`Update Light ${isOn}: ${startTime} - ${endTime}`);
+    Sensors.configureLightAutomation(isOn, startTime, endTime);
     io.emit("lightUpdated", isOn);
   });
   socket.on("disconnect", () => console.log("Client disconnected"));
 });
-
-// Setup sensors
-let sensorData = {};
-Sensors.initialize(sensorData);
 
 // Setup Azure
 Azure.setupClient(process.env.DEVICE_CONNECTION_STRING, sensorData);

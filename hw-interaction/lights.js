@@ -12,7 +12,7 @@ module.exports = class Lights {
    * @param {*} options pins, type
    */
   constructor(options) {
-    const DEFAULT_PINS = [6];
+    const DEFAULT_PINS = [47];
     const DEFAULT_TYPE = "NO";
 
     let opts = options || {};

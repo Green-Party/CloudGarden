@@ -5,7 +5,8 @@
  */
 
 module.exports = {
-  sleep
+  sleep,
+  setExactInterval
 };
 
 /**
@@ -22,14 +23,16 @@ function sleep(millis) {
  * @param {*} callback
  */
 function setExactInterval(interval, callback) {
-  var expected = Date.now() + interval;
-  setTimeout(step, interval);
+  let timer = { id: null };
+  let expected = Date.now() + interval;
+  timer.id = setTimeout(step, interval);
   function step() {
     var dt = Date.now() - expected;
     if (dt > interval) {
     }
     callback();
     expected += interval;
-    setTimeout(step, Math.max(0, interval - dt));
+    timer.id = setTimeout(step, Math.max(0, interval - dt));
   }
+  return timer;
 }
