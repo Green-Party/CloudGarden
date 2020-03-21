@@ -38,6 +38,13 @@
       "name": "Relay Test",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}\\hw-interaction\\test\\relay_test.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Switch Control Test",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\hw-interaction\\test\\pump_switch_control_test.js"
     }
   ]
 }

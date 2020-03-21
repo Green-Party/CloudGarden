@@ -46,7 +46,7 @@ module.exports = class Pumps {
 
   turnOff(idx) {
     if (this.enabled) {
-      if (!idx) {
+      if (idx == null) {
         this.controls.map(pump => {
           pump.turnOff();
         });
