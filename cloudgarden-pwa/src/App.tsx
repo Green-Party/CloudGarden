@@ -20,7 +20,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "./styles/Theme";
 import NavDrawer from "./components/main/NavDrawer";
 import { SensorDataProvider } from "./contexts";
-import { TestUserInputView } from "./components/userInput";
+import { UserAutomationView } from "./components/userInput";
 
 const Home = lazy(() => import("./Home"));
 
@@ -48,7 +48,7 @@ const App: React.FC = () => {
                   <NotificationView />
                 </Route>
                 <Route path="/input">
-                  <TestUserInputView />
+                  <UserAutomationView />
                 </Route>
               </Switch>
               <NavDrawer open={open} onCloseFunc={setOpen} />
