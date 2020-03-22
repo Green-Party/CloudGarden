@@ -13,7 +13,7 @@ import {
   GridListTile
 } from "@material-ui/core";
 import { makeStyles, createStyles, useTheme } from "@material-ui/core/styles";
-import { SensorType, SensorUnit } from "./Units";
+import { SensorType, SensorUnit, SensorRanges } from "./Units";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
 type DataPoints = { value: number; timestamp: Date }[][];
@@ -82,7 +82,6 @@ const HistoryChart: React.FC<Data> = ({ type, units, data }: Data) => {
 
   const filterData = (raw_data: DataPoints) => {
     const idx = filters.indexOf(TODAYS_DATA.toLowerCase());
-    debugger;
     if (idx > -1) {
       raw_data = raw_data.map(row => {
         return row.filter(datapoint => {
@@ -171,6 +170,18 @@ const HistoryChart: React.FC<Data> = ({ type, units, data }: Data) => {
 
   data = filterData(data);
 
+  const getDateStart = () => {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    return start;
+  };
+
+  const getDateEnd = () => {
+    const start = new Date();
+    start.setHours(23, 59, 59, 999);
+    return start;
+  };
+
   return (
     <div>
       <FilterChipsArray data={data} />
@@ -201,8 +212,16 @@ const HistoryChart: React.FC<Data> = ({ type, units, data }: Data) => {
           label="Time"
           standalone={false}
           domain={[
-            new Date(Math.min(...data.flat().map(v => v.timestamp.getTime()))),
-            new Date(Math.max(...data.flat().map(v => v.timestamp.getTime())))
+            filters.includes("todays data")
+              ? getDateStart()
+              : new Date(
+                  Math.min(...data.flat().map(v => v.timestamp.getTime()))
+                ),
+            filters.includes("todays data")
+              ? getDateEnd()
+              : new Date(
+                  Math.max(...data.flat().map(v => v.timestamp.getTime()))
+                )
           ]}
         />
 
@@ -212,7 +231,12 @@ const HistoryChart: React.FC<Data> = ({ type, units, data }: Data) => {
         */}
         <VictoryAxis
           dependentAxis
-          domain={[0, Math.max(...data.flat().map(v => v.value))]}
+          domain={[
+            0,
+            data.flat().length > 0
+              ? Math.max(...data.flat().map(v => v.value))
+              : SensorRanges[type].high
+          ]}
           orientation="left"
           standalone={false}
           axisLabelComponent={<VictoryLabel dy={-10} />}
@@ -226,7 +250,6 @@ const HistoryChart: React.FC<Data> = ({ type, units, data }: Data) => {
               `${type.toLowerCase().replace(/_/g, " ")} ${index + 1}`
             )
           ) {
-            debugger;
             return (
               <VictoryLine
                 data={value}
