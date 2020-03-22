@@ -18,14 +18,17 @@ import TuneIcon from "@material-ui/icons/Tune";
 import { makeStyles } from "@material-ui/core/styles";
 import { NavLink } from "react-router-dom";
 import { useSensorDataState } from "../../contexts/SensorContext";
-
+import { mdiAutoFix } from "@mdi/js";
+import Icon from "@mdi/react";
 const useStyles = makeStyles({
   active: {
     background: "#578C48",
     color: "white",
     "& svg": {
       fill: "white",
-      stroke: "white"
+      "& path": {
+        fill: "white!important"
+      }
     }
   },
   inactive: {
@@ -38,15 +41,23 @@ interface NavListItemProps {
   icon: JSX.Element;
   to: string;
   activeClassName: string;
+  onClose: Function;
 }
 
-const NavListItem = ({ text, icon, to, activeClassName }: NavListItemProps) => {
+const NavListItem = ({
+  text,
+  icon,
+  to,
+  activeClassName,
+  onClose
+}: NavListItemProps) => {
   return (
     <ListItem
       button
       component={NavLink}
       to={to}
       activeClassName={activeClassName}
+      onClick={() => onClose(false)}
     >
       <ListItemIcon>{icon}</ListItemIcon>
       <ListItemText primary={text} />
@@ -73,12 +84,14 @@ const NavDrawer: React.FC<NavDrawerProps> = ({
           icon={<BarChartIcon />}
           text="Dashboard"
           activeClassName={styles.active}
+          onClose={onCloseFunc}
         />
         <NavListItem
           to="/controls"
           icon={<TuneIcon />}
           text="Controls"
           activeClassName={styles.active}
+          onClose={onCloseFunc}
         />
         <NavListItem
           to="/notifications"
@@ -89,6 +102,14 @@ const NavDrawer: React.FC<NavDrawerProps> = ({
           }
           text="Notifications"
           activeClassName={styles.active}
+          onClose={onCloseFunc}
+        />
+        <NavListItem
+          to="/input"
+          icon={<Icon path={mdiAutoFix} size={1} color="rgba(0, 0, 0, 0.54)" />}
+          text="Automation"
+          activeClassName={styles.active}
+          onClose={onCloseFunc}
         />
       </List>
     </Drawer>
