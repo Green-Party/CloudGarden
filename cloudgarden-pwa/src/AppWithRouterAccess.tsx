@@ -18,11 +18,11 @@ const AppWithRouterAccess = () => {
       onAuthRequired={onAuthRequired}
       pkce={true}
     >
-      <SecureRoute path="/" component={App} />
+      <SecureRoute exact path="/" component={App} />
       <Route
         path="/login"
         render={() => (
-          <Login baseUrl="https://${process.env.REACT_APP_OKTA_ORG_URL}" />
+          <Login baseUrl={`https://${process.env.REACT_APP_OKTA_ORG_URL}`} />
         )}
       />
       <Route path="/implicit/callback" component={LoginCallback} />
