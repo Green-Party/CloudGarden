@@ -13,6 +13,7 @@ import {
   ADD_NOTIFICATION_DATA,
   REMOVE_NOTIFICATION_DATA
 } from "./SensorContext";
+import { useAuth0, Auth0Provider } from "./ReactAuth0Spa";
 
 export {
   SensorDataProvider,
@@ -22,5 +23,7 @@ export {
   ADD_SENSOR_DATA,
   REMOVE_SENSOR_DATA,
   ADD_NOTIFICATION_DATA,
-  REMOVE_NOTIFICATION_DATA
+  REMOVE_NOTIFICATION_DATA,
+  useAuth0,
+  Auth0Provider
 };

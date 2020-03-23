@@ -4,28 +4,33 @@
  * Renders the direct app routes and side navigation
  */
 import React, { lazy, Suspense, useState, Fragment } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
-} from "react-router-dom";
+import { Router, Switch, Route, Redirect } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
-import "./Header.css";
-import "./Dashboard.css";
-import Header from "./components/main/Header";
-import ControlView from "./components/controls/ControlView";
 import { NotificationView } from "./components/notifications";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import theme from "./styles/Theme";
-import NavDrawer from "./components/main/NavDrawer";
 import { SensorDataProvider } from "./contexts";
 import { UserAutomationView } from "./components/userInput";
+import { useAuth0 } from "./contexts";
+import { PrivateRoute } from "./components/auth";
+import "./Header.css";
+import "./Dashboard.css";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import theme from "./styles/Theme";
+import Header from "./components/main/Header";
+import ControlView from "./components/controls/ControlView";
+import NavDrawer from "./components/main/NavDrawer";
+import history from "./utils/history";
+import Loading from "./components/Loading";
 
 const Home = lazy(() => import("./Home"));
 
 const App: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const { loading } = useAuth0();
+
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -33,7 +38,7 @@ const App: React.FC = () => {
         <SensorDataProvider>
           <Fragment>
             <Header onMenuClick={setOpen} />
-            <Router>
+            <Router history={history}>
               <Switch>
                 <Route path="/dashboard">
                   <Home />
@@ -41,15 +46,12 @@ const App: React.FC = () => {
                 <Route exact path="/">
                   <Redirect to="/dashboard" />
                 </Route>
-                <Route path="/controls">
-                  <ControlView />
-                </Route>
-                <Route path="/notifications">
-                  <NotificationView />
-                </Route>
-                <Route path="/input">
-                  <UserAutomationView />
-                </Route>
+                <PrivateRoute path="/controls" component={ControlView} />
+                <PrivateRoute
+                  path="/notifications"
+                  component={NotificationView}
+                />
+                <PrivateRoute path="/input" component={UserAutomationView} />
               </Switch>
               <NavDrawer open={open} onCloseFunc={setOpen} />
             </Router>

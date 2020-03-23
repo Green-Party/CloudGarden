@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@auth0/auth0-spa-js": "^1.6.5",
     "@cycjimmy/jsmpeg-player": "^5.0.0",
     "@date-io/date-fns": "1.x",
     "@material-ui/core": "^4.9.1",
