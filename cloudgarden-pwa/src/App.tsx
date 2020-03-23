@@ -4,36 +4,40 @@
  * Renders the direct app routes and side navigation
  */
 import React, { lazy, Suspense, useState, Fragment } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
-} from "react-router-dom";
+import { Router, Switch, Route, Redirect } from "react-router-dom";
+import history from "./utils/history";
 import { ThemeProvider } from "@material-ui/core/styles";
+import { NotificationView } from "./components/notifications";
+import { SensorDataProvider } from "./contexts";
+import { UserAutomationView } from "./components/userInput";
 import "./Header.css";
 import "./Dashboard.css";
 import Header from "./components/main/Header";
 import ControlView from "./components/controls/ControlView";
-import { NotificationView } from "./components/notifications";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "./styles/Theme";
 import NavDrawer from "./components/main/NavDrawer";
-import { SensorDataProvider } from "./contexts";
-import { UserAutomationView } from "./components/userInput";
+import NavBar from "./components/auth/NavBar";
+import { useAuth0 } from "./contexts";
 
 const Home = lazy(() => import("./Home"));
 
 const App: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const { loading } = useAuth0();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <NavBar />
       <Suspense fallback={<div>Loading...</div>}>
         <SensorDataProvider>
           <Fragment>
             <Header onMenuClick={setOpen} />
-            <Router>
+            <Router history={history}>
               <Switch>
                 <Route path="/dashboard">
                   <Home />
