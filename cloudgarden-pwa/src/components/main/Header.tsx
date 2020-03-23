@@ -14,7 +14,9 @@ import {
   AppBar,
   Toolbar,
   MenuItem,
-  Menu
+  Menu,
+  Avatar,
+  Grid
 } from "@material-ui/core";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { useAuth0 } from "../../contexts";
@@ -35,6 +37,30 @@ const useStyles = makeStyles(theme =>
     },
     logo: {
       marginLeft: theme.spacing(3)
+    },
+    avatar: {
+      width: theme.spacing(7),
+      height: theme.spacing(7)
+    },
+    name: {
+      display: "inline-block",
+      marginLeft: theme.spacing(2)
+    },
+    button: {
+      backgroundColor: theme.palette.primary.dark,
+      color: "white"
+    },
+    logout: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2)
+    },
+    menuItem: {
+      background: theme.palette.secondary.main
+    },
+    menuList: {
+      "& ul": {
+        backgroundColor: theme.palette.secondary.main
+      }
     }
   })
 );
@@ -47,15 +73,12 @@ function Header(props: HeaderProps) {
 
   const UserImage: React.FC<any> = ({ user }: any) => {
     return (
-      <span className="user-info">
-        <img
-          src={user.picture}
-          alt="Profile"
-          className="nav-user-profile d-inline-block rounded-circle mr-3"
-          width="50"
-        />
-        <h6 className="d-inline-block">{user.name}</h6>
-      </span>
+      <Grid container direction="row" alignItems="center" justify="flex-start">
+        <Avatar src={user.picture} alt={user.name} className={classes.avatar} />
+        <Typography variant="subtitle2" className={classes.name}>
+          {user.name}
+        </Typography>
+      </Grid>
     );
   };
 
@@ -91,37 +114,49 @@ function Header(props: HeaderProps) {
           CloudGarden
         </Typography>
         {!isAuthenticated && (
-          <Button color="inherit" onClick={() => loginWithRedirect({})}>
+          <Button
+            size="medium"
+            className={classes.button}
+            onClick={() => loginWithRedirect({})}
+          >
             Login
           </Button>
         )}
         {isAuthenticated && (
           <div>
-            <IconButton
+            <Button
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleMenu}
               color="inherit"
+              variant="outlined"
             >
               <UserImage user={user} />
-            </IconButton>
+            </Button>
             <Menu
               id="menu-appbar"
+              elevation={0}
+              getContentAnchorEl={null}
               anchorEl={anchorEl}
               anchorOrigin={{
-                vertical: "top",
-                horizontal: "right"
+                vertical: "bottom",
+                horizontal: "center"
               }}
               keepMounted
               transformOrigin={{
                 vertical: "top",
-                horizontal: "right"
+                horizontal: "left"
               }}
               open={open}
               onClose={handleClose}
+              className={classes.menuList}
             >
-              <MenuItem onClick={handleLogout}>Log out</MenuItem>
+              <MenuItem onClick={handleLogout} className={classes.menuItem}>
+                <Typography variant="subtitle2" className={classes.logout}>
+                  logout
+                </Typography>
+              </MenuItem>
             </Menu>
           </div>
         )}
