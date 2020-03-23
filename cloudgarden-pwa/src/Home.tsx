@@ -6,13 +6,14 @@
 
 import React from "react";
 import "./Dashboard.css";
-import Tabs from "./components/main/Tabs";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
+import { Grid, Typography } from "@material-ui/core";
+import Tabs from "./components/main/Tabs";
 import MoistureDashboard from "./components/moisture/MoistureDashboard";
 import LightDashboard from "./components/light/LightDashboard";
 import TemperatureDashboard from "./components/temperature/TemperatureDashboard";
-import { Grid, Typography } from "@material-ui/core";
 import WaterLevelDashboard from "./components/waterLevel/WaterLevelDashboard";
+import { PrivateRoute } from "./components/auth";
 
 const Home: React.FC = () => {
   const match = useRouteMatch();
@@ -39,18 +40,27 @@ const Home: React.FC = () => {
       </Grid>
       <Grid item style={{ width: "100%" }}>
         <Switch>
-          <Route exact path={`${match.path}/moisture`}>
-            <MoistureDashboard />
-          </Route>
-          <Route exact path={`${match.path}/light`}>
-            <LightDashboard />
-          </Route>
-          <Route exact path={`${match.path}/temp`}>
-            <TemperatureDashboard />
-          </Route>
-          <Route exact path={`${match.path}/water`}>
-            <WaterLevelDashboard />
-          </Route>
+          <PrivateRoute
+            exact
+            path={`${match.path}/moisture`}
+            component={MoistureDashboard}
+          />
+          <PrivateRoute
+            exact
+            path={`${match.path}/light`}
+            component={LightDashboard}
+          />
+          <PrivateRoute
+            exact
+            path={`${match.path}/temp`}
+            component={TemperatureDashboard}
+          />
+
+          <PrivateRoute
+            exact
+            path={`${match.path}/water`}
+            component={WaterLevelDashboard}
+          />
           <Route path={match.path}>
             <div className="row-container">
               <Typography variant="h3" color="secondary">

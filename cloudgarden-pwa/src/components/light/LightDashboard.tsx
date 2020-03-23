@@ -141,10 +141,11 @@ const LightDashboard: React.FC = () => {
   const HistoryGraphs: React.FC = () => {
     const styles = useStyles();
 
-    console.log(
-      "uv Chart Sensor data",
-      sensorDataToChartData(sensorData, SensorType.UV_INDEX)
-    );
+    // For Debugging, uncomment below
+    // console.log(
+    //   "uv Chart Sensor data",
+    //   sensorDataToChartData(sensorData, SensorType.UV_INDEX)
+    // );
     return (
       <Fragment>
         <Card className={styles.chart}>
