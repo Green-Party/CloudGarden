@@ -26,6 +26,9 @@ import { makeStyles, useTheme, createStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import socketIOClient from "socket.io-client";
 import { JsmpegPlayer } from "../stream";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import IconButton from "@material-ui/core/IconButton";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -57,11 +60,13 @@ const useStyles = makeStyles(theme =>
       display: "flex",
       flexDirection: "column",
       alignItems: "start",
-      textAlign: "center"
+      textAlign: "center",
+      width: "100%"
     },
     livestream: {
       maxWidth: "inherit",
-      maxHeight: "inherit"
+      maxHeight: "inherit",
+      minHeight: "50vw"
     },
     media: {
       flexShrink: 0,
@@ -119,6 +124,9 @@ const useStyles = makeStyles(theme =>
       backgroundRepeat: "repeat-x",
       opacity: 1,
       backgroundClip: "border-box"
+    },
+    livestreamGrid: {
+      width: "100%"
     }
   })
 );
@@ -132,6 +140,8 @@ const ControlView: React.FC = () => {
   const [watering1, setWatering1] = useState(false);
   const [watering2, setWatering2] = useState(false);
   const [currentSocket, setCurrentSocket]: any = useState(null);
+  const [livestreamOpen, setLivestreamOpen] = useState(false);
+
   const onClickLightCommand = () => {
     currentSocket.emit("toggleLight", true);
   };
@@ -253,25 +263,50 @@ const ControlView: React.FC = () => {
       <GridListTile cols={smallWidth ? 2 : 4}>
         <Card className={styles.card}>
           <CardContent className={styles.cardContent}>
-            <Typography variant={"h6"} gutterBottom>
-              Live Stream
-            </Typography>
             <Grid
               container
               direction="column"
-              alignItems="center"
+              alignItems="flex-start"
               justify="center"
+              className={styles.livestreamGrid}
             >
-              <JsmpegPlayer
-                wrapperClassName={clsx(
-                  styles.livestream,
-                  "video-wrapper",
-                  "video"
-                )}
-                options={videoOptions}
-                overlayOptions={videoOverlayOptions}
-                videoUrl={`ws://${document.location.hostname}:8082/`}
-              />
+              <Grid
+                container
+                direction="row"
+                alignItems="flex-start"
+                justify="flex-start"
+              >
+                <IconButton onClick={() => setLivestreamOpen(!livestreamOpen)}>
+                  {livestreamOpen ? (
+                    <KeyboardArrowUpIcon />
+                  ) : (
+                    <KeyboardArrowDownIcon />
+                  )}
+                </IconButton>
+                <Typography variant={"h6"} gutterBottom>
+                  Live Stream
+                </Typography>
+              </Grid>
+              {livestreamOpen ? (
+                <Grid
+                  container
+                  direction="column"
+                  alignItems="center"
+                  justify="center"
+                  className={styles.livestreamGrid}
+                >
+                  <JsmpegPlayer
+                    wrapperClassName={clsx(
+                      styles.livestream,
+                      "video-wrapper",
+                      "video"
+                    )}
+                    options={videoOptions}
+                    overlayOptions={videoOverlayOptions}
+                    videoUrl={`ws://${document.location.hostname}:8082/`}
+                  />
+                </Grid>
+              ) : null}
             </Grid>
           </CardContent>
         </Card>

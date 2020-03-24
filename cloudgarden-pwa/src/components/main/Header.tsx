@@ -16,7 +16,8 @@ import {
   MenuItem,
   Menu,
   Avatar,
-  Grid
+  Grid,
+  useMediaQuery
 } from "@material-ui/core";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { useAuth0 } from "../../contexts";
@@ -42,6 +43,10 @@ const useStyles = makeStyles(theme =>
       width: theme.spacing(7),
       height: theme.spacing(7)
     },
+    avatarSmall: {
+      width: theme.spacing(5),
+      height: theme.spacing(5)
+    },
     name: {
       display: "inline-block",
       marginLeft: theme.spacing(2)
@@ -66,18 +71,26 @@ const useStyles = makeStyles(theme =>
 );
 
 function Header(props: HeaderProps) {
-  const classes = useStyles(useTheme());
+  const theme = useTheme();
+  const classes = useStyles(theme);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
   const open = Boolean(anchorEl);
-
+  const xsmallWidth = useMediaQuery(theme.breakpoints.down("xs"));
+  const smallWidth = useMediaQuery(theme.breakpoints.down("sm"));
   const UserImage: React.FC<any> = ({ user }: any) => {
     return (
       <Grid container direction="row" alignItems="center" justify="flex-start">
-        <Avatar src={user.picture} alt={user.name} className={classes.avatar} />
-        <Typography variant="subtitle2" className={classes.name}>
-          {user.name}
-        </Typography>
+        <Avatar
+          src={user.picture}
+          alt={user.name}
+          className={xsmallWidth ? classes.avatarSmall : classes.avatar}
+        />
+        {xsmallWidth ? null : (
+          <Typography variant="caption" className={classes.name}>
+            {user.name}
+          </Typography>
+        )}
       </Grid>
     );
   };
@@ -106,7 +119,7 @@ function Header(props: HeaderProps) {
           <MenuIcon fontSize="large" />
         </IconButton>
         <Typography
-          variant="h4"
+          variant={smallWidth ? "h5" : "h4"}
           className={classes.root}
           component="a"
           href="/"
