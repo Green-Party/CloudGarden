@@ -26,7 +26,12 @@ let readings = {
   water_level: 0,
   temperature: [-40, -40, -40],
   soil_moisture: [0, 0, 0],
-  pump_senabled: false
+  automated_moisture: false,
+  moisture_threshold: 4,
+  automated_lighting: false,
+  light_on_start: null,
+  light_on_end: null,
+  pumps_enabled: false
 };
 
 let controls = {
@@ -35,7 +40,9 @@ let controls = {
 };
 
 const interval = 5000;
-const pumpTime = 2000;
+const PUMP_TIME = 4000;
+const ONE_MINUTE = 60000;
+const LIGHT_CHECK_INTERVAL = ONE_MINUTE;
 
 function initialize(state) {
   let board = new five.Board();
@@ -95,12 +102,18 @@ function initialize(state) {
       type: "NO"
     });
 
-    configureLightTimeInterval();
-
     setInterval(() => {
       readings.temperature = thermoSensors.getReadings();
       console.log(`Temperature: ${readings.temperature}`);
       readings.soil_moisture = soilHumiditySensors.getReadings();
+      console.log(`Soil humidity: ${readings.soil_moisture}`);
+      if (readings.automated_moisture) {
+        readings.soil_moisture.forEach((reading, i) => {
+          if (reading < readings.moisture_threshold) {
+            runPump(i);
+          }
+        });
+      }
       console.log(`Soil humidity: ${readings.soil_moisture}`);
       readings.water_level = waterLevelRuler.getReading();
       console.log(`Water level: ${readings.water_level}`);
@@ -110,16 +123,49 @@ function initialize(state) {
   });
 }
 
-// configure to run for 15 mins at the beginning of every hour
-function configureLightTimeInterval() {
-  let date = new Date(Date.now());
-  let minutes = date.getMinutes();
-  if (minutes > 15) {
-    controls.light.turnOff();
-    setTimeout(configureLightTimeInterval, Math.max(0, (45 - minutes) * 60000));
+function configureLightAutomation(useAutomation, startTime, endTime) {
+  console.log(
+    `Updating use of light automation to: ${useAutomation}, start: ${startTime}, duration: ${endTime}`
+  );
+  readings.automated_lighting = useAutomation;
+  readings.light_on_start = new Date(startTime);
+  readings.light_on_end = new Date(endTime);
+  if (useAutomation) {
+    controls.light_timer = utils.setExactInterval(
+      LIGHT_CHECK_INTERVAL,
+      checkLightAutomation
+    );
   } else {
+    clearTimeout(controls.light_timer.id);
+  }
+}
+
+function configureSoilMoistureAutomation(useAutomation, threshold) {
+  console.log(
+    `Updating use of soil moisture automation to: ${useAutomation}, threshold: ${threshold}`
+  );
+  readings.automated_moisture = useAutomation;
+  readings.moisture_threshold = threshold;
+}
+
+function checkLightAutomation() {
+  let date = new Date(Date.now());
+
+  if (
+    date.getTime() > readings.light_on_start.getTime() &&
+    date.getTime() < readings.light_on_end.getTime()
+  ) {
     controls.light.turnOn();
-    setTimeout(configureLightTimeInterval, Math.max(0, (15 - minutes) * 60000));
+  } else if (
+    date.getTime() < readings.light_on_start.getTime() &&
+    readings.light_on_start.getTime() - date.getTime() < LIGHT_CHECK_INTERVAL
+  ) {
+    setTimeout(
+      checkLightAutomation,
+      readings.light_on_start.getTime() - date.getTime() + 1
+    );
+  } else {
+    controls.light.turnOff();
   }
 }
 
@@ -133,7 +179,7 @@ function toggleLight() {
 
 async function runPump(idx) {
   controls.pumps.turnOn(idx);
-  await utils.sleep(pumpTime);
+  await utils.sleep(PUMP_TIME);
   controls.pumps.turnOff(idx);
 }
 
@@ -142,6 +188,8 @@ async function runPump(idx) {
 
 module.exports = {
   initialize,
+  configureLightAutomation,
+  configureSoilMoistureAutomation,
   runPump,
   toggleLight
 };

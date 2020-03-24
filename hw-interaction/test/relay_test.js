@@ -17,7 +17,7 @@ async function runRelayTest() {
   let pumps = new Pumps();
 
   let light = new Light({
-    pin: 6,
+    pin: 47,
     type: "NO"
   });
 
