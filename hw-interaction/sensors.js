@@ -41,7 +41,8 @@ let controls = {
 
 const interval = 5000;
 const PUMP_TIME = 4000;
-const LIGHT_CHECK_INTERVAL = 15 * 60000;
+const ONE_MINUTE = 60000;
+const LIGHT_CHECK_INTERVAL = ONE_MINUTE;
 
 function initialize(state) {
   let board = new five.Board();
@@ -107,11 +108,11 @@ function initialize(state) {
       readings.soil_moisture = soilHumiditySensors.getReadings();
       console.log(`Soil humidity: ${readings.soil_moisture}`);
       if (readings.automated_moisture) {
-        for (let i = 0; i < readings.soil_moisture.length; i++) {
+        readings.soil_moisture.forEach((reading, i) => {
           if (reading < readings.moisture_threshold) {
             runPump(i);
           }
-        }
+        });
       }
       console.log(`Soil humidity: ${readings.soil_moisture}`);
       readings.water_level = waterLevelRuler.getReading();
@@ -127,8 +128,8 @@ function configureLightAutomation(useAutomation, startTime, endTime) {
     `Updating use of light automation to: ${useAutomation}, start: ${startTime}, duration: ${endTime}`
   );
   readings.automated_lighting = useAutomation;
-  readings.light_on_start = startTime;
-  readings.light_on_end = endTime;
+  readings.light_on_start = new Date(startTime);
+  readings.light_on_end = new Date(endTime);
   if (useAutomation) {
     controls.light_timer = utils.setExactInterval(
       LIGHT_CHECK_INTERVAL,
@@ -161,7 +162,7 @@ function checkLightAutomation() {
   ) {
     setTimeout(
       checkLightAutomation,
-      readings.light_on_start.getTime() - date.getTime()
+      readings.light_on_start.getTime() - date.getTime() + 1
     );
   } else {
     controls.light.turnOff();

@@ -127,7 +127,7 @@ const ControlView: React.FC = () => {
   const theme = useTheme();
   const styles = useStyles(theme);
   const smallWidth = useMediaQuery(theme.breakpoints.down("xs"));
-  const [lightState, setLightState] = useState(true);
+  const [lightState, setLightState] = useState(false);
   const [watering0, setWatering0] = useState(false);
   const [watering1, setWatering1] = useState(false);
   const [watering2, setWatering2] = useState(false);
