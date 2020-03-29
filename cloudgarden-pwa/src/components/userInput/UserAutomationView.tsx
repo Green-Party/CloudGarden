@@ -1,7 +1,8 @@
 /**
  * Creation Date: March 19, 2020
- * Author: Luke Slevinsky
- * Test view to test out user input controlled sensor automation
+ * Author: Gillian Pierce
+ * TAdapted from TestUserInputView this component allows
+ * users to control light and watering automation
  */
 
 import React, { useState, useEffect } from "react";

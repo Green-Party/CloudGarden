@@ -3,12 +3,13 @@
  * Author: Luke Slevinsky
  * A generic list component using material UIs virtual list components
  */
-import React from "react";
+import React, { useState } from "react";
 import {
   ListItem,
   ListItemText,
   Typography,
-  IconButton
+  IconButton,
+  Slide
 } from "@material-ui/core";
 import { FixedSizeList, ListChildComponentProps } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -27,6 +28,11 @@ interface AutosizerProps {
   width: number;
 }
 
+interface RowRenderprops {
+  props: ListChildComponentProps;
+  onClick: Function;
+}
+
 const StyledListItem = styled(ListItem)`
   background-color: ${theme.palette.secondary.light};
   &:hover {
@@ -41,51 +47,56 @@ const StyledListItem = styled(ListItem)`
   }
 `;
 
-function renderRow(props: ListChildComponentProps, onClick: Function) {
+const RenderRow: React.FC<RowRenderprops> = ({
+  props,
+  onClick
+}: RowRenderprops) => {
   const { index, style } = props;
-
+  const [deleted, setDeleted] = useState(false);
   const item = props.data[props.index];
 
   return (
-    <StyledListItem
-      button
-      divider
-      align-items="flex-start"
-      style={style}
-      key={index}
-    >
-      <ListItemText
-        primary={
-          <React.Fragment>
-            <Typography variant="overline" color="textPrimary">
-              {new Date(item._ts * 1000).toLocaleString()}
-            </Typography>
-            <Typography variant="h5" color="textPrimary">
-              {item.title}
-            </Typography>
-          </React.Fragment>
-        }
-        secondary={
-          <Typography variant="body2" color="textPrimary">
-            {item.body}
-          </Typography>
-        }
-      />
-      <IconButton
-        edge="end"
-        aria-label="delete"
-        onClick={() => onClick(item.id)}
+    <Slide in={!deleted} direction="right">
+      <StyledListItem
+        button
+        divider
+        align-items="flex-start"
+        style={style}
+        key={index}
       >
-        <DeleteIcon fontSize="large" />
-      </IconButton>
-    </StyledListItem>
+        <ListItemText
+          primary={
+            <React.Fragment>
+              <Typography variant="overline" color="textPrimary">
+                {new Date(item._ts * 1000).toLocaleString()}
+              </Typography>
+              <Typography variant="h5" color="textPrimary">
+                {item.title}
+              </Typography>
+            </React.Fragment>
+          }
+          secondary={
+            <Typography variant="body2" color="textPrimary">
+              {item.body}
+            </Typography>
+          }
+        />
+        <IconButton
+          edge="end"
+          aria-label="delete"
+          onClick={() => {
+            onClick(item.id);
+            setDeleted(true);
+          }}
+        >
+          <DeleteIcon fontSize="large" />
+        </IconButton>
+      </StyledListItem>
+    </Slide>
   );
-}
+};
 
 const VirtualizedList: React.FC<ListProps> = props => {
-  console.log("props.data.length");
-  console.log(props.data.length);
-
   if (props.dataSorter) {
     props.data.sort(props.dataSorter);
   }
@@ -100,7 +111,7 @@ const VirtualizedList: React.FC<ListProps> = props => {
           width={width}
         >
           {(renderProps: ListChildComponentProps) =>
-            renderRow(renderProps, props.onClickDelete)
+            RenderRow({ props: renderProps, onClick: props.onClickDelete })
           }
         </FixedSizeList>
       )}

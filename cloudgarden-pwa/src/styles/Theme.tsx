@@ -1,3 +1,9 @@
+/**
+ * Creation Date: Feb 28, 2020
+ * Author: Gillian Pierce
+ * Global theme component that provides styling to all parts of the app
+ */
+
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 
 let theme = createMuiTheme({
