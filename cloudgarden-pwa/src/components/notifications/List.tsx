@@ -1,3 +1,8 @@
+/**
+ * Creation Date: March 7, 2020
+ * Author: Luke Slevinsky
+ * A generic list component using material UIs virtual list components
+ */
 import React from "react";
 import {
   ListItem,

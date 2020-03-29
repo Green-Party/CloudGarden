@@ -1,7 +1,7 @@
 /**
  * Creation Date: March 7, 2020
  * Author: Luke Slevinsky
- * A test page for notifications
+ * A page for notifications
  */
 
 import React from "react";
