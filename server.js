@@ -38,7 +38,7 @@ if (process.argv.length > 3) {
   console.log("Usage: \n" + "node server.js [-https]");
   process.exit();
 } else if (process.argv.length > 2) {
-  if (process.argv[3] === "-https") {
+  if (process.argv[2] === "-https") {
     useHttps = true;
   } else {
     console.log("Usage: \n" + "node server.js [-https]");
@@ -175,7 +175,13 @@ io.on("connection", socket => {
 Azure.setupClient(process.env.DEVICE_CONNECTION_STRING, sensorData);
 
 // Setup the streaming relay
-const streamRelay = spawn(NODE_COMMAND, [STREAM_RELAY, SECRET, useHttps]);
+const streamRelay = spawn(NODE_COMMAND, [
+  STREAM_RELAY,
+  SECRET,
+  8081,
+  8082,
+  useHttps
+]);
 
 streamRelay.stdout.on("data", data => {
   console.log(`relay stdout: ${data}`);

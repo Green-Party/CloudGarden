@@ -15,13 +15,15 @@ const { STREAM_COMMAND, FFMPEG_ARGS } = CONSTANTS;
 
 var fs = require("fs"),
   http = require("http"),
+  https = require("https"),
   WebSocket = require("ws"),
   spawn = require("child_process").spawn;
+var socketServer;
 
 if (process.argv.length < 3) {
   console.log(
     "Usage: \n" +
-      "node websocket-relay.js <secret> [<stream-port> <websocket-port>]"
+      "node websocket-relay.js <secret>  [<stream-port> <websocket-port> -https]"
   );
   process.exit();
 }
@@ -29,17 +31,26 @@ if (process.argv.length < 3) {
 var STREAM_SECRET = process.argv[2],
   STREAM_PORT = process.argv[3] || 8081,
   WEBSOCKET_PORT = process.argv[4] || 8082,
-  USE_HTTPS = process.argv[5] || false,
+  USE_HTTPS = process.argv[5] === "true" || false,
   RECORD_STREAM = false;
 
-if (USE_HTTPS) {
-  WebSocket = require("wss");
-}
 // Websocket Server
-var socketServer = new WebSocket.Server({
-  port: WEBSOCKET_PORT,
-  perMessageDeflate: false
-});
+if (USE_HTTPS) {
+  const secureSocketServer = https
+    .createServer({
+      key: fs.readFileSync("./localhost.key"),
+      cert: fs.readFileSync("./localhost.crt")
+    })
+    .listen(WEBSOCKET_PORT);
+  socketServer = new WebSocket.Server({
+    server: secureSocketServer
+  });
+} else {
+  socketServer = new WebSocket.Server({
+    port: WEBSOCKET_PORT,
+    perMessageDeflate: false
+  });
+}
 socketServer.connectionCount = 0;
 socketServer.on("connection", (socket, upgradeReq) => {
   socketServer.connectionCount++;
