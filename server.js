@@ -18,7 +18,7 @@ const path = require("path");
 const chalk = require("chalk");
 const logger = require("morgan");
 const open = require("open");
-const io = require("socket.io")(server);
+const socketIO = require("socket.io");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const webPush = require("web-push");
@@ -29,8 +29,22 @@ const Sensors = require("./hw-interaction/sensors");
 const Azure = require("./hw-interaction/Azure/communication");
 const CONSTANTS = require("./constants");
 const { NODE_COMMAND, STREAM_RELAY, SECRET } = CONSTANTS;
+let useHttps = false;
+let io = undefined;
 
 require("dotenv").config();
+
+if (process.argv.length > 3) {
+  console.log("Usage: \n" + "node server.js [-https]");
+  process.exit();
+} else if (process.argv.length > 2) {
+  if (process.argv[2] === "-https") {
+    useHttps = true;
+  } else {
+    console.log("Usage: \n" + "node server.js [-https]");
+    process.exit();
+  }
+}
 
 // Static Routes
 // Serve production build of React app
@@ -66,18 +80,14 @@ app.post("/notifications/subscribe", (req, res) => {
 
 const port = 9000;
 
-//Run Server http
-server.listen(process.env.PORT || port, async () => {
-  console.log(
-    chalk.blueBright(`Listening intently on port http://localhost:${port}`)
-  );
-  await open(`http://localhost:${port}`);
-});
-
 // https
-if (fs.existsSync("./localhost.key") && fs.existsSync("./localhost.crt")) {
+if (
+  useHttps &&
+  fs.existsSync("./localhost.key") &&
+  fs.existsSync("./localhost.crt")
+) {
   try {
-    https
+    const secureServer = https
       .createServer(
         {
           key: fs.readFileSync("./localhost.key"),
@@ -85,7 +95,15 @@ if (fs.existsSync("./localhost.key") && fs.existsSync("./localhost.crt")) {
         },
         app
       )
-      .listen(9001);
+      .listen(9001, async () => {
+        console.log(
+          chalk.blueBright(
+            `Listening intently on port https://localhost:${port}`
+          )
+        );
+        await open(`https://localhost:${port}`);
+      });
+    io = socketIO(secureServer);
   } catch (err) {
     // If the type is not what you want, then just throw the error again.
     if (err.code !== "ENOENT") throw err;
@@ -93,6 +111,16 @@ if (fs.existsSync("./localhost.key") && fs.existsSync("./localhost.crt")) {
     // Handle a file-not-found error
     console.log("Key or cert is not found. HTTPS will not be served");
   }
+} else {
+  io = socketIO(server);
+
+  //Run Server http
+  server.listen(process.env.PORT || port, async () => {
+    console.log(
+      chalk.blueBright(`Listening intently on port http://localhost:${port}`)
+    );
+    await open(`http://localhost:${port}`);
+  });
 }
 
 // catch 404 and forward to error handler
@@ -147,7 +175,13 @@ io.on("connection", socket => {
 Azure.setupClient(process.env.DEVICE_CONNECTION_STRING, sensorData);
 
 // Setup the streaming relay
-const streamRelay = spawn(NODE_COMMAND, [STREAM_RELAY, SECRET]);
+const streamRelay = spawn(NODE_COMMAND, [
+  STREAM_RELAY,
+  SECRET,
+  8081,
+  8082,
+  useHttps
+]);
 
 streamRelay.stdout.on("data", data => {
   console.log(`relay stdout: ${data}`);
