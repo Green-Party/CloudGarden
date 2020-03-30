@@ -11,6 +11,8 @@
 const express = require("express");
 const app = express();
 const server = require("http").Server(app);
+const https = require("https");
+const fs = require("fs");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const chalk = require("chalk");
@@ -64,13 +66,34 @@ app.post("/notifications/subscribe", (req, res) => {
 
 const port = 9000;
 
-//Run Server
+//Run Server http
 server.listen(process.env.PORT || port, async () => {
   console.log(
     chalk.blueBright(`Listening intently on port http://localhost:${port}`)
   );
   await open(`http://localhost:${port}`);
 });
+
+// https
+if (fs.existsSync("./localhost.key") && fs.existsSync("./localhost.crt")) {
+  try {
+    https
+      .createServer(
+        {
+          key: fs.readFileSync("./localhost.key"),
+          cert: fs.readFileSync("./localhost.crt")
+        },
+        app
+      )
+      .listen(9001);
+  } catch (err) {
+    // If the type is not what you want, then just throw the error again.
+    if (err.code !== "ENOENT") throw err;
+
+    // Handle a file-not-found error
+    console.log("Key or cert is not found. HTTPS will not be served");
+  }
+}
 
 // catch 404 and forward to error handler
 app.use((_req, _res, next) => {
