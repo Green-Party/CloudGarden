@@ -175,7 +175,7 @@ io.on("connection", socket => {
 Azure.setupClient(process.env.DEVICE_CONNECTION_STRING, sensorData);
 
 // Setup the streaming relay
-const streamRelay = spawn(NODE_COMMAND, [STREAM_RELAY, SECRET]);
+const streamRelay = spawn(NODE_COMMAND, [STREAM_RELAY, SECRET, useHttps]);
 
 streamRelay.stdout.on("data", data => {
   console.log(`relay stdout: ${data}`);

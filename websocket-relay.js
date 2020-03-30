@@ -29,8 +29,12 @@ if (process.argv.length < 3) {
 var STREAM_SECRET = process.argv[2],
   STREAM_PORT = process.argv[3] || 8081,
   WEBSOCKET_PORT = process.argv[4] || 8082,
+  USE_HTTPS = process.argv[5] || false,
   RECORD_STREAM = false;
 
+if (USE_HTTPS) {
+  WebSocket = require("wss");
+}
 // Websocket Server
 var socketServer = new WebSocket.Server({
   port: WEBSOCKET_PORT,
