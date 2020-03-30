@@ -142,6 +142,10 @@ const ControlView: React.FC = () => {
   const [currentSocket, setCurrentSocket]: any = useState(null);
   const [livestreamOpen, setLivestreamOpen] = useState(false);
 
+  const webSocketUrl = `${
+    window.location.protocol === "https:" ? "wss" : "ws"
+  }://${document.location.hostname}:8082/`;
+
   const onClickLightCommand = () => {
     currentSocket.emit("toggleLight", true);
   };
@@ -303,7 +307,7 @@ const ControlView: React.FC = () => {
                     )}
                     options={videoOptions}
                     overlayOptions={videoOverlayOptions}
-                    videoUrl={`ws://${document.location.hostname}:8082/`}
+                    videoUrl={webSocketUrl}
                   />
                 </Grid>
               ) : null}
