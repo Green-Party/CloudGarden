@@ -15,7 +15,7 @@ module.exports = class WaterLevelSwitch {
    * @param {*} options pin, type, slave
    */
   constructor(options) {
-    const DEFAULT_PIN = 7;
+    const DEFAULT_PIN = 23;
     const DEFAULT_TYPE = "NC";
 
     let opts = options || {};

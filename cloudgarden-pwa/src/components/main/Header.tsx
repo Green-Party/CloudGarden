@@ -105,7 +105,7 @@ function Header(props: HeaderProps) {
 
   const handleLogout = () => {
     handleClose();
-    logout();
+    logout({ returnTo: window.location.origin });
   };
   return (
     <AppBar position="static" className={classes.root}>

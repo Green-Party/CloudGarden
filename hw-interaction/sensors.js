@@ -40,7 +40,7 @@ let controls = {
 };
 
 const interval = 5000;
-const PUMP_TIME = 3000;
+const PUMP_TIME = 1000;
 const ONE_MINUTE = 60000;
 const LIGHT_CHECK_INTERVAL = ONE_MINUTE;
 

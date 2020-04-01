@@ -155,17 +155,16 @@ export function dataStateReducer(state: DataState, action: Action) {
         (n: Notification) => n.id === updatedNotification.id
       );
       if (notification) {
-        if (notification.deleted) {
-          const index = stateCopy.indexOf(notification);
-          if (index > -1) {
-            stateCopy.splice(index, 1);
-          }
-        } else {
-          Object.assign(notification, updatedNotification);
-        }
+        Object.assign(notification, updatedNotification);
         newState = stateCopy;
       } else {
         newState = [...stateCopy, updatedNotification];
+      }
+      if (updatedNotification.deleted) {
+        const index = stateCopy.indexOf(updatedNotification);
+        if (index > -1) {
+          newState.splice(index, 1);
+        }
       }
       if (newState[0] === defaultNotification) {
         newState = Array.from(newState.slice(1));

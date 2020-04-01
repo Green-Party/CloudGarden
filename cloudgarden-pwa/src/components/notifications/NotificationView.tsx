@@ -1,7 +1,7 @@
 /**
- * Creation Date: March 7, 2020
- * Author: Luke Slevinsky
- * A page for notifications
+ * Creation Date: March 8, 2020
+ * Author: Gillian Pierce
+ * Adapted from TestNotificationView to hold notifications
  */
 
 import React from "react";
@@ -41,9 +41,6 @@ const NotificationView: React.FC = () => {
   const styles = useStyles(useTheme());
   const [state, dispatch] = useSensorData();
   const { notifications } = state;
-  console.log("notifications");
-  console.log(notifications);
-  console.log(notifications.length);
 
   async function deleteNotification(id: string) {
     try {

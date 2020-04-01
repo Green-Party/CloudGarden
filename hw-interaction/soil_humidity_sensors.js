@@ -12,7 +12,7 @@ module.exports = class SoilHumiditySensors {
    * @param {*} options pins, freq, threshold
    */
   constructor(options) {
-    const DEFAULT_PINS = ["A0", "A1", "A2"];
+    const DEFAULT_PINS = ["A0", "A5", "A7"];
     const DEFAULT_FREQ = 1000;
     const DEFAULT_THRESHOLD = 10;
 
