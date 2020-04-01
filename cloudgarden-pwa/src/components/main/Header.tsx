@@ -128,6 +128,7 @@ function Header(props: HeaderProps) {
         </Typography>
         {!isAuthenticated && (
           <Button
+            id="login-button"
             size="medium"
             className={classes.button}
             onClick={() => loginWithRedirect({})}

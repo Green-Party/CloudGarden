@@ -9,7 +9,6 @@ import React, { useContext, createContext, useEffect, useReducer } from "react";
 import * as signalR from "@microsoft/signalr";
 import axios from "axios";
 import { SensorData, Notification, DataState } from "../types";
-
 // Action types
 const ADD_SENSOR_DATA = "ADD_SENSOR_DATA";
 const REMOVE_SENSOR_DATA = "REMOVE_SENSOR_DATA";
@@ -55,7 +54,7 @@ const defaultNotification: Notification = {
   _ts: 0
 };
 
-const defaultDataState: DataState = {
+export const defaultDataState: DataState = {
   sensorData: [defaultSensorData],
   notifications: [defaultNotification]
 };
@@ -112,7 +111,7 @@ function startConnection(connection: signalR.HubConnection) {
     });
 }
 
-function dataStateReducer(state: DataState, action: Action) {
+export function dataStateReducer(state: DataState, action: Action) {
   switch (action.type) {
     case ADD_SENSOR_DATA: {
       const stateCopy: SensorData[] = Array.from(state.sensorData);
@@ -125,7 +124,6 @@ function dataStateReducer(state: DataState, action: Action) {
       } else {
         newState = [...stateCopy, updatedSensor];
       }
-
       if (newState[0] === defaultSensorData) {
         newState = Array.from(newState.slice(1));
       }
