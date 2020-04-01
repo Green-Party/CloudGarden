@@ -13,7 +13,7 @@ module.exports = class ThermoSensor {
     const DEFAULT_NUMBER = 1;
     const DEFAULT_ADDRESS = null;
 
-    const DEFAULT_PIN = 2;
+    const DEFAULT_PIN = 22;
     const DEFAULT_CONTROLLER = "DS18B20";
     const DEFAULT_FREQ = 1000;
 
