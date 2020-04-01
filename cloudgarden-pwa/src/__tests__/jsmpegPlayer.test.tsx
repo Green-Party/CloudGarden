@@ -10,23 +10,15 @@ describe("<JsmpegPlayer />", () => {
       "https://cycjimmy.github.io/staticFiles/images/screenshot/big_buck_bunny_640x360.jpg"
   };
   const overlayOptions = {};
-  let useEffect: jest.SpyInstance<
-    void,
-    [React.EffectCallback, (React.DependencyList | undefined)?]
-  >;
   const wrapper = shallow(
     <JsmpegPlayer
       wrapperClassName="video-wrapper video"
-      videoUrl="ws://url"
+      videoUrl={"ws://url"}
       options={videoOptions}
       overlayOptions={overlayOptions}
     />
   );
-  beforeEach(() => {
-    useEffect = jest.spyOn(React, "useEffect").mockImplementation(f => f());
-  });
   test("video player makes a canvas", async () => {
     console.log(wrapper.debug());
-    expect(useEffect).toHaveBeenCalled();
   });
 });
