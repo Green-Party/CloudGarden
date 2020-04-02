@@ -7,16 +7,27 @@
 import React from "react";
 import "./Dashboard.css";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography, useMediaQuery } from "@material-ui/core";
 import Tabs from "./components/main/Tabs";
 import MoistureDashboard from "./components/moisture/MoistureDashboard";
 import LightDashboard from "./components/light/LightDashboard";
 import TemperatureDashboard from "./components/temperature/TemperatureDashboard";
 import WaterLevelDashboard from "./components/waterLevel/WaterLevelDashboard";
 import { PrivateRoute } from "./components/auth";
+import { makeStyles } from "@material-ui/styles";
 
+const useStyles = makeStyles({
+  container: {
+    marginTop: 16
+  },
+  mobileContainer: {
+    width: 375
+  }
+});
 const Home: React.FC = () => {
   const match = useRouteMatch();
+  const styles = useStyles();
+  const mobile = !useMediaQuery("(min-width:400px)");
   //Top layer is used to select which sensor data to display
   //Routes point to the various dashboard components
   return (
@@ -26,7 +37,7 @@ const Home: React.FC = () => {
       justify="center"
       alignItems="center"
       spacing={4}
-      style={{ marginTop: "16px" }}
+      className={mobile ? styles.mobileContainer : styles.container}
     >
       <Grid item>
         <Tabs
@@ -38,7 +49,7 @@ const Home: React.FC = () => {
           ]}
         />
       </Grid>
-      <Grid item style={{ width: "100%" }}>
+      <Grid item>
         <Switch>
           <PrivateRoute
             exact
@@ -55,18 +66,15 @@ const Home: React.FC = () => {
             path={`${match.path}/temp`}
             component={TemperatureDashboard}
           />
-
           <PrivateRoute
             exact
             path={`${match.path}/water`}
             component={WaterLevelDashboard}
           />
           <Route path={match.path}>
-            <div className="row-container">
-              <Typography variant="h3" color="secondary">
-                Please select a sensor.
-              </Typography>
-            </div>
+            <Typography variant={mobile ? "overline" : "h5"} color="secondary">
+              Please select a sensor.
+            </Typography>
           </Route>
         </Switch>
       </Grid>

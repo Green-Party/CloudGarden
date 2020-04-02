@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme =>
       flexGrow: 1
     },
     gridList: {
-      width: "100%",
+      width: "100vw",
       height: "100%"
     },
     icon: {

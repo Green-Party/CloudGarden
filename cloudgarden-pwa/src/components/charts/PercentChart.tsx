@@ -5,7 +5,7 @@
  */
 import React, { useState, useEffect } from "react";
 import { VictoryPie } from "victory";
-import { Typography, useTheme } from "@material-ui/core";
+import { Typography, useTheme, useMediaQuery } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
 interface Data {
@@ -31,6 +31,7 @@ const useStyles = makeStyles({
 const PercentChart: React.FC<Data> = ({ value, range, units }: Data) => {
   const styles = useStyles();
   const theme = useTheme();
+  const mobile = !useMediaQuery("(min-width:400px)");
 
   let percent = Math.round(
     ((value - range.low) / (range.high - range.low)) * 100
@@ -76,9 +77,13 @@ const PercentChart: React.FC<Data> = ({ value, range, units }: Data) => {
               }
             }
           }}
-          animate={{
-            duration: 1000
-          }}
+          animate={
+            mobile
+              ? false
+              : {
+                  duration: 1000
+                }
+          }
           labels={() => null}
           endAngle={angle}
         />
