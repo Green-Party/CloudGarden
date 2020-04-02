@@ -10,10 +10,12 @@ describe("<JsmpegPlayer />", () => {
       "https://cycjimmy.github.io/staticFiles/images/screenshot/big_buck_bunny_640x360.jpg"
   };
   const overlayOptions = {};
-  const wrapper = shallow(
+  const wrapper = mount(
     <JsmpegPlayer
       wrapperClassName="video-wrapper video"
-      videoUrl={"ws://url"}
+      videoUrl={
+        "https://cycjimmy.github.io/staticFiles/media/big_buck_bunny_640x360.ts"
+      }
       options={videoOptions}
       overlayOptions={overlayOptions}
     />

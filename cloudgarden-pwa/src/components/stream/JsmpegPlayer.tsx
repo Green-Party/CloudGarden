@@ -21,10 +21,11 @@ const JsmpegPlayer: React.FC<PlayerProps> = props => {
   let els: ElementProps = {
     videoWrapper: null
   };
-
+  console.log("in player");
   React.useEffect(() => {
     // Reference documentation, pay attention to the order of parameters.
     // https://github.com/cycjimmy/jsmpeg-player#usage
+    console.log("in use effect");
     new JSMpeg.VideoElement(
       els.videoWrapper,
       props.videoUrl,
