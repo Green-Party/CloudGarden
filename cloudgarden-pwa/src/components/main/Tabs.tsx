@@ -40,12 +40,16 @@ const useStyles = makeStyles(theme =>
       width: "100vw",
       maxWidth: "unset",
       marginLeft: 0
+    },
+    tab: {
+      paddingLeft: "1%",
+      paddingRight: "1%"
     }
   })
 );
 
 const Tabs: React.FC<TabsProps> = ({ tabValues }: TabsProps) => {
-  const mobile = !useMediaQuery("(min-width:400px)");
+  const mobile = !useMediaQuery("(min-width:450px)");
   let location = useLocation();
   const styles = useStyles();
   let initialValue = tabValues.map(t => t.target).indexOf(location.pathname);
@@ -85,6 +89,7 @@ const Tabs: React.FC<TabsProps> = ({ tabValues }: TabsProps) => {
             label={value.label}
             component={NavLink}
             to={value.target}
+            className={styles.tab}
           />
         ))}
       </TabsContainer>
