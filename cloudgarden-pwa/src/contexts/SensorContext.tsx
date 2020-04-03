@@ -21,7 +21,7 @@ type NotificationPayload = {
   updatedNotification: Notification;
 };
 type SensorDataPayload = {
-  updatedSensor: SensorData;
+  updatedSensors: SensorData[];
 };
 type SensorType = "ADD_SENSOR_DATA" | "REMOVE_SENSOR_DATA";
 type NotificationType = "ADD_NOTIFICATION_DATA" | "REMOVE_NOTIFICATION_DATA";
@@ -65,6 +65,7 @@ const apiBaseUrl = "https://db-to-signalr-service.azurewebsites.net/";
 const axiosConfig = {};
 
 function getConnectionInfo() {
+  console.log("getting connection");
   return axios
     .post(`${apiBaseUrl}/api/negotiate`, null, axiosConfig)
     .then(resp => {
@@ -116,19 +117,25 @@ function dataStateReducer(state: DataState, action: Action) {
   switch (action.type) {
     case ADD_SENSOR_DATA: {
       const stateCopy: SensorData[] = Array.from(state.sensorData);
-      const updatedSensor: SensorData = action.payload.updatedSensor;
-      let newState;
-      let sensor = stateCopy.find((s: SensorData) => s.id === updatedSensor.id);
-      if (sensor) {
-        Object.assign(sensor, updatedSensor);
-        newState = stateCopy;
-      } else {
-        newState = [...stateCopy, updatedSensor];
-      }
+      const updatedSensors: SensorData[] = [];
+      updatedSensors.push(...action.payload.updatedSensors);
+      console.log(updatedSensors);
+      let newState = stateCopy;
+      updatedSensors.forEach(updatedSensor => {
+        let sensor = stateCopy.find(
+          (s: SensorData) => s.id === updatedSensor.id
+        );
+        if (sensor) {
+          Object.assign(sensor, updatedSensor);
+          newState = stateCopy;
+        } else {
+          newState = [...stateCopy, updatedSensor];
+        }
 
-      if (newState[0] === defaultSensorData) {
-        newState = Array.from(newState.slice(1));
-      }
+        if (newState[0] === defaultSensorData) {
+          newState = Array.from(newState.slice(1));
+        }
+      });
       return {
         sensorData: newState,
         notifications: state.notifications
@@ -136,13 +143,17 @@ function dataStateReducer(state: DataState, action: Action) {
     }
     case REMOVE_SENSOR_DATA: {
       const stateCopy: SensorData[] = Array.from(state.sensorData);
-      const updatedSensor: SensorData = action.payload.updatedSensor;
-      const index = stateCopy.indexOf(updatedSensor);
-      if (index > -1) {
-        stateCopy.splice(index, 1);
-      } else {
-        console.log("No sensor to delete");
-      }
+      const updatedSensors: SensorData[] = Array.from(
+        action.payload.updatedSensors
+      );
+      updatedSensors.forEach(updatedSensor => {
+        const index = stateCopy.indexOf(updatedSensor);
+        if (index > -1) {
+          stateCopy.splice(index, 1);
+        } else {
+          console.log("No sensor to delete");
+        }
+      });
       return {
         sensorData: stateCopy,
         notifications: state.notifications
@@ -200,16 +211,18 @@ function dataStateReducer(state: DataState, action: Action) {
 function SensorDataProvider({ children }: SensorDataProviderProps) {
   const [state, dispatch] = useReducer(dataStateReducer, defaultDataState);
 
-  const sensorsUpdated = (updatedSensor: SensorData) => {
-    dispatch({ type: ADD_SENSOR_DATA, payload: { updatedSensor } });
+  const sensorsUpdated = (updatedSensors: SensorData[]) => {
+    console.log("sensors updated");
+    dispatch({ type: ADD_SENSOR_DATA, payload: { updatedSensors } });
   };
   const notificationsUpdated = (updatedNotification: Notification) => {
+    console.log("notifications updated");
     dispatch({ type: ADD_NOTIFICATION_DATA, payload: { updatedNotification } });
   };
 
   useEffect(() => {
     getSensorData()
-      .then(sensors => sensors.forEach(sensorsUpdated))
+      .then(sensors => sensorsUpdated(sensors))
       .then(getNotifications)
       .then(notificationData => notificationData.forEach(notificationsUpdated))
       .then(getConnectionInfo)
@@ -245,6 +258,7 @@ function SensorDataProvider({ children }: SensorDataProviderProps) {
         startConnection(connection);
       })
       .catch(console.error);
+    console.log("data been got");
   }, []);
   return (
     <SensorStateContext.Provider value={state}>
