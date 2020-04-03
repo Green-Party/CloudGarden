@@ -45,7 +45,7 @@ const ONE_MINUTE = 60000;
 const LIGHT_CHECK_INTERVAL = ONE_MINUTE;
 
 function initialize(state) {
-  let board = new five.Board();
+  let board = new five.Board({ timeout: 20000 });
 
   state.sensorData = readings;
 
@@ -55,7 +55,7 @@ function initialize(state) {
       board: board
     });
 
-    si1145.initialize(() => {
+    await si1145.initialize(() => {
       if (si1145.deviceActive()) {
         setInterval(() => {
           if (si1145.deviceActive()) {
@@ -64,9 +64,15 @@ function initialize(state) {
                 readings.visible = si1145.device.parameters[0].value;
                 readings.ir = si1145.device.parameters[1].value;
                 readings.uv_index = si1145.device.parameters[2].value;
-                console.log(`Visible: ${si1145.device.parameters[0].value}`);
-                console.log(`IR: ${si1145.device.parameters[1].value}`);
-                console.log(`UVIndex: ${si1145.device.parameters[2].value}`);
+                console.log(
+                  `Visible: ${readings.visible} = ${si1145.device.parameters[0].value}`
+                );
+                console.log(
+                  `IR: ${readings.ir} = ${si1145.device.parameters[1].value}`
+                );
+                console.log(
+                  `UVIndex: ${readings.uv_index} = ${si1145.device.parameters[2].value}`
+                );
               } else {
                 console.error(`Error: ${err}`);
               }
@@ -178,9 +184,16 @@ function toggleLight() {
 }
 
 async function runPump(idx) {
-  controls.pumps.turnOn(idx);
-  await utils.sleep(PUMP_TIME);
-  controls.pumps.turnOff(idx);
+  if (controls.pumps) {
+    controls.pumps.turnOn(idx);
+    await utils.sleep(PUMP_TIME);
+    controls.pumps.turnOff(idx);
+  } else {
+    console.log("Pumps not initialized");
+    controls.pumps = new Pumps({
+      enabled: false
+    });
+  }
 }
 
 // To test sensor initialization

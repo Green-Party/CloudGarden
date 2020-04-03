@@ -15,7 +15,7 @@ module.exports = class ThermoSensor {
 
     const DEFAULT_PIN = 22;
     const DEFAULT_CONTROLLER = "DS18B20";
-    const DEFAULT_FREQ = 1000;
+    const DEFAULT_FREQ = 5000;
 
     let opts = options || {};
 
