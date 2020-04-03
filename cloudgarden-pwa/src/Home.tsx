@@ -21,7 +21,10 @@ const useStyles = makeStyles({
     marginTop: 16
   },
   mobileContainer: {
-    width: 375
+    width: "100vw"
+  },
+  item: {
+    marginTop: 16
   }
 });
 const Home: React.FC = () => {
@@ -36,10 +39,9 @@ const Home: React.FC = () => {
       direction="column"
       justify="center"
       alignItems="center"
-      spacing={4}
       className={mobile ? styles.mobileContainer : styles.container}
     >
-      <Grid item>
+      <Grid item className={styles.item}>
         <Tabs
           tabValues={[
             { target: `${match.url}/moisture`, label: "moisture" },
@@ -49,7 +51,7 @@ const Home: React.FC = () => {
           ]}
         />
       </Grid>
-      <Grid item>
+      <Grid item className={styles.item}>
         <Switch>
           <PrivateRoute
             exact
