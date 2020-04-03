@@ -16,12 +16,13 @@ interface Data {
 
 const useStyles = makeStyles({
   chartLabel: {
+    margin: 0,
     position: "absolute",
-    top: "52%",
+    top: "48%",
     left: "50%",
-    zIndex: 2,
-    marginTop: "-2rem",
-    marginLeft: "-2.3rem"
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    zIndex: 2
   },
   container: {
     position: "relative"
@@ -88,7 +89,7 @@ const PercentChart: React.FC<Data> = ({ value, range, units }: Data) => {
           endAngle={angle}
         />
         <Typography variant="h6" className={styles.chartLabel}>
-          {value.toPrecision(4)}
+          {Math.trunc(value)}
         </Typography>
       </div>
       <Typography variant="subtitle1">
