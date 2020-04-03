@@ -10,7 +10,8 @@ import {
   Paper,
   Typography,
   GridList,
-  GridListTile
+  GridListTile,
+  useMediaQuery
 } from "@material-ui/core";
 import { makeStyles, createStyles, useTheme } from "@material-ui/core/styles";
 import { SensorType, SensorUnit, SensorRanges } from "./Units";
@@ -73,6 +74,7 @@ const useStyles = makeStyles(theme =>
 const HistoryChart: React.FC<Data> = ({ type, units, data }: Data) => {
   const theme = useTheme();
   const styles = useStyles(theme);
+  const mobile = !useMediaQuery("(min-width:400px)");
   const [filters, setFilters] = useState<string[]>([]);
   const colors = [
     theme.palette.primary.light,
@@ -133,7 +135,7 @@ const HistoryChart: React.FC<Data> = ({ type, units, data }: Data) => {
           });
           return newChipData;
         }),
-      []
+      [data]
     );
 
     useEffect(() => {
@@ -149,7 +151,7 @@ const HistoryChart: React.FC<Data> = ({ type, units, data }: Data) => {
         });
         return newChipData;
       });
-    }, [filters]);
+    }, []);
 
     return (
       <Paper className={classes.root}>
@@ -260,13 +262,18 @@ const HistoryChart: React.FC<Data> = ({ type, units, data }: Data) => {
                 style={{
                   data: { stroke: colors[index] }
                 }}
-                animate={{
-                  duration: 1000,
-                  onLoad: { duration: 1000 }
-                }}
+                animate={
+                  mobile
+                    ? false
+                    : {
+                        duration: 1000,
+                        onLoad: { duration: 1000 }
+                      }
+                }
               />
             );
           }
+          return null;
         })}
       </svg>
     </div>
