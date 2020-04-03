@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { useMediaQuery, Grid } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import "../../Dashboard.css";
 import { makeStyles, useTheme, createStyles } from "@material-ui/core/styles";
 import socketIOClient from "socket.io-client";

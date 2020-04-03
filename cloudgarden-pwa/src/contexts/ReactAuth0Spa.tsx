@@ -83,7 +83,7 @@ const Auth0Provider: React.FC<Auth0ProviderProps> = ({
       setLoading(false);
     };
     initAuth0();
-  }, []);
+  }, [auth0Options, onRedirectCallback]);
 
   const loginWithPopup = async (params = {}) => {
     setPopupOpen(true);

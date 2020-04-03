@@ -34,7 +34,7 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Loading />}>
         <SensorDataProvider>
           <Fragment>
             <Header onMenuClick={setOpen} />

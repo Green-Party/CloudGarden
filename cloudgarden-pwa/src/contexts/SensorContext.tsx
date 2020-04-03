@@ -12,6 +12,7 @@ import { SensorData, Notification, DataState } from "../types";
 
 // Action types
 const ADD_SENSOR_DATA = "ADD_SENSOR_DATA";
+const ADD_SENSORS_DATA = "ADD_SENSORS_DATA";
 const REMOVE_SENSOR_DATA = "REMOVE_SENSOR_DATA";
 const ADD_NOTIFICATION_DATA = "ADD_NOTIFICATION_DATA";
 const REMOVE_NOTIFICATION_DATA = "REMOVE_NOTIFICATION_DATA";
@@ -23,10 +24,15 @@ type NotificationPayload = {
 type SensorDataPayload = {
   updatedSensor: SensorData;
 };
+type SensorsDataPayload = {
+  updatedSensors: SensorData[];
+};
 type SensorType = "ADD_SENSOR_DATA" | "REMOVE_SENSOR_DATA";
+type SensorsType = "ADD_SENSORS_DATA";
 type NotificationType = "ADD_NOTIFICATION_DATA" | "REMOVE_NOTIFICATION_DATA";
 type Action =
   | { type: SensorType; payload: SensorDataPayload }
+  | { type: SensorsType; payload: SensorsDataPayload }
   | { type: NotificationType; payload: NotificationPayload };
 type Dispatch = (action: Action) => void;
 
@@ -134,6 +140,31 @@ function dataStateReducer(state: DataState, action: Action) {
         notifications: state.notifications
       };
     }
+    case ADD_SENSORS_DATA: {
+      const updatedSensors: SensorData[] = action.payload.updatedSensors;
+      let stateCopy: SensorData[] = Array.from(state.sensorData);
+      let newState;
+      updatedSensors.forEach(updatedSensor => {
+        let sensor = stateCopy.find(
+          (s: SensorData) => s.id === updatedSensor.id
+        );
+        if (sensor) {
+          Object.assign(sensor, updatedSensor);
+          newState = stateCopy;
+        } else {
+          newState = [...stateCopy, updatedSensor];
+        }
+
+        if (newState[0] === defaultSensorData) {
+          newState = Array.from(newState.slice(1));
+        }
+        stateCopy = newState;
+      });
+      return {
+        sensorData: stateCopy,
+        notifications: state.notifications
+      };
+    }
     case REMOVE_SENSOR_DATA: {
       const stateCopy: SensorData[] = Array.from(state.sensorData);
       const updatedSensor: SensorData = action.payload.updatedSensor;
@@ -200,8 +231,11 @@ function dataStateReducer(state: DataState, action: Action) {
 function SensorDataProvider({ children }: SensorDataProviderProps) {
   const [state, dispatch] = useReducer(dataStateReducer, defaultDataState);
 
-  const sensorsUpdated = (updatedSensor: SensorData) => {
+  const sensorUpdated = (updatedSensor: SensorData) => {
     dispatch({ type: ADD_SENSOR_DATA, payload: { updatedSensor } });
+  };
+  const sensorsUpdated = (updatedSensors: SensorData[]) => {
+    dispatch({ type: ADD_SENSORS_DATA, payload: { updatedSensors } });
   };
   const notificationsUpdated = (updatedNotification: Notification) => {
     dispatch({ type: ADD_NOTIFICATION_DATA, payload: { updatedNotification } });
@@ -209,7 +243,7 @@ function SensorDataProvider({ children }: SensorDataProviderProps) {
 
   useEffect(() => {
     getSensorData()
-      .then(sensors => sensors.forEach(sensorsUpdated))
+      .then(sensors => sensorsUpdated(sensors))
       .then(getNotifications)
       .then(notificationData => notificationData.forEach(notificationsUpdated))
       .then(getConnectionInfo)
@@ -233,7 +267,7 @@ function SensorDataProvider({ children }: SensorDataProviderProps) {
           .configureLogging(signalR.LogLevel.Information)
           .build();
 
-        connection.on("sensorsUpdated", sensorsUpdated);
+        connection.on("sensorsUpdated", sensorUpdated);
         connection.on("notificationsUpdated", notificationsUpdated);
 
         connection.onclose(() => {
