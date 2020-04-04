@@ -10,7 +10,7 @@ import * as serviceWorker from "./serviceWorker";
 import App from "./App";
 import "./index.css";
 import { subscribeUser } from "./subscription";
-import { Auth0Provider } from "./contexts";
+import { Auth0Provider, SensorDataProvider } from "./contexts";
 import auth_config from "./components/auth/auth_config.json";
 import history from "./utils/history";
 
@@ -35,7 +35,9 @@ ReactDOM.render(
     auth0Options={auth0Options}
     onRedirectCallback={onRedirectCallback}
   >
-    <App />
+    <SensorDataProvider>
+      <App />
+    </SensorDataProvider>
   </Auth0Provider>,
   document.getElementById("root")
 );

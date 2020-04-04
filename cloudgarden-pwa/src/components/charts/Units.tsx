@@ -28,34 +28,33 @@ export const SensorRanges: SensorRangesType = {
     CELSIUS: {
       low: 0,
       high: 100,
-      ideal: 50
+      ideal: 19
     },
     FERINHEIGHT: {
       low: 32,
       high: 212,
-      ideal: 122
-    },
-    high: 100
+      ideal: 67
+    }
   },
   SOIL_MOISTURE: {
     low: 0,
     high: 10,
-    ideal: 6.5
+    ideal: 5
   },
   UV_INDEX: {
     low: 0,
-    high: 11,
-    ideal: 4
+    high: 10,
+    ideal: 2
   },
   IR: {
-    low: 550,
-    high: 1000,
-    ideal: 800
+    low: 0,
+    high: 1100,
+    ideal: 1100
   },
   VISIBLE: {
-    low: 400,
-    high: 800,
-    ideal: 530
+    low: 0,
+    high: 400,
+    ideal: 400
   },
   WATER_LEVEL: {
     low: 0,

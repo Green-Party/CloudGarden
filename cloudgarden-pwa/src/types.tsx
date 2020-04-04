@@ -38,4 +38,5 @@ export type Notification = {
 export type DataState = {
   sensorData: SensorData[];
   notifications: Notification[];
+  dataLoading: boolean;
 };

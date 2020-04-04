@@ -12,22 +12,37 @@ import { SensorData, Notification, DataState } from "../types";
 
 // Action types
 const ADD_SENSOR_DATA = "ADD_SENSOR_DATA";
+const ADD_SENSORS_DATA = "ADD_SENSORS_DATA";
 const REMOVE_SENSOR_DATA = "REMOVE_SENSOR_DATA";
 const ADD_NOTIFICATION_DATA = "ADD_NOTIFICATION_DATA";
+const ADD_NOTIFICATIONS_DATA = "ADD_NOTIFICATIONS_DATA";
 const REMOVE_NOTIFICATION_DATA = "REMOVE_NOTIFICATION_DATA";
+const UPDATE_LOADING_STATE = "UPDATE_LOADING_STATE";
 
 type SensorDataProviderProps = { children: React.ReactNode };
 type NotificationPayload = {
   updatedNotification: Notification;
 };
+type NotificationsDataPayload = {
+  updatedNotifications: Notification[];
+};
 type SensorDataPayload = {
   updatedSensor: SensorData;
 };
+type SensorsDataPayload = {
+  updatedSensors: SensorData[];
+};
 type SensorType = "ADD_SENSOR_DATA" | "REMOVE_SENSOR_DATA";
+type SensorsType = "ADD_SENSORS_DATA";
 type NotificationType = "ADD_NOTIFICATION_DATA" | "REMOVE_NOTIFICATION_DATA";
+type NotificationsType = "ADD_NOTIFICATIONS_DATA";
+type LoadingStateType = "UPDATE_LOADING_STATE";
 type Action =
   | { type: SensorType; payload: SensorDataPayload }
-  | { type: NotificationType; payload: NotificationPayload };
+  | { type: SensorsType; payload: SensorsDataPayload }
+  | { type: NotificationType; payload: NotificationPayload }
+  | { type: NotificationsType; payload: NotificationsDataPayload }
+  | { type: LoadingStateType; payload: boolean };
 type Dispatch = (action: Action) => void;
 
 const SensorStateContext = createContext<DataState | undefined>(undefined);
@@ -57,7 +72,8 @@ const defaultNotification: Notification = {
 
 const defaultDataState: DataState = {
   sensorData: [defaultSensorData],
-  notifications: [defaultNotification]
+  notifications: [defaultNotification],
+  dataLoading: true
 };
 
 // axios configs
@@ -131,7 +147,34 @@ function dataStateReducer(state: DataState, action: Action) {
       }
       return {
         sensorData: newState,
-        notifications: state.notifications
+        notifications: state.notifications,
+        dataLoading: state.dataLoading
+      };
+    }
+    case ADD_SENSORS_DATA: {
+      const updatedSensors: SensorData[] = action.payload.updatedSensors;
+      let stateCopy: SensorData[] = Array.from(state.sensorData);
+      let newState;
+      updatedSensors.forEach(updatedSensor => {
+        let sensor = stateCopy.find(
+          (s: SensorData) => s.id === updatedSensor.id
+        );
+        if (sensor) {
+          Object.assign(sensor, updatedSensor);
+          newState = stateCopy;
+        } else {
+          newState = [...stateCopy, updatedSensor];
+        }
+
+        if (newState[0] === defaultSensorData) {
+          newState = Array.from(newState.slice(1));
+        }
+        stateCopy = newState;
+      });
+      return {
+        sensorData: stateCopy,
+        notifications: state.notifications,
+        dataLoading: state.dataLoading
       };
     }
     case REMOVE_SENSOR_DATA: {
@@ -145,7 +188,8 @@ function dataStateReducer(state: DataState, action: Action) {
       }
       return {
         sensorData: stateCopy,
-        notifications: state.notifications
+        notifications: state.notifications,
+        dataLoading: state.dataLoading
       };
     }
     case ADD_NOTIFICATION_DATA: {
@@ -173,7 +217,35 @@ function dataStateReducer(state: DataState, action: Action) {
       }
       return {
         notifications: newState,
-        sensorData: state.sensorData
+        sensorData: state.sensorData,
+        dataLoading: state.dataLoading
+      };
+    }
+    case ADD_NOTIFICATIONS_DATA: {
+      const updatedNotifications: Notification[] =
+        action.payload.updatedNotifications;
+      let stateCopy: Notification[] = Array.from(state.notifications);
+      let newState;
+      updatedNotifications.forEach(updatedNotification => {
+        let notification = stateCopy.find(
+          (n: Notification) => n.id === updatedNotification.id
+        );
+        if (notification) {
+          Object.assign(notification, updatedNotification);
+          newState = stateCopy;
+        } else {
+          newState = [...stateCopy, updatedNotification];
+        }
+
+        if (newState[0] === defaultNotification) {
+          newState = Array.from(newState.slice(1));
+        }
+        stateCopy = newState;
+      });
+      return {
+        notifications: stateCopy,
+        sensorData: state.sensorData,
+        dataLoading: state.dataLoading
       };
     }
     case REMOVE_NOTIFICATION_DATA: {
@@ -188,7 +260,15 @@ function dataStateReducer(state: DataState, action: Action) {
       }
       return {
         notifications: stateCopy,
-        sensorData: state.sensorData
+        sensorData: state.sensorData,
+        dataLoading: state.dataLoading
+      };
+    }
+    case UPDATE_LOADING_STATE: {
+      return {
+        notifications: state.notifications,
+        sensorData: state.sensorData,
+        dataLoading: action.payload
       };
     }
     default: {
@@ -200,18 +280,30 @@ function dataStateReducer(state: DataState, action: Action) {
 function SensorDataProvider({ children }: SensorDataProviderProps) {
   const [state, dispatch] = useReducer(dataStateReducer, defaultDataState);
 
-  const sensorsUpdated = (updatedSensor: SensorData) => {
+  const sensorUpdated = (updatedSensor: SensorData) => {
     dispatch({ type: ADD_SENSOR_DATA, payload: { updatedSensor } });
   };
-  const notificationsUpdated = (updatedNotification: Notification) => {
+  const sensorsUpdated = (updatedSensors: SensorData[]) => {
+    dispatch({ type: ADD_SENSORS_DATA, payload: { updatedSensors } });
+  };
+  const notificationUpdated = (updatedNotification: Notification) => {
     dispatch({ type: ADD_NOTIFICATION_DATA, payload: { updatedNotification } });
+  };
+  const notificationsUpdated = (updatedNotifications: Notification[]) => {
+    dispatch({
+      type: ADD_NOTIFICATIONS_DATA,
+      payload: { updatedNotifications }
+    });
+  };
+  const loadingUpdate = (updatedLoadingState: boolean) => {
+    dispatch({ type: UPDATE_LOADING_STATE, payload: updatedLoadingState });
   };
 
   useEffect(() => {
     getSensorData()
-      .then(sensors => sensors.forEach(sensorsUpdated))
+      .then(sensors => sensorsUpdated(sensors))
       .then(getNotifications)
-      .then(notificationData => notificationData.forEach(notificationsUpdated))
+      .then(notificationData => notificationsUpdated(notificationData))
       .then(getConnectionInfo)
       .then(info => {
         let accessToken = info.accessToken;
@@ -233,8 +325,8 @@ function SensorDataProvider({ children }: SensorDataProviderProps) {
           .configureLogging(signalR.LogLevel.Information)
           .build();
 
-        connection.on("sensorsUpdated", sensorsUpdated);
-        connection.on("notificationsUpdated", notificationsUpdated);
+        connection.on("sensorsUpdated", sensorUpdated);
+        connection.on("notificationsUpdated", notificationUpdated);
 
         connection.onclose(() => {
           console.log("disconnected");
@@ -243,6 +335,7 @@ function SensorDataProvider({ children }: SensorDataProviderProps) {
           }, 2000);
         });
         startConnection(connection);
+        loadingUpdate(false);
       })
       .catch(console.error);
   }, []);
