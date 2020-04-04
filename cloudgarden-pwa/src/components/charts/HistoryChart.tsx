@@ -93,6 +93,7 @@ const HistoryChart: React.FC<Data> = ({ type, units, data }: Data) => {
         });
       });
     }
+
     return raw_data;
   };
 
@@ -184,6 +185,21 @@ const HistoryChart: React.FC<Data> = ({ type, units, data }: Data) => {
     return start;
   };
 
+  let yDomain: [number, number] = [
+    0,
+    data.flat().length > 0
+      ? Math.max(...data.flat().map(v => v.value))
+      : SensorRanges[type].high
+  ];
+  let xDomain: [Date, Date] = [
+    filters.includes("todays data")
+      ? getDateStart()
+      : new Date(Math.min(...data.flat().map(v => v.timestamp.getTime()))),
+    filters.includes("todays data")
+      ? getDateEnd()
+      : new Date(Math.max(...data.flat().map(v => v.timestamp.getTime())))
+  ];
+
   return (
     <div>
       <FilterChipsArray data={data} />
@@ -213,18 +229,7 @@ const HistoryChart: React.FC<Data> = ({ type, units, data }: Data) => {
           scale="time"
           label="Time"
           standalone={false}
-          domain={[
-            filters.includes("todays data")
-              ? getDateStart()
-              : new Date(
-                  Math.min(...data.flat().map(v => v.timestamp.getTime()))
-                ),
-            filters.includes("todays data")
-              ? getDateEnd()
-              : new Date(
-                  Math.max(...data.flat().map(v => v.timestamp.getTime()))
-                )
-          ]}
+          domain={xDomain}
         />
 
         {/*
@@ -233,14 +238,10 @@ const HistoryChart: React.FC<Data> = ({ type, units, data }: Data) => {
         */}
         <VictoryAxis
           dependentAxis
-          domain={[
-            0,
-            data.flat().length > 0
-              ? Math.max(...data.flat().map(v => v.value))
-              : SensorRanges[type].high
-          ]}
+          domain={yDomain}
           orientation="left"
           standalone={false}
+          scale="linear"
           axisLabelComponent={<VictoryLabel dy={-10} />}
           label={`${type.toLowerCase().replace(/_/g, " ")}`}
         />
@@ -258,7 +259,9 @@ const HistoryChart: React.FC<Data> = ({ type, units, data }: Data) => {
                 x="timestamp"
                 y="value"
                 scale={{ x: "time", y: "linear" }}
+                domain={{ y: yDomain }}
                 standalone={false}
+                interpolation="monotoneX" //"catmullRom"
                 style={{
                   data: { stroke: colors[index] }
                 }}

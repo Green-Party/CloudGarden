@@ -89,12 +89,11 @@ const PercentChart: React.FC<Data> = ({ value, range, units }: Data) => {
           endAngle={angle}
         />
         <Typography variant="h6" className={styles.chartLabel}>
-          {Math.trunc(value)}
+          {Math.round((value + Number.EPSILON) * 100) / 100}
         </Typography>
       </div>
       <Typography variant="subtitle1">
-        Ideal: {Math.round(range.ideal)}
-        {units}
+        {units === "nm" ? <br /> : `Ideal: ${range.ideal} ${units}`}
       </Typography>
     </div>
   );
