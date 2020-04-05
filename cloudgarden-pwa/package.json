@@ -82,6 +82,7 @@
   },
   "devDependencies": {
     "arkit": "^1.6.2",
+    "jest-webgl-canvas-mock": "^0.2.3",
     "react-test-renderer": "^16.13.1"
   },
   "proxy": "http://localhost:9000"

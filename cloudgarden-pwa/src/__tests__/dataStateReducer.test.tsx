@@ -1,7 +1,11 @@
 import React from "react";
 import { shallow, configure, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import { dataStateReducer, defaultDataState } from "../contexts/SensorContext";
+import {
+  dataStateReducer,
+  defaultDataState,
+  Action
+} from "../contexts/SensorContext";
 import { SensorData, Notification, DataState } from "../types";
 import {
   mockSensorData,
@@ -11,17 +15,6 @@ import {
   defaultSensorData
 } from "./utils";
 
-type SensorType = "ADD_SENSOR_DATA" | "REMOVE_SENSOR_DATA";
-type NotificationType = "ADD_NOTIFICATION_DATA" | "REMOVE_NOTIFICATION_DATA";
-type NotificationPayload = {
-  updatedNotification: Notification;
-};
-type SensorDataPayload = {
-  updatedSensor: SensorData;
-};
-type Action =
-  | { type: SensorType; payload: SensorDataPayload }
-  | { type: NotificationType; payload: NotificationPayload };
 configure({ adapter: new Adapter() });
 
 describe("dataStateReducer", () => {
@@ -32,7 +25,8 @@ describe("dataStateReducer", () => {
     };
     expect(dataStateReducer(defaultDataState, action)).toEqual({
       sensorData: [action.payload.updatedSensor],
-      notifications: defaultDataState.notifications
+      notifications: defaultDataState.notifications,
+      dataLoading: true
     });
   });
   test("handles ADD_SENSOR_DATA when sensor exists already", async () => {
@@ -41,7 +35,8 @@ describe("dataStateReducer", () => {
     existingSensor.id = sensorToUpdate.id;
     const existingState = {
       sensorData: [existingSensor],
-      notifications: defaultDataState.notifications
+      notifications: defaultDataState.notifications,
+      dataLoading: true
     };
     const action: Action = {
       type: "ADD_SENSOR_DATA",
@@ -49,14 +44,16 @@ describe("dataStateReducer", () => {
     };
     expect(dataStateReducer(existingState, action)).toEqual({
       sensorData: [action.payload.updatedSensor],
-      notifications: defaultDataState.notifications
+      notifications: defaultDataState.notifications,
+      dataLoading: true
     });
   });
   test("handles REMOVE_SENSOR_DATA when sensor exists", async () => {
     const sensorToUpdate = mockSensorData();
     const existingState = {
       sensorData: [...defaultDataState.sensorData, sensorToUpdate],
-      notifications: defaultDataState.notifications
+      notifications: defaultDataState.notifications,
+      dataLoading: true
     };
     const action: Action = {
       type: "REMOVE_SENSOR_DATA",
@@ -81,7 +78,8 @@ describe("dataStateReducer", () => {
     };
     expect(dataStateReducer(defaultDataState, action)).toEqual({
       sensorData: defaultDataState.sensorData,
-      notifications: [action.payload.updatedNotification]
+      notifications: [action.payload.updatedNotification],
+      dataLoading: true
     });
   });
   test("handles ADD_NOTIFICATION_DATA when notification exists already", async () => {
@@ -90,7 +88,8 @@ describe("dataStateReducer", () => {
     existingNotification.id = notificationToUpdate.id;
     const existingState = {
       sensorData: defaultDataState.sensorData,
-      notifications: [...defaultDataState.notifications, existingNotification]
+      notifications: [...defaultDataState.notifications, existingNotification],
+      dataLoading: true
     };
     const action: Action = {
       type: "ADD_NOTIFICATION_DATA",
@@ -98,14 +97,16 @@ describe("dataStateReducer", () => {
     };
     expect(dataStateReducer(existingState, action)).toEqual({
       sensorData: defaultDataState.sensorData,
-      notifications: [notificationToUpdate]
+      notifications: [notificationToUpdate],
+      dataLoading: true
     });
   });
   test("handles REMOVE_NOTIFICATION_DATA when notification exists", async () => {
     const notificationToUpdate = mockNotification();
     const existingState = {
       sensorData: defaultDataState.sensorData,
-      notifications: [...defaultDataState.notifications, notificationToUpdate]
+      notifications: [...defaultDataState.notifications, notificationToUpdate],
+      dataLoading: true
     };
     const action: Action = {
       type: "REMOVE_NOTIFICATION_DATA",
@@ -122,5 +123,16 @@ describe("dataStateReducer", () => {
     expect(dataStateReducer(defaultDataState, action)).toEqual(
       defaultDataState
     );
+  });
+  test("handles UPDATE_LOADING_STATE action", async () => {
+    const action: Action = {
+      type: "UPDATE_LOADING_STATE",
+      payload: false
+    };
+    expect(dataStateReducer(defaultDataState, action)).toEqual({
+      sensorData: defaultDataState.sensorData,
+      notifications: defaultDataState.notifications,
+      dataLoading: false
+    });
   });
 });

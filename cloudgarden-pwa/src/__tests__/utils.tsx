@@ -23,7 +23,8 @@ export const defaultNotification: Notification = {
 
 export const defaultDataState: DataState = {
   sensorData: [defaultSensorData],
-  notifications: [defaultNotification]
+  notifications: [defaultNotification],
+  dataLoading: true
 };
 
 export function mockSensorData() {
@@ -65,8 +66,10 @@ export function mockDataState(
 ) {
   const sensorData = _.range(sensorLength).map(mockSensorData);
   const notifications = _.range(notificationLength).map(mockNotification);
+  const dataLoading = true;
   return {
     sensorData,
-    notifications
+    notifications,
+    dataLoading
   };
 }

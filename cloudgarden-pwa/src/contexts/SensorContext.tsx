@@ -36,7 +36,7 @@ type SensorsType = "ADD_SENSORS_DATA";
 type NotificationType = "ADD_NOTIFICATION_DATA" | "REMOVE_NOTIFICATION_DATA";
 type NotificationsType = "ADD_NOTIFICATIONS_DATA";
 type LoadingStateType = "UPDATE_LOADING_STATE";
-type Action =
+export type Action =
   | { type: SensorType; payload: SensorDataPayload }
   | { type: SensorsType; payload: SensorsDataPayload }
   | { type: NotificationType; payload: NotificationPayload }
@@ -69,7 +69,7 @@ const defaultNotification: Notification = {
   _ts: 0
 };
 
-export const defaultDataState: DataState = {
+const defaultDataState: DataState = {
   sensorData: [defaultSensorData],
   notifications: [defaultNotification],
   dataLoading: true
@@ -375,6 +375,7 @@ export {
   useSensorDataState,
   useSensorDataDispatch,
   useSensorData,
+  defaultDataState,
   ADD_SENSOR_DATA,
   REMOVE_SENSOR_DATA,
   ADD_NOTIFICATION_DATA,
