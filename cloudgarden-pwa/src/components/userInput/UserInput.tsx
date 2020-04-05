@@ -108,10 +108,6 @@ const useStyles = makeStyles((theme) =>
 const UserInput: React.FC<UserInputProps> = (props) => {
   const theme = useTheme();
   const styles = useStyles(theme);
-  // const [inputState, setInputState]: [boolean, Function] = useState(false);
-  // const [selectedStartTime, setSelectedStartTime] = useState<Date | null>(null);
-  // const [selectedEndTime, setSelectedEndTime] = useState<Date | null>(null);
-  // const [selectedNumber, setSelectedNumber] = useState<string>("");
   const { onSubmit } = props;
   const {
     inputState,
@@ -145,28 +141,21 @@ const UserInput: React.FC<UserInputProps> = (props) => {
   };
 
   const handleStartTimeChange = (date: Date | null) => {
-    // setSelectedStartTime(date);
     let currentState = getCurrentState();
     currentState.selectedStartTime = date;
     updateState(currentState);
   };
   const handleEndTimeChange = (date: Date | null) => {
-    // setSelectedEndTime(date);
     let currentState = getCurrentState();
     currentState.selectedEndTime = date;
     updateState(currentState);
   };
   const handleNumberChange = (number: string) => {
-    // setSelectedNumber(number);
     let currentState = getCurrentState();
     currentState.selectedNumber = number;
     updateState(currentState);
   };
   const onSwitchChanged = () => {
-    // setInputState((lastState: boolean) => {
-    //   if (lastState) props.onTurnOff();
-    //   return !lastState;
-    // });
     if (inputState) props.onTurnOff();
     let currentState = getCurrentState();
     if (props.type === "MOISTURE") {

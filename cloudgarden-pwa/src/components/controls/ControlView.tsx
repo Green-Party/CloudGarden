@@ -140,7 +140,6 @@ const ControlView: React.FC = () => {
   const {
     controlDashboard: { lightState },
   } = controlState;
-  // const [lightState, setLightState] = useState(false);
   const [watering0, setWatering0] = useState(false);
   const [watering1, setWatering1] = useState(false);
   const [watering2, setWatering2] = useState(false);
