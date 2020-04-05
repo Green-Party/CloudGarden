@@ -2,7 +2,7 @@
  * Creation Date: March 22, 2020
  * Author: Luke Slevinsky
  * This component makes it so that you must authenticate before hitting the route
- * Ideas modified from: https://manage.auth0.com/dashboard/us/cloudgarden/applications/IcF1UdmW4g5cH4o9vEfU0Cmkk4k0RS5m/quickstart
+ * Ideas modified from: https://auth0.com/docs/quickstart/spa/react?framed=1&sq=1#configure-auth0
  */
 
 import React, { useEffect } from "react";
@@ -28,7 +28,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
     }
     const fn = async () => {
       await loginWithRedirect({
-        appState: { targetUrl: window.location.pathname }
+        appState: { targetUrl: window.location.pathname },
       });
     };
     fn();

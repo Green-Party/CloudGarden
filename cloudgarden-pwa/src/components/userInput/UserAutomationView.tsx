@@ -11,8 +11,14 @@ import "../../Dashboard.css";
 import { makeStyles, useTheme, createStyles } from "@material-ui/core/styles";
 import socketIOClient from "socket.io-client";
 import UserInput from "./UserInput";
+import {
+  useControlState,
+  UPDATE_LIGHT_AUTOMATION,
+  UPDATE_MOISTURE_AUTOMATION,
+} from "../../contexts";
+import { LightAutomationPayload, MoistureAutomationPayload } from "../../types";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     button: {
       background: theme.palette.secondary.main,
@@ -24,8 +30,8 @@ const useStyles = makeStyles(theme =>
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
       "&:hover": {
-        background: theme.palette.secondary.dark
-      }
+        background: theme.palette.secondary.dark,
+      },
     },
     card: {
       transition: "0.3s",
@@ -36,29 +42,45 @@ const useStyles = makeStyles(theme =>
       textAlign: "center",
       margin: 8,
       color: theme.palette.primary.dark,
-      justifyContent: "center"
+      justifyContent: "center",
     },
     cardContent: {
       display: "flex",
       flexDirection: "column",
       alignItems: "start",
-      textAlign: "center"
+      textAlign: "center",
     },
     gridList: {
       width: "100%",
-      height: "100%"
+      height: "100%",
     },
     grid: {
       marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2)
-    }
+      marginBottom: theme.spacing(2),
+    },
   })
 );
 
 const UserAutomationView: React.FC = () => {
   const theme = useTheme();
   const styles = useStyles(theme);
+  const [controlState, controlDispatch] = useControlState();
   const [currentSocket, setCurrentSocket]: any = useState(null);
+
+  const updateLightAutomation = (updatedLightState: LightAutomationPayload) => {
+    controlDispatch({
+      type: UPDATE_LIGHT_AUTOMATION,
+      payload: updatedLightState,
+    });
+  };
+  const updateMoistureAutomation = (
+    updatedMoistureState: MoistureAutomationPayload
+  ) => {
+    controlDispatch({
+      type: UPDATE_MOISTURE_AUTOMATION,
+      payload: updatedMoistureState,
+    });
+  };
 
   const onClickLightUpdate = (
     _selectedNumber: number,
@@ -68,14 +90,14 @@ const UserAutomationView: React.FC = () => {
     currentSocket.emit("updateLight", {
       isOn: true,
       timeOfDayStart: selectedStartTime,
-      timeOfDayEnd: selectedEndTime
+      timeOfDayEnd: selectedEndTime,
     });
   };
   const turnOffLight = () => {
     currentSocket.emit("updateLight", {
       isOn: false,
       threshold: -1,
-      timeOfDay: -1
+      timeOfDay: -1,
     });
   };
   const onClickMoistureUpdate = (
@@ -85,13 +107,13 @@ const UserAutomationView: React.FC = () => {
   ) => {
     currentSocket.emit("updateMoistureThreshold", {
       isOn: true,
-      threshold: selectedNumber
+      threshold: selectedNumber,
     });
   };
   const turnOffMoisture = () => {
     currentSocket.emit("updateMoistureThreshold", {
       isOn: false,
-      threshold: -1
+      threshold: -1,
     });
   };
 
@@ -126,6 +148,16 @@ const UserAutomationView: React.FC = () => {
           type="MOISTURE"
           onSubmit={onClickMoistureUpdate}
           onTurnOff={turnOffMoisture}
+          inputState={
+            controlState.automationDashboard.moisture.moistureAutomation
+          }
+          selectedStartTime={null}
+          selectedEndTime={null}
+          selectedNumber={
+            controlState.automationDashboard.moisture.selectedNumber
+          }
+          updateLightAutomation={updateLightAutomation}
+          updateMoistureAutomation={updateMoistureAutomation}
         />
       </Grid>
       <Grid item xs={10} sm={5} md={4} className={styles.grid}>
@@ -133,6 +165,16 @@ const UserAutomationView: React.FC = () => {
           type="LIGHT"
           onSubmit={onClickLightUpdate}
           onTurnOff={turnOffLight}
+          inputState={controlState.automationDashboard.light.lightAutomation}
+          selectedStartTime={
+            controlState.automationDashboard.light.selectedStartTime
+          }
+          selectedEndTime={
+            controlState.automationDashboard.light.selectedEndTime
+          }
+          selectedNumber=""
+          updateLightAutomation={updateLightAutomation}
+          updateMoistureAutomation={updateMoistureAutomation}
         />
       </Grid>
     </Grid>

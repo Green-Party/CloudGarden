@@ -40,3 +40,13 @@ export type DataState = {
   notifications: Notification[];
   dataLoading: boolean;
 };
+
+export type MoistureAutomationPayload = {
+  moistureAutomation: boolean;
+  selectedNumber: string;
+};
+export type LightAutomationPayload = {
+  lightAutomation: boolean;
+  selectedStartTime: null | Date;
+  selectedEndTime: null | Date;
+};
