@@ -16,11 +16,11 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
 } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker
+  KeyboardTimePicker,
 } from "@material-ui/pickers";
 import { makeStyles, useTheme, createStyles } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
@@ -36,9 +36,15 @@ interface UserInputProps {
   type: InputType;
   onSubmit: Function;
   onTurnOff: Function;
+  inputState: boolean;
+  selectedStartTime: null | Date;
+  selectedEndTime: null | Date;
+  selectedNumber: string;
+  updateLightAutomation: Function;
+  updateMoistureAutomation: Function;
 }
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     button: {
       background: theme.palette.secondary.main,
@@ -50,10 +56,10 @@ const useStyles = makeStyles(theme =>
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
       "&:hover": {
-        background: theme.palette.secondary.dark
+        background: theme.palette.secondary.dark,
       },
       marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     card: {
       transition: "0.3s",
@@ -63,68 +69,118 @@ const useStyles = makeStyles(theme =>
       alignItems: "flex-start",
       margin: 8,
       color: theme.palette.primary.dark,
-      height: "100%"
+      height: "100%",
     },
     cardContent: {
       display: "flex",
       position: "relative",
       flexDirection: "column",
       alignItems: "stretch",
-      height: "100%"
+      height: "100%",
     },
     gridList: {
       width: "100%",
-      height: "100%"
+      height: "100%",
     },
     formControl: {
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(2),
-      minWidth: 250
+      minWidth: 250,
     },
     helperText: {
-      color: theme.palette.primary.dark
+      color: theme.palette.primary.dark,
     },
     switch: {
-      alignSelf: "flex-end"
+      alignSelf: "flex-end",
     },
     actions: {
       display: "flex",
       justifyContent: "space-around",
       width: "100%",
-      alignItems: "center"
+      alignItems: "center",
     },
     disabled: {
-      color: "rgba(0, 0, 0, 0.38)"
-    }
+      color: "rgba(0, 0, 0, 0.38)",
+    },
   })
 );
 
-const UserInput: React.FC<UserInputProps> = props => {
+const UserInput: React.FC<UserInputProps> = (props) => {
   const theme = useTheme();
   const styles = useStyles(theme);
-  const [inputState, setInputState]: [boolean, Function] = useState(false);
-  const [selectedStartTime, setSelectedStartTime] = useState<Date | null>(null);
-  const [selectedEndTime, setSelectedEndTime] = useState<Date | null>(null);
-  const [selectedNumber, setSelectedNumber] = useState<string>("");
+  // const [inputState, setInputState]: [boolean, Function] = useState(false);
+  // const [selectedStartTime, setSelectedStartTime] = useState<Date | null>(null);
+  // const [selectedEndTime, setSelectedEndTime] = useState<Date | null>(null);
+  // const [selectedNumber, setSelectedNumber] = useState<string>("");
   const { onSubmit } = props;
+  const {
+    inputState,
+    selectedStartTime,
+    selectedEndTime,
+    selectedNumber,
+    updateLightAutomation,
+    updateMoistureAutomation,
+  } = props;
+
+  const updateState =
+    props.type === "MOISTURE"
+      ? updateMoistureAutomation
+      : updateLightAutomation;
+
+  const getCurrentState = () => {
+    let curState;
+    if (props.type === "MOISTURE") {
+      curState = {
+        moistureAutomation: inputState,
+        selectedNumber: selectedNumber,
+      };
+    } else {
+      curState = {
+        lightAutomation: inputState,
+        selectedStartTime,
+        selectedEndTime,
+      };
+    }
+    return curState;
+  };
 
   const handleStartTimeChange = (date: Date | null) => {
-    setSelectedStartTime(date);
+    // setSelectedStartTime(date);
+    let currentState = getCurrentState();
+    currentState.selectedStartTime = date;
+    updateState(currentState);
   };
   const handleEndTimeChange = (date: Date | null) => {
-    setSelectedEndTime(date);
+    // setSelectedEndTime(date);
+    let currentState = getCurrentState();
+    currentState.selectedEndTime = date;
+    updateState(currentState);
   };
   const handleNumberChange = (number: string) => {
-    setSelectedNumber(number);
+    // setSelectedNumber(number);
+    let currentState = getCurrentState();
+    currentState.selectedNumber = number;
+    updateState(currentState);
   };
   const onSwitchChanged = () => {
-    setInputState((lastState: boolean) => {
-      if (lastState) props.onTurnOff();
-      return !lastState;
-    });
+    // setInputState((lastState: boolean) => {
+    //   if (lastState) props.onTurnOff();
+    //   return !lastState;
+    // });
+    if (inputState) props.onTurnOff();
+    let currentState = getCurrentState();
+    if (props.type === "MOISTURE") {
+      console.log(`Moisture ${inputState}`);
+      currentState.moistureAutomation = !inputState;
+    } else {
+      console.log(`Moisture ${inputState}`);
+      currentState.lightAutomation = !inputState;
+    }
+    console.log(currentState);
+    updateState(currentState);
   };
 
-  const Input: React.FC<InputProps> = props => {
+  const Input: React.FC<InputProps> = (props) => {
     return (
       <>
         <CardContent className={styles.cardContent}>
@@ -140,7 +196,7 @@ const UserInput: React.FC<UserInputProps> = props => {
                 autoWidth
                 id="moisture-select"
                 value={selectedNumber}
-                onChange={e => {
+                onChange={(e) => {
                   handleNumberChange(e.target.value as string);
                 }}
               >
@@ -168,7 +224,7 @@ const UserInput: React.FC<UserInputProps> = props => {
                   value={selectedStartTime}
                   onChange={handleStartTimeChange}
                   KeyboardButtonProps={{
-                    "aria-label": "change start time"
+                    "aria-label": "change start time",
                   }}
                   className={styles.helperText}
                   placeholder="8:00 AM"
@@ -188,7 +244,7 @@ const UserInput: React.FC<UserInputProps> = props => {
                   value={selectedEndTime}
                   onChange={handleEndTimeChange}
                   KeyboardButtonProps={{
-                    "aria-label": "change end time"
+                    "aria-label": "change end time",
                   }}
                   className={styles.helperText}
                   placeholder="8:00 AM"

@@ -16,7 +16,7 @@ import {
   GridList,
   GridListTile,
   useMediaQuery,
-  Grid
+  Grid,
 } from "@material-ui/core";
 import WbSunnyIcon from "@material-ui/icons/WbSunny";
 import Brightness2Icon from "@material-ui/icons/Brightness2";
@@ -29,8 +29,9 @@ import { JsmpegPlayer } from "../stream";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import IconButton from "@material-ui/core/IconButton";
+import { useControlState, UPDATE_CONTROL_DASHBOARD } from "../../contexts";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     button: {
       background: theme.palette.secondary.main,
@@ -42,8 +43,8 @@ const useStyles = makeStyles(theme =>
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
       "&:hover": {
-        background: theme.palette.secondary.dark
-      }
+        background: theme.palette.secondary.dark,
+      },
     },
     card: {
       transition: "0.3s",
@@ -54,19 +55,19 @@ const useStyles = makeStyles(theme =>
       textAlign: "center",
       margin: 8,
       color: theme.palette.primary.dark,
-      justifyContent: "center"
+      justifyContent: "center",
     },
     cardContent: {
       display: "flex",
       flexDirection: "column",
       alignItems: "start",
       textAlign: "center",
-      width: "100%"
+      width: "100%",
     },
     livestream: {
       maxWidth: "inherit",
       maxHeight: "inherit",
-      minHeight: "50vw"
+      minHeight: "50vw",
     },
     media: {
       flexShrink: 0,
@@ -74,38 +75,38 @@ const useStyles = makeStyles(theme =>
       height: "20%",
       marginLeft: "auto",
       marginRight: 8,
-      padding: "2%"
+      padding: "2%",
     },
     chart: {
-      margin: 8
+      margin: 8,
     },
     sun: {
       // margin: theme.spacing(2),
-      color: theme.palette.secondary.main
+      color: theme.palette.secondary.main,
     },
     moon: {
-      transform: "rotate(180deg)"
+      transform: "rotate(180deg)",
       // margin: theme.spacing(2)
     },
     gridList: {
       width: "100%",
-      height: "100%"
+      height: "100%",
     },
     "@keyframes wave-animation": {
       "0%": { backgroundPosition: "0 102%" },
-      "100%": { backgroundPosition: "200px 102%" }
+      "100%": { backgroundPosition: "200px 102%" },
     },
     "@keyframes loading-animation": {
       "0%": { backgroundSize: "100px 0px" },
-      "100%": { backgroundSize: "100px 30px" }
+      "100%": { backgroundSize: "100px 30px" },
     },
     "@keyframes tall-loading-animation": {
       "0%": { backgroundSize: "200px 0px" },
-      "100%": { backgroundSize: "200px 200px" }
+      "100%": { backgroundSize: "200px 200px" },
     },
     "@keyframes tall-wave-animation": {
       "0%": { backgroundPosition: "0 105%" },
-      "100%": { backgroundPosition: "200px 105%" }
+      "100%": { backgroundPosition: "200px 105%" },
     },
     wave: {
       backgroundImage: "url(wave.png)",
@@ -114,7 +115,7 @@ const useStyles = makeStyles(theme =>
       backgroundSize: "100px 50px",
       backgroundRepeat: "repeat-x",
       opacity: 1,
-      backgroundClip: "border-box"
+      backgroundClip: "border-box",
     },
     waveTall: {
       backgroundImage: "url(wave-tall.png)",
@@ -123,11 +124,11 @@ const useStyles = makeStyles(theme =>
       backgroundSize: "400px 200px",
       backgroundRepeat: "repeat-x",
       opacity: 1,
-      backgroundClip: "border-box"
+      backgroundClip: "border-box",
     },
     livestreamGrid: {
-      width: "100%"
-    }
+      width: "100%",
+    },
   })
 );
 
@@ -135,19 +136,31 @@ const ControlView: React.FC = () => {
   const theme = useTheme();
   const styles = useStyles(theme);
   const smallWidth = useMediaQuery(theme.breakpoints.down("xs"));
-  const [lightState, setLightState] = useState(false);
+  const [controlState, controlDispatch] = useControlState();
+  const {
+    controlDashboard: { lightState },
+  } = controlState;
+  // const [lightState, setLightState] = useState(false);
   const [watering0, setWatering0] = useState(false);
   const [watering1, setWatering1] = useState(false);
   const [watering2, setWatering2] = useState(false);
   const [currentSocket, setCurrentSocket]: any = useState(null);
   const [livestreamOpen, setLivestreamOpen] = useState(false);
 
+  const setLightState = (updatedLightState: boolean) => {
+    controlDispatch({
+      type: UPDATE_CONTROL_DASHBOARD,
+      payload: { lightState: updatedLightState },
+    });
+  };
+
   const webSocketUrl = `${
     window.location.protocol === "https:" ? "wss" : "ws"
   }://${document.location.hostname}:8082/`;
+  console.log(webSocketUrl);
 
   const onClickLightCommand = () => {
-    currentSocket.emit("toggleLight", true);
+    currentSocket.emit("toggleLight", lightState);
   };
   const onClickPumpCommand = (idx: number, waterFunc: Function) => {
     waterFunc(true);
@@ -172,7 +185,7 @@ const ControlView: React.FC = () => {
   }, []);
 
   const videoOptions = {
-    poster: "/" + process.env.PUBLIC_URL + "watering.GIF"
+    poster: "/" + process.env.PUBLIC_URL + "watering.GIF",
   };
 
   const videoOverlayOptions = {};

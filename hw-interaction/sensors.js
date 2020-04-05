@@ -31,12 +31,12 @@ let readings = {
   automated_lighting: false,
   light_on_start: null,
   light_on_end: null,
-  pumps_enabled: false
+  pumps_enabled: false,
 };
 
 let controls = {
   pumps: null,
-  light: null
+  light: null,
 };
 
 const interval = 5000;
@@ -49,17 +49,17 @@ function initialize(state) {
 
   state.sensorData = readings;
 
-  board.on("ready", async function() {
+  board.on("ready", async function () {
     // light sensor
     const si1145 = new Si1145({
-      board: board
+      board: board,
     });
 
     await si1145.initialize(() => {
       if (si1145.deviceActive()) {
         setInterval(() => {
           if (si1145.deviceActive()) {
-            si1145.getDataFromDevice(err => {
+            si1145.getDataFromDevice((err) => {
               if (!err) {
                 readings.visible = si1145.device.parameters[0].value;
                 readings.ir = si1145.device.parameters[1].value;
@@ -95,17 +95,17 @@ function initialize(state) {
 
     // pumps - controlled through relays at pins 3,4,5
     controls.pumps = new Pumps({
-      enabled: false
+      enabled: false,
     });
 
     const _waterLevelSwitch = new WaterLevelSwitch({
-      slave: controls.pumps
+      slave: controls.pumps,
     });
 
     // grow light - controlled through relay at pin 6
     controls.light = new Light({
       pin: 47,
-      type: "NO"
+      type: "NO",
     });
 
     setInterval(() => {
@@ -141,8 +141,10 @@ function configureLightAutomation(useAutomation, startTime, endTime) {
       LIGHT_CHECK_INTERVAL,
       checkLightAutomation
     );
-  } else {
+  } else if (controls.light_timer) {
     clearTimeout(controls.light_timer.id);
+  } else {
+    console.log("no timer set");
   }
 }
 
@@ -191,7 +193,7 @@ async function runPump(idx) {
   } else {
     console.log("Pumps not initialized");
     controls.pumps = new Pumps({
-      enabled: false
+      enabled: false,
     });
   }
 }
@@ -204,5 +206,5 @@ module.exports = {
   configureLightAutomation,
   configureSoilMoistureAutomation,
   runPump,
-  toggleLight
+  toggleLight,
 };

@@ -9,7 +9,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import { NotificationView } from "./components/notifications";
 import { useSensorDataState } from "./contexts";
 import { UserAutomationView } from "./components/userInput";
-import { useAuth0 } from "./contexts";
+import { useAuth0, ControlStateProvider } from "./contexts";
 import { PrivateRoute } from "./components/auth";
 import "./Header.css";
 import "./Dashboard.css";
@@ -38,23 +38,25 @@ const App: React.FC = () => {
       <Suspense fallback={<Loading />}>
         <Fragment>
           <Header onMenuClick={setOpen} />
-          <Router history={history}>
-            <Switch>
-              <Route path="/dashboard">
-                <Home />
-              </Route>
-              <Route exact path="/">
-                <Redirect to="/dashboard" />
-              </Route>
-              <PrivateRoute path="/controls" component={ControlView} />
-              <PrivateRoute
-                path="/notifications"
-                component={NotificationView}
-              />
-              <PrivateRoute path="/input" component={UserAutomationView} />
-            </Switch>
-            <NavDrawer open={open} onCloseFunc={setOpen} />
-          </Router>
+          <ControlStateProvider>
+            <Router history={history}>
+              <Switch>
+                <Route path="/dashboard">
+                  <Home />
+                </Route>
+                <Route exact path="/">
+                  <Redirect to="/dashboard" />
+                </Route>
+                <PrivateRoute
+                  path="/notifications"
+                  component={NotificationView}
+                />
+                <PrivateRoute path="/controls" component={ControlView} />
+                <PrivateRoute path="/input" component={UserAutomationView} />
+              </Switch>
+              <NavDrawer open={open} onCloseFunc={setOpen} />
+            </Router>
+          </ControlStateProvider>
         </Fragment>
       </Suspense>
     </ThemeProvider>
