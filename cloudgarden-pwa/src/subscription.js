@@ -12,9 +12,8 @@ const convertedVapidKey = urlBase64ToUint8Array(
 function urlBase64ToUint8Array(base64String) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
 
-  // eslint-disable-next-line
-
   const base64 = (base64String + padding)
+    // eslint-disable-next-line
     .replace(/\-/g, "+")
     .replace(/_/g, "/");
 

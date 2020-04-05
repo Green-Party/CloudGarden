@@ -155,7 +155,7 @@ io.on("connection", socket => {
   });
   socket.on("togglePump", async idx => {
     console.log(`Toggling pump ${idx}`);
-    await Sensors.runPump(idx);
+    Sensors.runPump(idx);
     io.emit("pumpToggled", true);
   });
   socket.on("updateMoistureThreshold", ({ isOn, threshold }) => {

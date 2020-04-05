@@ -201,9 +201,9 @@ const UserInput: React.FC<UserInputProps> = props => {
           <Button
             disabled={
               !props.disabled ||
-              (selectedNumber == "" && props.type == "MOISTURE") ||
-              ((selectedStartTime == null || selectedEndTime == null) &&
-                props.type == "LIGHT")
+              (selectedNumber === "" && props.type === "MOISTURE") ||
+              ((selectedStartTime === null || selectedEndTime === null) &&
+                props.type === "LIGHT")
             }
             id="submit-button"
             className={styles.button}

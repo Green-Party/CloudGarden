@@ -116,10 +116,10 @@ function Header(props: HeaderProps) {
           aria-label="menu"
           onClick={() => props.onMenuClick(true)}
         >
-          <MenuIcon fontSize="large" />
+          <MenuIcon fontSize={xsmallWidth ? "default" : "large"} />
         </IconButton>
         <Typography
-          variant={smallWidth ? "h5" : "h4"}
+          variant={smallWidth ? (xsmallWidth ? "h6" : "h4") : "h5"}
           className={classes.root}
           component="a"
           href="/"

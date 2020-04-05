@@ -137,7 +137,12 @@ const MoistureDashboard: React.FC = () => {
   };
 
   return (
-    <GridList cellHeight="auto" className={styles.gridList} cols={3}>
+    <GridList
+      spacing={8}
+      cellHeight="auto"
+      className={styles.gridList}
+      cols={3}
+    >
       <GridListTile cols={smallWidth ? 3 : 1}>
         <MoisturePercentage soil_moisture={soilMoisture1} />
       </GridListTile>
