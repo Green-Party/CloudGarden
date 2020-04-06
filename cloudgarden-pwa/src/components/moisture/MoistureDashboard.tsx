@@ -74,7 +74,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-interface moistureChartProps {
+export interface moistureChartProps {
   soil_moisture: number;
 }
 

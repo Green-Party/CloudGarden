@@ -190,7 +190,9 @@ const UserInput: React.FC<UserInputProps> = (props) => {
                 }}
               >
                 {_.range(1, 11).map((i: number) => (
-                  <MenuItem value={i}>{i}</MenuItem>
+                  <MenuItem key={`number-${i}`} value={i}>
+                    {i}
+                  </MenuItem>
                 ))}
                 }
               </Select>
