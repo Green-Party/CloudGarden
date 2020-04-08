@@ -5,7 +5,7 @@
 The time commitment and care needed to grow plants using traditional methodologies can be a barrier to entry for those who are inexperienced, even if they are interested in home gardening. 
 We hope to remove some of these barriers with our self contained smart gardening system that allows users to monitor and take care of their plants no matter where they are, as long as they have an internet connection. Furthermore, our system will remove much of the human error involved with traditional gardening as the various sensors will help to ensure consistent and optimal temperature, soil humidity, and light levels.
 
-## Technologies used
+## Technologies Used
 
 ![alt text](https://github.com/Green-Party/CloudGarden/blob/master/cloudgarden-pwa/public/image.png "Technologies Used")
 
